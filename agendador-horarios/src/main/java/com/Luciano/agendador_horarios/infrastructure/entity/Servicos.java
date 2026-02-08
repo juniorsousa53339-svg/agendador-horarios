@@ -17,7 +17,6 @@ public class Servicos {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     @NotNull
     private long idServico;
 

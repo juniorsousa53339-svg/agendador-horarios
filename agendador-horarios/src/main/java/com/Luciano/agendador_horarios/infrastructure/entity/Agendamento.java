@@ -27,12 +27,12 @@ public class Agendamento {
     private LocalDateTime dataHoraAgendamento;
 
     @ManyToOne
-    @JoinColumn(name = "servico_id")
+    @JoinColumn(name = "servico")
     private Servicos servico;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id")
-    private Cliente idCliente;
+    @JoinColumn(name = "cliente")
+    private Cliente cliente;
 
     @NotNull
     private LocalDateTime dataInsercao = LocalDateTime.now();

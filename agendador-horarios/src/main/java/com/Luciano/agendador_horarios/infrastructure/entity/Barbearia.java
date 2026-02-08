@@ -23,6 +23,10 @@ public class Barbearia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id_barbearia;
 
+    @ManyToOne
+    @JoinColumn(name = "proprietario")
+    private Proprietario proprietario;
+
     @NotNull
     private String nomeBarbearia;
 
