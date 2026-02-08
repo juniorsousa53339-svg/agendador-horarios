@@ -21,7 +21,7 @@ public class AgendamentoService {
         LocalDateTime horaAgendamento = agendamento.getDataHoraAgendamento();
         LocalDateTime horaFim = agendamento.getDataHoraAgendamento().plusMinutes(1);
 
-        Agendamento agendados = agendamentoRepository.findByServicoAndDataHoraAgendamentoBetween(agendamento.getServico(),
+        Agendamento agendados = agendamentoRepository.findByServicoAndDataHoraAgendamentoBetween(String.valueOf(agendamento.getServico()),
                 horaAgendamento, horaFim);
 
 
@@ -49,7 +49,7 @@ public class AgendamentoService {
             throw new RuntimeException("Horário não está preenchido");
         }
 
-        agendamento.setId(agenda.getId());
+        agendamento.setIdAgendamento(agenda.getIdAgendamento());
         return agendamentoRepository.save(agendamento);
     }
 }

@@ -1,4 +1,9 @@
 package com.Luciano.agendador_horarios.infrastructure.repository;
 
-public interface BarbeariaRepository {
+import com.Luciano.agendador_horarios.infrastructure.entity.Barbearia;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BarbeariaRepository extends JpaRepository<Barbearia, Integer> {
+
+    Barbearia findById_barbeariaAndNome(String nomeBarbearia, long id_barbearia);
 }

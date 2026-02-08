@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -12,19 +13,28 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
 @Entity
 @Table(name = "agendamento")
 public class Agendamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String servico;
-    private String profissional;
-    private LocalDateTime dataHoraAgendamento;
-    private String cliente;
-    private String telefoneCliente;
-    private LocalDateTime dataInsercao = LocalDateTime.now();
+    @NotNull
+    private Long idAgendamento;
 
+    @NotNull
+    private LocalDateTime dataHoraAgendamento;
+
+    @ManyToOne
+    @JoinColumn(name = "servico_id")
+    private Servicos servico;
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente idCliente;
+
+    @NotNull
+    private LocalDateTime dataInsercao = LocalDateTime.now();
 
 }
