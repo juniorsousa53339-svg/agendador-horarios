@@ -1,36 +1,38 @@
-# 📅 Agendador de Horários – Barbearia
+<h1 align="center">📅 Agendador de Horários – Barbearia</h1>
 
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
-![Spring](https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
-![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
-![H2](https://img.shields.io/badge/H2_Database-1E90FF?style=for-the-badge&logo=databricks&logoColor=white)
-![JSON](https://img.shields.io/badge/JSON-000000?style=for-the-badge&logo=json&logoColor=white)
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Em%20Evolução-yellow?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white"/>
+  <img src="https://img.shields.io/badge/H2%20Database-1E90FF?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/JSON-000000?style=for-the-badge&logo=json&logoColor=white"/>
+</p>
 
 ---
 
-## Sobre o projeto
+## 📌 Sobre o projeto
 
-Este projeto é um **sistema de agendamento de horários**, desenvolvido inicialmente para **barbearias**, mas pensado para ser adaptável a qualquer tipo de comércio que trabalhe com agendamentos.
+Este projeto é um **sistema de agendamento de horários**, desenvolvido inicialmente para **barbearias**, mas pensado para ser facilmente adaptável a qualquer tipo de comércio que trabalhe com agendamentos.
 
-O foco é criar um projeto simples, organizado e evolutivo utilizando **Spring Boot**.
+O objetivo é aplicar boas práticas de desenvolvimento, utilizando **Spring Boot** e conceitos fundamentais da programação orientada a objetos.
 
-## Funcionalidades atuais
+## ⚙️ Funcionalidades atuais
+
+Funcionalidades relacionadas ao **agendamento**:
 
 - ➕ Adicionar agendamento  
 - ✏️ Alterar agendamento  
 - ❌ Excluir agendamento  
 
-O projeto também utiliza **verificações em JSON** para validação das regras de negócio.
+O sistema também utiliza **verificações em JSON** para validação das regras de negócio.
 
-## Conceitos aplicados
+## 🧠 Conceitos aplicados
 
 - Programação Orientada a Objetos (POO)  
 - Herança  
 - Encapsulamento  
 
-## Status do projeto
+## 🚧 Status do projeto
 
-🚧 **Em constante evolução**
-
-O projeto está sendo desenvolvido gradualmente, com melhorias contínuas e adição de novas funcionalidades conforme o aprendizado avança.
+O projeto está em **constante evolução**, sendo desenvolvido gradualmente com melhorias no código, refatorações e adição de novas funcionalidades conforme o aprendizado avança.
