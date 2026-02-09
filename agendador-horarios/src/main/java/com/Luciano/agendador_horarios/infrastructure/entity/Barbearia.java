@@ -21,7 +21,7 @@ public class Barbearia {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_barbearia;
+    private long idBarbearia;
 
     @ManyToOne
     @JoinColumn(name = "proprietario")
@@ -31,7 +31,7 @@ public class Barbearia {
     private String nomeBarbearia;
 
     @NotNull
-    private String endereco;
+    private String rua;
 
     @NotNull
     private int numeroRua;

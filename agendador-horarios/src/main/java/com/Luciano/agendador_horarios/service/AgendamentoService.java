@@ -37,7 +37,7 @@ public class AgendamentoService {
 
     public List<Agendamento> buscarAgendamentosDia(LocalDate data){
         LocalDateTime primeiraHoraDia = data.atStartOfDay();
-        LocalDateTime horaFinalDia = data.atTime(23, 59, 59);
+        LocalDateTime horaFinalDia = data.atTime(20, 59, 59);
 
         return agendamentoRepository.findByDataHoraAgendamentoBetween(primeiraHoraDia, horaFinalDia);
     }
