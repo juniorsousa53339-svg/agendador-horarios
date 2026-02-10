@@ -25,7 +25,6 @@ public class BarbeariaService {
         Barbearia barbearias = barbeariaRepository.findByNomeBarbeariaAndProprietario
                 (nomeBarbearia, proprietario);
 
-
         if (Objects.nonNull(barbearias)) {
             throw new RuntimeException("Barbearia já está preenchido");
         }
@@ -36,13 +35,25 @@ public class BarbeariaService {
         barbeariaRepository.deleteByNomeBarbearia(nomeBarbearia);
     }
 
-    public List<Barbearia> buscarBarbearia(String nomeBarbearia, long idBarbearia, String rua, String numeroRua) {
+    public List<Barbearia> buscarBarbearia(String nomeBarbearia, long idBarbearia, String rua) {
         String nomebarbearia = nomeBarbearia;
 
         return barbeariaRepository.findByIdBarbeariaAndNomebarbeariaAndRuaAndnumeroRua
                 (idBarbearia, nomeBarbearia, rua);
     }
 
-      //     Falta a funcionalidade de alterar Barbearia
+    public Barbearia alterarBarbearia(Barbearia barbearia, String nomeBarbearia, String rua,
+                                      String numeroRua, Proprietario proprietario) {
+
+        Barbearia barbeariaAlterada = barbeariaRepository.findByNomeBarbeariaAndRuaAndNumeroRuaAndProprietario(nomeBarbearia, rua, numeroRua, proprietario);
+
+        if (Objects.isNull(barbeariaAlterada)) {
+            throw new RuntimeException("Barbearia não está preenchido");
+        }
+
+        barbearia.setIdBarbearia(barbeariaAlterada.getIdBarbearia());
+        return barbeariaRepository.save(barbeariaAlterada);
+
+    }
 }
 

@@ -16,5 +16,9 @@ public interface BarbeariaRepository extends JpaRepository<Barbearia, Long> {
 
     List<Barbearia> findByIdBarbeariaAndNomebarbeariaAndRuaAndnumeroRua
             (long idBarbearia, String nomeBarbearia, String rua);
+
+    Barbearia findByNomeBarbeariaAndRuaAndNumeroRuaAndProprietario
+            (String nomeBarbearia, String rua, String numeroRua, Proprietario proprietario);
+
 }
 
