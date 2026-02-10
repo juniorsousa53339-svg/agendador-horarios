@@ -19,6 +19,9 @@ import java.time.LocalTime;
 @Table(name = "barbearia")
 public class Barbearia {
 
+
+//    Add Validation Spring para validar as entidades
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idBarbearia;

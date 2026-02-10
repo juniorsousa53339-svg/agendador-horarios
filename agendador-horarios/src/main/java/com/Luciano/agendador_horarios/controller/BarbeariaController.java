@@ -36,5 +36,6 @@ public class BarbeariaController {
        //    Fazer >Alterar Barbearia
 
 
+
 }
 
