@@ -30,15 +30,14 @@ public class BarbeariaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Barbearia>> buscarBarbearias
+    public ResponseEntity<List<Barbearia>> buscarBarbearia
             (@RequestParam String nomeBarbearia, @RequestParam long idBarbearia, @RequestParam String rua) {
-        return ResponseEntity.ok().body(barbeariaService.buscarBarbearia(nomeBarbearia, idBarbearia, rua));
+        return ResponseEntity.ok().body(barbeariaService.buscarBarbearia(nomeBarbearia,idBarbearia, rua));
     }
 
     @PutMapping
     public ResponseEntity<Barbearia> alterarNomeBarbearia(@RequestBody Barbearia barbearia,
                                                           @RequestParam String nomeBarbearia) {
-
         return ResponseEntity.accepted().body(barbeariaService.alterarNomeBarbearia(barbearia, nomeBarbearia));
     }
     //      Fazer metodo de alterar (Horarios de funcionamento)

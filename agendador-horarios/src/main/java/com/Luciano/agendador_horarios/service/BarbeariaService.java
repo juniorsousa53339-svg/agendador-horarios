@@ -6,6 +6,7 @@ import com.Luciano.agendador_horarios.infrastructure.repository.BarbeariaReposit
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,6 +54,18 @@ public class BarbeariaService {
         barbearia.setIdBarbearia(nomeBarbeariaAlt.getIdBarbearia());
         return barbeariaRepository.save(nomeBarbeariaAlt);
 
+    }
+
+    public Barbearia alterarHorariosFun(Barbearia barbearia, LocalTime horarioAbertura, LocalTime horarioFechamento) {
+        Barbearia HorarioFun = barbeariaRepository.findybyBarbeariaAndHorarioAberturaAndHorarioFechamento
+                (barbearia, horarioAbertura, horarioFechamento);
+
+        if (Objects.isNull(HorarioFun)) {
+            throw new RuntimeException("Horário de funcionamento não encontrado.");
+        }
+        barbearia.setHorarioAbertura(HorarioFun.getHorarioAbertura());
+        barbearia.setHorarioFechamento(HorarioFun.getHorarioFechamento());
+        return barbeariaRepository.save(barbearia);
     }
     //     FAZER: Metodo de alterar (Telefone)
 

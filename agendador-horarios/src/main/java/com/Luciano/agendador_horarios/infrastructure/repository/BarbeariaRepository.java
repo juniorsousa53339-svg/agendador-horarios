@@ -5,6 +5,8 @@ import com.Luciano.agendador_horarios.infrastructure.entity.Proprietario;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface BarbeariaRepository extends JpaRepository<Barbearia, Long> {
@@ -21,5 +23,11 @@ public interface BarbeariaRepository extends JpaRepository<Barbearia, Long> {
             (String nomeBarbearia);
 
     Barbearia findByNomeBarbearia(String nomeBarbearia);
+
+    Barbearia findybyBarbeariaAndHorarioAberturaAndHorarioFechamento
+            (Barbearia barbearia , LocalDateTime horarioAbertura, LocalDateTime horarioFechamento);
+
+    Barbearia findybyBarbeariaAndHorarioAberturaAndHorarioFechamento(Barbearia barbearia, LocalTime horarioAbertura, LocalTime horarioFechamento);
 }
+
 
