@@ -33,9 +33,11 @@ public class BarbeariaController {
             (@RequestParam String nomeBarbearia, @RequestParam long idBarbearia, @RequestParam String rua) {
         return ResponseEntity.ok().body(barbeariaService.buscarBarbearia(nomeBarbearia, idBarbearia, rua));
     }
-       //    Fazer >Alterar Barbearia
 
-
-
+    @PutMapping
+    public ResponseEntity<List<Barbearia> alterarBarbearia(@RequestBody Barbearia barbearia,]
+                                                           @RequestParam ){
+        //    Finalizar >Alterar Barbearia
+    }
 }
-
+ 
