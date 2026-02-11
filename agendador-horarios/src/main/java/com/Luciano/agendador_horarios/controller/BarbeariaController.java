@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -35,9 +36,24 @@ public class BarbeariaController {
     }
 
     @PutMapping
-    public ResponseEntity<List<Barbearia> alterarBarbearia(@RequestBody Barbearia barbearia,]
-                                                           @RequestParam ){
-        //    Finalizar >Alterar Barbearia
+    public ResponseEntity<Barbearia> alterarNomeBarbearia(@RequestBody Barbearia barbearia,
+                                                          @RequestParam String nomeBarbearia) {
+
+        return ResponseEntity.accepted().body(barbeariaService.alterarNomeBarbearia(barbearia, nomeBarbearia));
     }
+    //      Fazer metodo de alterar (Horarios de funcionamento)
+    @PutMapping
+    public ResponseEntity<Barbearia> alterarHorariosFun(@RequestBody Barbearia barbearia,
+                                                        @RequestParam LocalTime horarioAbertura,
+                                                        @RequestParam LocalTime horarioFechamento) {
+
+        return ResponseEntity.accepted().body(barbeariaService.alterarHorariosFun(barbearia, horarioAbertura,horarioFechamento));
+    }
+
+    //     FAZER: Metodo de alterar (Telefone)
+
+    //      FAZER: Metodo de alterar (Endereço)
+
+    //      FAZER: Metodo de alterar (Proprietario)
 }
  

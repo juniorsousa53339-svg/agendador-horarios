@@ -42,18 +42,22 @@ public class BarbeariaService {
                 (idBarbearia, nomeBarbearia, rua);
     }
 
-    public Barbearia alterarBarbearia(Barbearia barbearia, String nomeBarbearia, String rua,
-                                      String numeroRua, Proprietario proprietario) {
+    public Barbearia alterarNomeBarbearia(Barbearia barbearia, String nomeBarbearia) {
 
-        Barbearia barbeariaAlterada = barbeariaRepository.findByNomeBarbeariaAndRuaAndNumeroRuaAndProprietario(nomeBarbearia, rua, numeroRua, proprietario);
+        Barbearia nomeBarbeariaAlt = barbeariaRepository.findByNomeBarbearia(nomeBarbearia);
 
-        if (Objects.isNull(barbeariaAlterada)) {
+        if (Objects.isNull(nomeBarbeariaAlt)) {
             throw new RuntimeException("Barbearia não está preenchido");
         }
 
-        barbearia.setIdBarbearia(barbeariaAlterada.getIdBarbearia());
-        return barbeariaRepository.save(barbeariaAlterada);
+        barbearia.setIdBarbearia(nomeBarbeariaAlt.getIdBarbearia());
+        return barbeariaRepository.save(nomeBarbeariaAlt);
 
     }
+    //     FAZER: Metodo de alterar (Telefone)
+
+    //      FAZER: Metodo de alterar (Endereço)
+
+    //      FAZER: Metodo de alterar (Proprietario)
 }
 
