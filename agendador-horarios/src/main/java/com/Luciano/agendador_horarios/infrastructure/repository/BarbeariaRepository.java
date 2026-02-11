@@ -27,7 +27,12 @@ public interface BarbeariaRepository extends JpaRepository<Barbearia, Long> {
     Barbearia findybyBarbeariaAndHorarioAberturaAndHorarioFechamento
             (Barbearia barbearia , LocalDateTime horarioAbertura, LocalDateTime horarioFechamento);
 
-    Barbearia findybyBarbeariaAndHorarioAberturaAndHorarioFechamento(Barbearia barbearia, LocalTime horarioAbertura, LocalTime horarioFechamento);
+    Barbearia findybyBarbeariaAndHorarioAberturaAndHorarioFechamento
+            (Barbearia barbearia, LocalTime horarioAbertura, LocalTime horarioFechamento);
+
+    Barbearia findybyBarbeariaAndTelefoneBarbearia(Barbearia barbearia, String telefoneBarbearia);
+
+    Barbearia findybyBarbeariaAndRuaAndNumeroRua(Barbearia barbearia, String rua, String numeroRua);
 }
 
 

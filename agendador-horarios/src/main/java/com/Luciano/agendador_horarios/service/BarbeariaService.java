@@ -67,9 +67,27 @@ public class BarbeariaService {
         barbearia.setHorarioFechamento(HorarioFun.getHorarioFechamento());
         return barbeariaRepository.save(barbearia);
     }
-    //     FAZER: Metodo de alterar (Telefone)
 
-    //      FAZER: Metodo de alterar (Endereço)
+    public Barbearia alterarTelefone(Barbearia barbearia, String telefoneBarbearia) {
+        Barbearia altTelefone = barbeariaRepository.findybyBarbeariaAndTelefoneBarbearia(barbearia, telefoneBarbearia);
+
+        if (Objects.isNull(altTelefone)) {
+            throw new RuntimeException("Horário de funcionamento não encontrado.");
+        }
+        barbearia.setTelefoneBarbearia(altTelefone.getTelefoneBarbearia());
+        return barbeariaRepository.save(barbearia);
+    }
+
+    public Barbearia alterarEndereco(Barbearia barbearia, String rua , String numeroRua) {
+        Barbearia altEndereco = barbeariaRepository.findybyBarbeariaAndRuaAndNumeroRua(barbearia,rua,numeroRua);
+
+        if (Objects.isNull(altEndereco)) {
+            throw new RuntimeException("Endereço não encontrado para a barbearia informada.");
+        }
+        barbearia.setRua(altEndereco.getRua());
+        barbearia.setNumeroRua(altEndereco.getNumeroRua());
+        return barbeariaRepository.save(barbearia);
+    }
 
     //      FAZER: Metodo de alterar (Proprietario)
 }

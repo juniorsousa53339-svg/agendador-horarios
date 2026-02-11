@@ -45,7 +45,6 @@ public class BarbeariaController {
     public ResponseEntity<Barbearia> alterarHorariosFun(@RequestBody Barbearia barbearia,
                                                         @RequestParam LocalTime horarioAbertura,
                                                         @RequestParam LocalTime horarioFechamento) {
-
         return ResponseEntity.accepted().body(barbeariaService.alterarHorariosFun(barbearia, horarioAbertura,horarioFechamento));
     }
 
