@@ -5,9 +5,9 @@ import com.Luciano.agendador_horarios.infrastructure.entity.Proprietario;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+
 
 public interface BarbeariaRepository extends JpaRepository<Barbearia, Long> {
 
@@ -16,23 +16,15 @@ public interface BarbeariaRepository extends JpaRepository<Barbearia, Long> {
     @Transactional
     void deleteByNomeBarbearia(String nomeBarbearia);
 
-    List<Barbearia> findByIdBarbeariaAndNomebarbeariaAndRuaAndnumeroRua
-            (long idBarbearia, String nomeBarbearia, String rua);
-
-    Barbearia findByNomeBarbeariaAndRuaAndNumeroRuaAndProprietario
-            (String nomeBarbearia);
+    List<Barbearia> findByIdBarbeariaAndNomeBarbeariaAndRua(long idBarbearia, String nomeBarbearia, String rua);
 
     Barbearia findByNomeBarbearia(String nomeBarbearia);
 
-    Barbearia findybyBarbeariaAndHorarioAberturaAndHorarioFechamento
-            (Barbearia barbearia , LocalDateTime horarioAbertura, LocalDateTime horarioFechamento);
+    Barbearia findByHorarioAberturaAndHorarioFechamento(LocalTime horarioAbertura, LocalTime horarioFechamento);
 
-    Barbearia findybyBarbeariaAndHorarioAberturaAndHorarioFechamento
-            (Barbearia barbearia, LocalTime horarioAbertura, LocalTime horarioFechamento);
+    Barbearia findByTelefoneBarbearia(String telefoneBarbearia);
 
-    Barbearia findybyBarbeariaAndTelefoneBarbearia(Barbearia barbearia, String telefoneBarbearia);
+    Barbearia findByRuaAndNumeroRua(String rua, String numeroRua);
 
-    Barbearia findybyBarbeariaAndRuaAndNumeroRua(Barbearia barbearia, String rua, String numeroRua);
+    Barbearia findByProprietario(Proprietario proprietario);
 }
-
-

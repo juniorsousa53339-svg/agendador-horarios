@@ -19,15 +19,12 @@ public class BarbeariaService {
     public Barbearia salvarBarbearia(Barbearia barbearia) {
 
         String nomeBarbearia = barbearia.getNomeBarbearia();
-        String rua = barbearia.getRua();
         Proprietario proprietario = barbearia.getProprietario();
-        int numeroRua = barbearia.getNumeroRua();
 
-        Barbearia barbearias = barbeariaRepository.findByNomeBarbeariaAndProprietario
-                (nomeBarbearia, proprietario);
+        Barbearia barbeariaExistente = barbeariaRepository.findByNomeBarbeariaAndProprietario(nomeBarbearia, proprietario);
 
-        if (Objects.nonNull(barbearias)) {
-            throw new RuntimeException("Barbearia já está preenchido");
+        if (Objects.nonNull(barbeariaExistente)) {
+            throw new RuntimeException("Barbearia já está cadastrada.");
         }
         return barbeariaRepository.save(barbearia);
     }
@@ -36,59 +33,64 @@ public class BarbeariaService {
         barbeariaRepository.deleteByNomeBarbearia(nomeBarbearia);
     }
 
-    public List<Barbearia> buscarBarbearia(String nomeBarbearia, long idBarbearia, String rua) {
-        String nomebarbearia = nomeBarbearia;
-
-        return barbeariaRepository.findByIdBarbeariaAndNomebarbeariaAndRuaAndnumeroRua
-                (idBarbearia, nomeBarbearia, rua);
+    public List<Barbearia> buscarBarbearia(long idBarbearia, String nomeBarbearia, String rua) {
+        return barbeariaRepository.findByIdBarbeariaAndNomeBarbeariaAndRua(idBarbearia, nomeBarbearia, rua);
     }
 
     public Barbearia alterarNomeBarbearia(Barbearia barbearia, String nomeBarbearia) {
+        Barbearia barbeariaExistente = barbeariaRepository.findByNomeBarbearia(nomeBarbearia);
 
-        Barbearia nomeBarbeariaAlt = barbeariaRepository.findByNomeBarbearia(nomeBarbearia);
-
-        if (Objects.isNull(nomeBarbeariaAlt)) {
-            throw new RuntimeException("Barbearia não está preenchido");
+        if (Objects.isNull(barbeariaExistente)) {
+            throw new RuntimeException("Barbearia não encontrada.");
         }
 
-        barbearia.setIdBarbearia(nomeBarbeariaAlt.getIdBarbearia());
-        return barbeariaRepository.save(nomeBarbeariaAlt);
-
+        barbearia.setNomeBarbearia(nomeBarbearia);
+        return barbeariaRepository.save(barbearia);
     }
 
     public Barbearia alterarHorariosFun(Barbearia barbearia, LocalTime horarioAbertura, LocalTime horarioFechamento) {
-        Barbearia HorarioFun = barbeariaRepository.findybyBarbeariaAndHorarioAberturaAndHorarioFechamento
-                (barbearia, horarioAbertura, horarioFechamento);
+        Barbearia barbeariaComHorario = barbeariaRepository.findByHorarioAberturaAndHorarioFechamento(horarioAbertura, horarioFechamento);
 
-        if (Objects.isNull(HorarioFun)) {
+        if (Objects.isNull(barbeariaComHorario)) {
             throw new RuntimeException("Horário de funcionamento não encontrado.");
         }
-        barbearia.setHorarioAbertura(HorarioFun.getHorarioAbertura());
-        barbearia.setHorarioFechamento(HorarioFun.getHorarioFechamento());
+
+        barbearia.setHorarioAbertura(barbeariaComHorario.getHorarioAbertura());
+        barbearia.setHorarioFechamento(barbeariaComHorario.getHorarioFechamento());
         return barbeariaRepository.save(barbearia);
     }
 
     public Barbearia alterarTelefone(Barbearia barbearia, String telefoneBarbearia) {
-        Barbearia altTelefone = barbeariaRepository.findybyBarbeariaAndTelefoneBarbearia(barbearia, telefoneBarbearia);
+        Barbearia barbeariaComTelefone = barbeariaRepository.findByTelefoneBarbearia(telefoneBarbearia);
 
-        if (Objects.isNull(altTelefone)) {
-            throw new RuntimeException("Horário de funcionamento não encontrado.");
+        if (Objects.isNull(barbeariaComTelefone)) {
+            throw new RuntimeException("Telefone não encontrado.");
         }
-        barbearia.setTelefoneBarbearia(altTelefone.getTelefoneBarbearia());
+
+        barbearia.setTelefoneBarbearia(barbeariaComTelefone.getTelefoneBarbearia());
         return barbeariaRepository.save(barbearia);
     }
 
-    public Barbearia alterarEndereco(Barbearia barbearia, String rua , String numeroRua) {
-        Barbearia altEndereco = barbeariaRepository.findybyBarbeariaAndRuaAndNumeroRua(barbearia,rua,numeroRua);
+    public Barbearia alterarEndereco(Barbearia barbearia, String rua, String numeroRua) {
+        Barbearia barbeariaComEndereco = barbeariaRepository.findByRuaAndNumeroRua(rua, numeroRua);
 
-        if (Objects.isNull(altEndereco)) {
+        if (Objects.isNull(barbeariaComEndereco)) {
             throw new RuntimeException("Endereço não encontrado para a barbearia informada.");
         }
-        barbearia.setRua(altEndereco.getRua());
-        barbearia.setNumeroRua(altEndereco.getNumeroRua());
+
+        barbearia.setRua(barbeariaComEndereco.getRua());
+        barbearia.setNumeroRua(barbeariaComEndereco.getNumeroRua());
         return barbeariaRepository.save(barbearia);
     }
 
-    //      FAZER: Metodo de alterar (Proprietario)
-}
+    public Barbearia alterarProprietario(Barbearia barbearia, Proprietario proprietario) {
+        Barbearia barbeariaComProprietario = barbeariaRepository.findByProprietario(proprietario);
 
+        if (Objects.isNull(barbeariaComProprietario)) {
+            throw new RuntimeException("Proprietário não encontrado.");
+        }
+
+        barbearia.setProprietario(barbeariaComProprietario.getProprietario());
+        return barbeariaRepository.save(barbearia);
+    }
+}
