@@ -20,7 +20,7 @@ public class Agendamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
+
     private Long idAgendamento;
 
     @NotNull

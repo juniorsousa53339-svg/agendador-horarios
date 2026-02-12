@@ -19,7 +19,7 @@ public class Proprietario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     @NotNull
-    private long id_proprietario;
+    private Long id_proprietario;
 
     @NotNull
     private String nome;

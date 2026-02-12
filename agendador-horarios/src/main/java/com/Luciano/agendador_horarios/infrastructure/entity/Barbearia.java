@@ -19,12 +19,9 @@ import java.time.LocalTime;
 @Table(name = "barbearia")
 public class Barbearia {
 
-
-//    Add Validation Spring para validar as entidades
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idBarbearia;
+    private Long idBarbearia;
 
     @ManyToOne
     @JoinColumn(name = "proprietario")
@@ -36,8 +33,8 @@ public class Barbearia {
     @NotNull
     private String rua;
 
-    @NotNull
-    private int numeroRua;
+
+    private Integer numeroRua;
 
     @NotNull
     private String telefoneBarbearia;
