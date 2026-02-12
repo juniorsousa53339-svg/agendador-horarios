@@ -13,26 +13,45 @@
 
 ## 📌 Sobre o projeto
 
-Este projeto é um **sistema de agendamento de horários**, desenvolvido inicialmente para **barbearias**, mas pensado para ser facilmente adaptável a qualquer tipo de comércio que trabalhe com agendamentos.
+Projeto simples de estudo com Spring Boot para praticar um CRUD de:
 
-O objetivo é aplicar boas práticas de desenvolvimento, utilizando **Spring Boot** e conceitos fundamentais da programação orientada a objetos.
+- **Agendamento**
+- **Barbearia**
+
+A proposta é manter uma base fácil de entender e evoluir.
 
 ## ⚙️ Funcionalidades atuais
 
-Funcionalidades relacionadas ao **agendamento**:
+### Agendamento
+- ➕ Criar
+- 🔍 Buscar por dia
+- ✏️ Alterar
+- ❌ Deletar
 
-- ➕ Adicionar agendamento  
-- ✏️ Alterar agendamento  
-- ❌ Excluir agendamento  
+### Barbearia
+- ➕ Criar
+- 🔍 Buscar por nome
+- ✏️ Alterar
+- ❌ Deletar
 
-O sistema também utiliza **verificações em JSON** para validação das regras de negócio.
+## 🔗 Endpoints principais
 
-## 🧠 Conceitos aplicados
+### Agendamento
+- `POST /agendamentos`
+- `GET /agendamentos?data=yyyy-MM-dd`
+- `PUT /agendamentos?cliente=...&dataHoraAgendamento=yyyy-MM-ddTHH:mm:ss`
+- `DELETE /agendamentos?cliente=...&dataHoraAgendamento=yyyy-MM-ddTHH:mm:ss`
 
-- Programação Orientada a Objetos (POO)  
-- Herança  
-- Encapsulamento  
+### Barbearia
+- `POST /barbearias`
+- `GET /barbearias?nomeBarbearia=...`
+- `PUT /barbearias?nomeBarbearia=...&rua=...&numeroRua=...`
+- `DELETE /barbearias?nomeBarbearia=...`
 
 ## 🚧 Status do projeto
 
-O projeto está em **constante evolução**, sendo desenvolvido gradualmente com melhorias no código, refatorações e adição de novas funcionalidades conforme o aprendizado avança.
+Projeto de aprendizado, com foco em clareza do código e evolução gradual.
+
+## 📘 Guia rápido
+
+Veja o passo a passo simples em: `docs/GUIA_PROJETO_E_TESTES.md`.
