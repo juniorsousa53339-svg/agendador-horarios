@@ -36,3 +36,8 @@ O sistema também utiliza **verificações em JSON** para validação das regras
 ## 🚧 Status do projeto
 
 O projeto está em **constante evolução**, sendo desenvolvido gradualmente com melhorias no código, refatorações e adição de novas funcionalidades conforme o aprendizado avança.
+
+
+## 📘 Guia de mentoria (projeto + testes)
+
+Se você quiser entender a arquitetura e o raciocínio dos testes unitários passo a passo, leia: `docs/GUIA_PROJETO_E_TESTES.md`.
