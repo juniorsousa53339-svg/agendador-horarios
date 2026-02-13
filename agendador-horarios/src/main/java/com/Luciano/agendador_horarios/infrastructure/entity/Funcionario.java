@@ -20,8 +20,7 @@ public class Funcionario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @NotNull
-    private long id_Funcionario;
+    private Long idFuncionario;
 
     @NotNull
     private String nomeFuncionario;

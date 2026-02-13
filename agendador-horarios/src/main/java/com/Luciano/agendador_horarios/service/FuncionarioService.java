@@ -31,7 +31,7 @@ public class FuncionarioService {
     }
 
     public List<Funcionario> buscarFuncionario(long idFuncionario, String nomeFuncionario) {
-        return funcionarioRepository.findById_FuncionarioAndNomeFuncionario(idFuncionario, nomeFuncionario);
+        return funcionarioRepository.findByIdFuncionarioAndNomeFuncionario(idFuncionario, nomeFuncionario);
     }
 
     public Funcionario alterarNomeFuncionario(Funcionario funcionario, String nomeFuncionario) {
