@@ -1,37 +1,103 @@
 package com.Luciano.agendador_horarios;
 
+import com.Luciano.agendador_horarios.controller.BarbeariaController;
 import com.Luciano.agendador_horarios.infrastructure.entity.Barbearia;
-import com.Luciano.agendador_horarios.infrastructure.repository.BarbeariaRepository;
+import com.Luciano.agendador_horarios.infrastructure.entity.Proprietario;
+import com.Luciano.agendador_horarios.service.BarbeariaService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.Mockito;
+import org.springframework.http.ResponseEntity;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.time.LocalTime;
 
-@SpringBootTest
-class BarbeariaServiceTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
-    @Autowired
-    private BarbeariaRepository repository;
+class BarbeariaControllerTest {
 
-    @Test
-    void deveSalvarBarbearia() {
-        Barbearia b = new Barbearia();
-        b.setNomeBarbearia("Teste");
+    private BarbeariaService barbeariaService;
+    private BarbeariaController barbeariaController;
 
-        Barbearia salva = repository.save(b);
-
-        assertNotNull(salva.getIdBarbearia());
+    @BeforeEach
+    void setup() {
+        barbeariaService = Mockito.mock(BarbeariaService.class);
+        barbeariaController = new BarbeariaController(barbeariaService);
     }
 
     @Test
-    void deveBuscarBarbearia() {
+    void deveAlterarNome() {
         Barbearia barbearia = new Barbearia();
-        barbearia.setNomeBarbearia("teste2");
+        barbearia.setNomeBarbearia("Novo Nome");
 
-        Barbearia salva = repository.save(barbearia);
-        assertNotNull(salva.getIdBarbearia());
+        when(barbeariaService.alterarNomeBarbearia(any(), anyString()))
+                .thenReturn(barbearia);
 
+        ResponseEntity<Barbearia> response =
+                barbeariaController.alterarNomeBarbearia(barbearia, "Antigo Nome");
+
+        assertEquals(202, response.getStatusCode().value());
+        assertEquals("Novo Nome", response.getBody().getNomeBarbearia());
     }
 
+    @Test
+    void deveAlterarHorario() {
+        Barbearia barbearia = new Barbearia();
+
+        when(barbeariaService.alterarHorariosFun(any(), any(), any()))
+                .thenReturn(barbearia);
+
+        ResponseEntity<Barbearia> response =
+                barbeariaController.alterarHorariosFun(
+                        barbearia,
+                        LocalTime.of(8,0),
+                        LocalTime.of(18,0)
+                );
+
+        assertEquals(202, response.getStatusCode().value());
+    }
+
+    @Test
+    void deveAlterarTelefone() {
+        Barbearia barbearia = new Barbearia();
+        barbearia.setTelefoneBarbearia("11999999999");
+
+        when(barbeariaService.alterarTelefone(any(), anyString()))
+                .thenReturn(barbearia);
+
+        ResponseEntity<Barbearia> response =
+                barbeariaController.alterarTelefone(barbearia, "11999999999");
+
+        assertEquals(202, response.getStatusCode().value());
+        assertEquals("11999999999", response.getBody().getTelefoneBarbearia());
+    }
+
+    @Test
+    void deveAlterarEndereco() {
+        Barbearia barbearia = new Barbearia();
+        barbearia.setRua("Rua Nova");
+
+        when(barbeariaService.alterarEndereco(any(), anyString(), anyString()))
+                .thenReturn(barbearia);
+
+        ResponseEntity<Barbearia> response =
+                barbeariaController.alterarEndereco(barbearia, "Rua Nova", "123");
+
+        assertEquals(202, response.getStatusCode().value());
+        assertEquals("Rua Nova", response.getBody().getRua());
+    }
+
+    @Test
+    void deveAlterarProprietario() {
+        Barbearia barbearia = new Barbearia();
+        Proprietario proprietario = new Proprietario();
+
+        when(barbeariaService.alterarProprietario(any(), any()))
+                .thenReturn(barbearia);
+
+        ResponseEntity<Barbearia> response =
+                barbeariaController.alterarProprietario(barbearia, proprietario);
+
+        assertEquals(202, response.getStatusCode().value());
+    }
 }

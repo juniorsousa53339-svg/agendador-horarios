@@ -23,8 +23,8 @@ public class BarbeariaController {
         return ResponseEntity.accepted().body(barbeariaService.salvarBarbearia(barbearia));
     }
 
-    @DeleteMapping("/barbearias/delete")
-    public ResponseEntity<Void> deletarBarbearia(@RequestBody Barbearia barbearia, @RequestParam String nomeBarbearia) {
+    @DeleteMapping
+    public ResponseEntity<Void> deletarBarbearia( @RequestParam String nomeBarbearia) {
 
         barbeariaService.deletarBarbearia(nomeBarbearia);
         return ResponseEntity.noContent().build();
