@@ -1,12 +1,13 @@
 <div align="center">
-  <img src="./Gemini_Generated_Image_qcgenwqcgenwqcge.png" width="100%" style="border-radius: 20px;" alt="Barber Pro System Banner" />
+  <img src="./banner.png" width="100%" style="border-radius: 20px;" alt="Barber Pro System Banner" />
 
   <br><br>
 
-  <h3>💻 Tech Stack</h3>
-  <img src="https://skillicons.dev/icons?i=java,spring,maven,hibernate,mysql,postman,git,github,idea,docker" />
+  <p align="center">
+    <img src="https://skillicons.dev/icons?i=java,spring,maven,hibernate,mysql,postman,git,github,idea,docker" />
+  </p>
 
-  <br><br>
+  <br>
 
   <table width="100%">
     <tr>
@@ -23,22 +24,23 @@
 
   <br>
 
-  <h3 align="left">🚀 Principais Funcionalidades</h3>
   <table width="100%">
     <tr>
-      <td width="50%" bgcolor="#ffffff" style="padding: 20px; border-radius: 10px; border: 1px solid #d0d7de; vertical-align: top;">
-        <h4 style="color: #0969da;">🛡️ Engenharia & Testes</h4>
-        <p style="color: #57606a; font-size: 14px;">
-          Arquitetura baseada em camadas com cobertura exaustiva de testes unitários usando JUnit 5 e Mockito.
-        </p>
-        <code style="color: #cf222e;">java</code> <code style="color: #cf222e;">junit</code>
+      <td width="50%" bgcolor="#161b22" style="padding: 20px; border-radius: 15px; border: 1px solid #30363d; vertical-align: top;">
+        <h4 style="color: #3fb950;">🛡️ Engenharia & Testes</h4>
+        <ul style="color: #8b949e; text-align: left; font-size: 14px;">
+          <li>JUnit 5 & Mockito (Alta Cobertura)</li>
+          <li>Arquitetura em Camadas (Service/Repo)</li>
+          <li>Injeção de Dependências Dinâmica</li>
+        </ul>
       </td>
-      <td width="50%" bgcolor="#ffffff" style="padding: 20px; border-radius: 10px; border: 1px solid #d0d7de; vertical-align: top;">
-        <h4 style="color: #0969da;">⚙️ Gestão Inteligente</h4>
-        <p style="color: #57606a; font-size: 14px;">
-          Validação Fail-Fast para horários, endereços e vínculos entre proprietários e barbearias.
-        </p>
-        <code style="color: #cf222e;">spring-boot</code> <code style="color: #cf222e;">jpa</code>
+      <td width="50%" bgcolor="#161b22" style="padding: 20px; border-radius: 15px; border: 1px solid #30363d; vertical-align: top;">
+        <h4 style="color: #d29922;">⚙️ Regras de Negócio</h4>
+        <ul style="color: #8b949e; text-align: left; font-size: 14px;">
+          <li>Validação Fail-Fast de Horários</li>
+          <li>Gestão de Vínculo Dono/Estabelecimento</li>
+          <li>Filtros de Busca Multicamadas</li>
+        </ul>
       </td>
     </tr>
   </table>
@@ -46,7 +48,5 @@
   <br>
 
   <p align="center">
-    <img src="https://github-readme-stats.vercel.app/api?username=SEU_USUARIO_AQUI&show_icons=true&theme=tokyonight&include_all_commits=true&count_private=true" alt="GitHub Stats" />
-  </p>
-
-</div>
+    <img src="https://img.shields.io/badge/Status-Desenvolvimento%20Ativo-green?style=for-the-badge" />
+    <img src="
