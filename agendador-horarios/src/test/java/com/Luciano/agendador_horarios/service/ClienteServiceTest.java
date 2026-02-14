@@ -78,4 +78,50 @@ public class ClienteServiceTest {
         verify(clienteRepository).findByNomeCliente(novoNome);
 
     }
+
+    @Test
+    @DisplayName("Deve alterar telefone com sucesso")
+    void deveAlterarTelefoneComSucesso() {
+        Cliente cliente = new Cliente();
+        String telefone = "11999999999";
+
+        Cliente clienteMock = new Cliente();
+        clienteMock.setTelefoneCliente(telefone);
+
+        when(clienteRepository.findByTelefoneCliente(telefone)).thenReturn(clienteMock);
+        when(clienteRepository.save(any())).thenReturn(cliente);
+
+        Cliente result = clienteService.alterarTelefoneCliente(cliente, telefone);
+
+        assertEquals(telefone, result.getTelefoneCliente());
+        verify(clienteRepository).save(cliente);
+    }
+
+    @Test
+    @DisplayName("Deve alterar os dados do cliente com sucesso")
+    void deveAlterarDadosClienteComSucesso() {
+
+
+        Cliente clienteExistente = new Cliente();
+        clienteExistente.setNomeCliente("Dafiner");
+        clienteExistente.setTelefoneCliente("11 98888777");
+
+
+        when(clienteRepository.findByNomeCliente("Dafiner")).thenReturn(clienteExistente);
+
+
+        Cliente clienteAtualizado = new Cliente();
+        clienteAtualizado.setNomeCliente("Dafiner");
+        clienteAtualizado.setTelefoneCliente("11 99999999");
+
+
+        Cliente resultado = clienteService.alterarDadosCliente(clienteAtualizado, "Dafiner", "11 99999999");
+
+
+        assertEquals("Dafiner", resultado.getNomeCliente());
+        assertEquals("11 99999999", resultado.getTelefoneCliente());
+
+
+        verify(clienteRepository, times(1)).save(clienteAtualizado);
+    }
 }
