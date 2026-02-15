@@ -1,6 +1,7 @@
 package com.Luciano.agendador_horarios.service;
 
 import com.Luciano.agendador_horarios.infrastructure.entity.Agendamento;
+import com.Luciano.agendador_horarios.infrastructure.entity.Servicos;
 import com.Luciano.agendador_horarios.infrastructure.repository.AgendamentoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class AgendamentoService {
 
     private final AgendamentoRepository agendamentoRepository;
 
-    public Agendamento salvarAgendamento(Agendamento agendamento){
+    public Agendamento salvarAgendamento(Agendamento agendamento) {
 
         LocalDateTime horaAgendamento = agendamento.getDataHoraAgendamento();
         LocalDateTime horaFim = agendamento.getDataHoraAgendamento().plusMinutes(1);
