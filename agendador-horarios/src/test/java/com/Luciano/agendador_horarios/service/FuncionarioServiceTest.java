@@ -42,5 +42,6 @@ import static org.mockito.Mockito.when;
         assertNotNull(resultado);
         assertEquals("Mario", resultado.getNomeFuncionario());
         verify(funcionarioRepository).save(any(Funcionario.class));
+        oo
     }
 }
