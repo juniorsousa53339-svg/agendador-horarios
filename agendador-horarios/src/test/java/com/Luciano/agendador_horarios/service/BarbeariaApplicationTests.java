@@ -1,9 +1,8 @@
-package com.Luciano.agendador_horarios;
+package com.Luciano.agendador_horarios.service;
 
 import com.Luciano.agendador_horarios.infrastructure.entity.Barbearia;
 import com.Luciano.agendador_horarios.infrastructure.entity.Proprietario;
 import com.Luciano.agendador_horarios.infrastructure.repository.BarbeariaRepository;
-import com.Luciano.agendador_horarios.service.BarbeariaService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
