@@ -41,12 +41,5 @@ public class FuncionarioController {
     public ResponseEntity<Funcionario> alterarTelefoneFuncionario(@RequestBody Funcionario funcionario, @RequestParam String telefoneFuncionario) {
         return ResponseEntity.accepted().body(funcionarioService.alterarTelefoneFuncionario(funcionario, telefoneFuncionario));
     }
-    @PutMapping("/alterar-dados")
-    public ResponseEntity<Funcionario> alterarDadosFuncionario(@RequestBody Funcionario funcionario,
-                                                               @RequestParam String nomeFuncionario,
-                                                               @RequestParam String telefoneFuncionario) {
-        return ResponseEntity.accepted().body(
-                funcionarioService.alterarDadosFuncionario(funcionario, nomeFuncionario, telefoneFuncionario)
-        );
-    }
+
 }

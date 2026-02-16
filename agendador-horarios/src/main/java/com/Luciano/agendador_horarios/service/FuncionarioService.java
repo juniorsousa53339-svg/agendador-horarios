@@ -55,16 +55,4 @@ public class FuncionarioService {
         funcionario.setTelefoneFuncionario(funcionarioComTelefone.getTelefoneFuncionario());
         return funcionarioRepository.save(funcionario);
     }
-
-    public Funcionario alterarDadosFuncionario(Funcionario funcionario, String nomeFuncionario, String telefoneFuncionario) {
-        Funcionario funcionarioExistente = funcionarioRepository.findByNomeFuncionario(nomeFuncionario);
-
-        if (Objects.isNull(funcionarioExistente)) {
-            throw new RuntimeException("Funcionário não encontrado.");
-        }
-
-        funcionario.setNomeFuncionario(nomeFuncionario);
-        funcionario.setTelefoneFuncionario(telefoneFuncionario);
-        return funcionarioRepository.save(funcionario);
-    }
 }
