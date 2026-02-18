@@ -34,8 +34,16 @@ public class ProprietarioService {
         return proprietarioRepository.save(proprietario);
     }
 
-    public void deletarProprietario(String nome) {
-        proprietarioRepository.deleteByNome(nome);
+    public void deletarProprietario(String nome, String senha, String senhaDigitada) {
+
+        Proprietario proprietario = proprietarioRepository.findByNome(nome);
+        proprietario.setSenha(senha);
+
+        if (passwordEncoder.matches(senhaDigitada, proprietario.getSenha())) {
+            proprietarioRepository.deleteByNome(nome);
+            return;
+        }
+        throw new RuntimeException("Senha invalida!");
     }
 
     public List<Proprietario> buscarProprietario(long idProprietario, String nome, String email) {
