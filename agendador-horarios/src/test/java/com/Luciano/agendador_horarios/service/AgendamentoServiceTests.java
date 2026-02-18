@@ -1,6 +1,7 @@
 package com.Luciano.agendador_horarios.service;
 
 import com.Luciano.agendador_horarios.infrastructure.entity.Agendamento;
+import com.Luciano.agendador_horarios.infrastructure.entity.Servicos;
 import com.Luciano.agendador_horarios.infrastructure.repository.AgendamentoRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,9 +29,11 @@ class AgendamentoServiceTest {
     @Test
     @DisplayName("Deve salvar agendamento com sucesso")
     void deveSalvarAgendamentoComSucesso() {
+        Servicos servico = new Servicos();
+        servico.setNomeServico("Corte");
 
         Agendamento agendamento = new Agendamento();
-        agendamento.setServico("Corte");
+        agendamento.setServico(servico);
         agendamento.setDataHoraAgendamento(LocalDateTime.now());
         when(agendamentoRepository
                 .findByServicoAndDataHoraAgendamentoBetween(anyString(), any(), any()))
