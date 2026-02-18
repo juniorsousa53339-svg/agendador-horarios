@@ -11,6 +11,8 @@ public class SecurityConfig {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoderProprietario() {
         return new BCryptPasswordEncoder();
+
+
     }
 
     @Bean
