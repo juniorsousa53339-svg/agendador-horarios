@@ -3,6 +3,7 @@ package com.Luciano.agendador_horarios.service;
 import com.Luciano.agendador_horarios.infrastructure.entity.Proprietario;
 import com.Luciano.agendador_horarios.infrastructure.repository.ProprietarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +14,13 @@ import java.util.Objects;
 public class ProprietarioService {
 
     private final ProprietarioRepository proprietarioRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public Proprietario salvarProprietario(Proprietario proprietario) {
+
+        String senhaCodificada = passwordEncoder.encode(proprietario.getSenha());
+        passwordEncoder.encode(proprietario.getSenha());
+
 
         String nome = proprietario.getNome();
         String telefone = proprietario.getTelefone();
