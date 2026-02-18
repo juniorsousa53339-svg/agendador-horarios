@@ -25,13 +25,14 @@ public class ProprietarioService {
     public Proprietario salvarProprietario(Proprietario proprietario) {
 
         String senhaCodificada = passwordEncoder.encode(proprietario.getSenha());
-        passwordEncoder.encode(proprietario.getSenha());
+        proprietario.setSenha(senhaCodificada);
 
 
-        String nome = proprietario.getNome();
-        String telefone = proprietario.getTelefone();
-
-        Proprietario proprietarioExistente = proprietarioRepository.findByNomeAndTelefone(nome, telefone);
+        Proprietario proprietarioExistente =
+                proprietarioRepository.findByNomeAndTelefone(
+                        proprietario.getNome(),
+                        proprietario.getTelefone()
+                );
 
         if (Objects.nonNull(proprietarioExistente)) {
             throw new RuntimeException("Proprietário já está cadastrado.");
@@ -43,6 +44,10 @@ public class ProprietarioService {
     public void deletarProprietario(String nome, String senhaDigitada) {
 
         Proprietario proprietario = proprietarioRepository.findByNome(nome);
+
+        if (proprietario == null) {
+            throw new RuntimeException("Proprietário não encontrado!");
+        }
 
         validarSenha(proprietario, senhaDigitada);
 
@@ -62,9 +67,10 @@ public class ProprietarioService {
         return proprietarioRepository.findByIdProprietarioAndNomeAndEmail(idProprietario, nome, email);
     }
 
-    public Proprietario alterarNome(Proprietario proprietario, String nome, String senhaDigitada) {
+    public Proprietario alterarNome(String nomeAtual, String novoNome, String senhaDigitada) {
 
-        Proprietario proprietarioExistente = proprietarioRepository.findByNome(nome);
+        Proprietario proprietarioExistente =
+                proprietarioRepository.findByNome(nomeAtual);
 
         if (Objects.isNull(proprietarioExistente)) {
             throw new RuntimeException("Proprietário não encontrado.");
@@ -72,14 +78,14 @@ public class ProprietarioService {
 
         validarSenha(proprietarioExistente, senhaDigitada);
 
-        proprietario.setNome(proprietarioExistente.getNome());
+        proprietarioExistente.setNome(novoNome);
 
-        return proprietarioRepository.save(proprietario);
+        return proprietarioRepository.save(proprietarioExistente);
     }
 
-    public Proprietario alterarTelefone(Proprietario proprietario, String telefone, String senhaDigitada) {
+    public Proprietario alterarTelefone(String telefoneAtual, String senhaDigitada,String telefoneNovo) {
 
-        Proprietario proprietarioComTelefone = proprietarioRepository.findByTelefone(telefone);
+        Proprietario proprietarioComTelefone = proprietarioRepository.findByTelefone(telefoneAtual);
 
         if (Objects.isNull(proprietarioComTelefone)) {
             throw new RuntimeException("Telefone não encontrado.");
@@ -87,14 +93,14 @@ public class ProprietarioService {
 
         validarSenha(proprietarioComTelefone, senhaDigitada);
 
-        proprietario.setTelefone(proprietarioComTelefone.getTelefone());
+        proprietarioComTelefone.setTelefone(telefoneNovo);
 
-        return proprietarioRepository.save(proprietario);
+        return proprietarioRepository.save(proprietarioComTelefone);
     }
 
-    public Proprietario alterarEmail(Proprietario proprietario, String email, String senhaDigitada) {
+    public Proprietario alterarEmail(String emailAtual, String senhaDigitada, String emailNovo) {
 
-        Proprietario proprietarioComEmail = proprietarioRepository.findByEmail(email);
+        Proprietario proprietarioComEmail = proprietarioRepository.findByEmail(emailAtual);
 
         if (Objects.isNull(proprietarioComEmail)) {
             throw new RuntimeException("Email não encontrado.");
@@ -102,8 +108,6 @@ public class ProprietarioService {
 
         validarSenha(proprietarioComEmail, senhaDigitada);
 
-        proprietario.setEmail(proprietarioComEmail.getEmail());
-
-        return proprietarioRepository.save(proprietario);
+        return proprietarioRepository.save(proprietarioComEmail);
     }
 }
