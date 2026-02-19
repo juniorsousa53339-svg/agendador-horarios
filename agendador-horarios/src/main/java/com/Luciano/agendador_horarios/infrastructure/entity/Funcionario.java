@@ -19,8 +19,9 @@ public class Funcionario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long idFuncionario;
+
+    private String senha;
 
     @NotNull
     private String nomeFuncionario;

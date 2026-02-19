@@ -1,9 +1,9 @@
 package com.Luciano.agendador_horarios.service;
 
 import com.Luciano.agendador_horarios.infrastructure.entity.Agendamento;
-import com.Luciano.agendador_horarios.infrastructure.entity.Servicos;
 import com.Luciano.agendador_horarios.infrastructure.repository.AgendamentoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,6 +16,7 @@ import java.util.Objects;
 public class AgendamentoService {
 
     private final AgendamentoRepository agendamentoRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public Agendamento salvarAgendamento(Agendamento agendamento) {
 

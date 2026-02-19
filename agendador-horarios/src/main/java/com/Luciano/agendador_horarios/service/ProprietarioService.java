@@ -2,6 +2,7 @@ package com.Luciano.agendador_horarios.service;
 
 import com.Luciano.agendador_horarios.infrastructure.entity.Proprietario;
 import com.Luciano.agendador_horarios.infrastructure.repository.ProprietarioRepository;
+import com.Luciano.agendador_horarios.security.PasswordValidatorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,19 +15,10 @@ import java.util.Objects;
 public class ProprietarioService {
 
     private final ProprietarioRepository proprietarioRepository;
+    private final PasswordValidatorService passwordValidatorService;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    private void validarSenha(Proprietario proprietario, String senhaDigitada) {
-        if (!passwordEncoder.matches(senhaDigitada, proprietario.getSenha())) {
-            throw new RuntimeException("Senha inválida!");
-        }
-    }
-
     public Proprietario salvarProprietario(Proprietario proprietario) {
-
-        String senhaCodificada = passwordEncoder.encode(proprietario.getSenha());
-        proprietario.setSenha(senhaCodificada);
-
 
         Proprietario proprietarioExistente =
                 proprietarioRepository.findByNomeAndTelefone(
@@ -37,6 +29,12 @@ public class ProprietarioService {
         if (Objects.nonNull(proprietarioExistente)) {
             throw new RuntimeException("Proprietário já está cadastrado.");
         }
+
+        String senhaCodificada = passwordEncoder.encode
+                (proprietario.getSenha());
+
+        proprietario.setSenha(senhaCodificada);
+
 
         return proprietarioRepository.save(proprietario);
     }
@@ -49,25 +47,37 @@ public class ProprietarioService {
             throw new RuntimeException("Proprietário não encontrado!");
         }
 
-        validarSenha(proprietario, senhaDigitada);
+        passwordValidatorService.validarSenha(proprietario, senhaDigitada);
 
         proprietarioRepository.deleteByNome(nome);
     }
 
-    public List<Proprietario> buscarProprietario(long idProprietario, String nome, String email, String senhaDigitada) {
+    public List<Proprietario> buscarProprietario(long idProprietario,
+                                                 String nome,
+                                                 String email,
+                                                 String senhaDigitada
+    ) {
 
-        Proprietario proprietario = proprietarioRepository.findByNome(nome);
+        Proprietario proprietario =
+                proprietarioRepository.findByNome(nome);
 
         if (proprietario == null) {
             throw new RuntimeException("Proprietário não encontrado!");
         }
 
-        validarSenha(proprietario, senhaDigitada);
+        passwordValidatorService.validarSenha(
+                proprietario, senhaDigitada
+        );
 
-        return proprietarioRepository.findByIdProprietarioAndNomeAndEmail(idProprietario, nome, email);
+        return proprietarioRepository.findByIdProprietarioAndNomeAndEmail
+                (idProprietario, nome, email);
     }
 
-    public Proprietario alterarNome(String nomeAtual, String novoNome, String senhaDigitada) {
+    public Proprietario alterarNome(String nomeAtual,
+                                    String novoNome,
+                                    String senhaDigitada,
+                                    Proprietario proprietario
+    ) {
 
         Proprietario proprietarioExistente =
                 proprietarioRepository.findByNome(nomeAtual);
@@ -76,38 +86,60 @@ public class ProprietarioService {
             throw new RuntimeException("Proprietário não encontrado.");
         }
 
-        validarSenha(proprietarioExistente, senhaDigitada);
+        passwordValidatorService.validarSenha
+                (proprietario, senhaDigitada);
 
-        proprietarioExistente.setNome(novoNome);
+        proprietarioExistente.setNome
+                (novoNome);
 
-        return proprietarioRepository.save(proprietarioExistente);
+        return proprietarioRepository.save
+                (proprietarioExistente);
     }
 
-    public Proprietario alterarTelefone(String telefoneAtual, String senhaDigitada,String telefoneNovo) {
+    public Proprietario alterarTelefone(
+            String telefoneAtual,
+            String senhaDigitada,
+            String telefoneNovo,
+            Proprietario proprietario
+    ) {
 
-        Proprietario proprietarioComTelefone = proprietarioRepository.findByTelefone(telefoneAtual);
+        Proprietario proprietarioComTelefone =
+                proprietarioRepository.findByTelefone
+                        (telefoneAtual);
 
         if (Objects.isNull(proprietarioComTelefone)) {
             throw new RuntimeException("Telefone não encontrado.");
         }
 
-        validarSenha(proprietarioComTelefone, senhaDigitada);
+        passwordValidatorService.validarSenha
+                (proprietario, senhaDigitada);
 
-        proprietarioComTelefone.setTelefone(telefoneNovo);
+        proprietarioComTelefone.setTelefone
+                (telefoneNovo);
 
-        return proprietarioRepository.save(proprietarioComTelefone);
+        return proprietarioRepository.save
+                (proprietarioComTelefone);
     }
 
-    public Proprietario alterarEmail(String emailAtual, String senhaDigitada, String emailNovo) {
+    public Proprietario alterarEmail(
+            String emailAtual,
+            String senhaDigitada,
+            String emailNovo,
+            Proprietario proprietario
+    ) {
 
-        Proprietario proprietarioComEmail = proprietarioRepository.findByEmail(emailAtual);
+        Proprietario proprietarioComEmail =
+                proprietarioRepository.
+                        findByEmail(emailAtual);
 
         if (Objects.isNull(proprietarioComEmail)) {
             throw new RuntimeException("Email não encontrado.");
         }
 
-        validarSenha(proprietarioComEmail, senhaDigitada);
+        passwordValidatorService.validarSenha
+                (proprietario, senhaDigitada);
 
-        return proprietarioRepository.save(proprietarioComEmail);
+        return proprietarioRepository.save
+                (proprietarioComEmail);
     }
 }
