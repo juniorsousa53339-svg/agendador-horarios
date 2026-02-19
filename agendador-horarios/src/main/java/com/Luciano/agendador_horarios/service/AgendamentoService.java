@@ -1,9 +1,7 @@
 package com.Luciano.agendador_horarios.service;
 
 import com.Luciano.agendador_horarios.infrastructure.entity.Agendamento;
-import com.Luciano.agendador_horarios.infrastructure.entity.Proprietario;
 import com.Luciano.agendador_horarios.infrastructure.repository.AgendamentoRepository;
-import com.Luciano.agendador_horarios.security.PasswordValidatorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
