@@ -4,6 +4,7 @@ import com.Luciano.agendador_horarios.infrastructure.entity.Barbearia;
 import com.Luciano.agendador_horarios.infrastructure.entity.Proprietario;
 import com.Luciano.agendador_horarios.infrastructure.repository.BarbeariaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -16,6 +17,7 @@ public class BarbeariaService {
 
     private final BarbeariaRepository barbeariaRepository;
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Barbearia salvarBarbearia(Barbearia barbearia) {
 
         String nomeBarbearia = barbearia.getNomeBarbearia();
@@ -29,14 +31,17 @@ public class BarbeariaService {
         return barbeariaRepository.save(barbearia);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public void deletarBarbearia(String nomeBarbearia) {
         barbeariaRepository.deleteByNomeBarbearia(nomeBarbearia);
     }
 
+    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public List<Barbearia> buscarBarbearia(long idBarbearia, String nomeBarbearia, String rua) {
         return barbeariaRepository.findByIdBarbeariaAndNomeBarbeariaAndRua(idBarbearia, nomeBarbearia, rua);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Barbearia alterarNomeBarbearia(Barbearia barbearia, String nomeBarbearia) {
         Barbearia barbeariaExistente = barbeariaRepository.findByNomeBarbearia(nomeBarbearia);
 
@@ -48,6 +53,7 @@ public class BarbeariaService {
         return barbeariaRepository.save(barbearia);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Barbearia alterarHorariosFun(Barbearia barbearia, LocalTime horarioAbertura, LocalTime horarioFechamento) {
         Barbearia barbeariaComHorario = barbeariaRepository.findByHorarioAberturaAndHorarioFechamento(horarioAbertura, horarioFechamento);
 
@@ -60,6 +66,7 @@ public class BarbeariaService {
         return barbeariaRepository.save(barbearia);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Barbearia alterarTelefone(Barbearia barbearia, String telefoneBarbearia) {
         Barbearia barbeariaComTelefone = barbeariaRepository.findByTelefoneBarbearia(telefoneBarbearia);
 
@@ -71,6 +78,7 @@ public class BarbeariaService {
         return barbeariaRepository.save(barbearia);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Barbearia alterarEndereco(Barbearia barbearia, String rua, String numeroRua) {
         Barbearia barbeariaComEndereco = barbeariaRepository.findByRuaAndNumeroRua(rua, numeroRua);
 
@@ -83,6 +91,7 @@ public class BarbeariaService {
         return barbeariaRepository.save(barbearia);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Barbearia alterarProprietario(Barbearia barbearia, Proprietario proprietario) {
         Barbearia barbeariaComProprietario = barbeariaRepository.findByProprietario(proprietario);
 

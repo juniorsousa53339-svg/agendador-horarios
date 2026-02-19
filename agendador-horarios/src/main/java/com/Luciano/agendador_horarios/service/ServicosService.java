@@ -3,6 +3,7 @@ package com.Luciano.agendador_horarios.service;
 import com.Luciano.agendador_horarios.infrastructure.entity.Servicos;
 import com.Luciano.agendador_horarios.infrastructure.repository.ServicosRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ public class ServicosService {
 
     private final ServicosRepository servicosRepository;
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Servicos salvarServico(Servicos servicos) {
 
         String nomeServico = servicos.getNomeServico();
@@ -30,10 +32,13 @@ public class ServicosService {
         return servicosRepository.save(servicos);
     }
 
+    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public void deletarServico(String nomeServico) {
         servicosRepository.deleteByNomeServico(nomeServico);
     }
 
+
+    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public List<Servicos> buscarServico(long idServico,
                                         String nomeServico,
                                         BigDecimal precoServico) {
@@ -42,6 +47,7 @@ public class ServicosService {
                 .findByIdServicoAndNomeServicoAndPrecoServico(idServico, nomeServico, precoServico);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Servicos alterarNomeServico(Servicos servicos, String nomeServico) {
 
         Servicos servicoExistente = servicosRepository.findByNomeServico(nomeServico);
@@ -54,6 +60,7 @@ public class ServicosService {
         return servicosRepository.save(servicos);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Servicos alterarPrecoServico(Servicos servicos, BigDecimal precoServico) {
 
         Servicos servicoComPreco = servicosRepository.findByPrecoServico(precoServico);
@@ -66,6 +73,7 @@ public class ServicosService {
         return servicosRepository.save(servicos);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Servicos alterarDescricaoServico(Servicos servicos, String descricaoServico) {
 
         Servicos servicoExistente =

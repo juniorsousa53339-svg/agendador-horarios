@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.antlr.v4.runtime.misc.NotNull;
 
-import javax.management.relation.Role;
+
 
 @Getter
 @Setter
@@ -22,13 +22,12 @@ public class Usuario {
     private Long id;
 
     @NotNull
-    private String email;
+    private String username;
 
     @NotNull
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
 
 }

@@ -3,6 +3,7 @@ package com.Luciano.agendador_horarios.service;
 import com.Luciano.agendador_horarios.infrastructure.entity.Agendamento;
 import com.Luciano.agendador_horarios.infrastructure.repository.AgendamentoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,6 @@ import java.util.Objects;
 public class AgendamentoService {
 
     private final AgendamentoRepository agendamentoRepository;
-    private final PasswordValidatorService passwordValidatorService;
-    private final BCryptPasswordEncoder passwordEncoder;
 
     public Agendamento salvarAgendamento(Agendamento agendamento) {
 
@@ -38,6 +37,7 @@ public class AgendamentoService {
         return agendamentoRepository.save(agendamento);
     }
 
+    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public void deletarAgendamento(
             LocalDateTime dataHoraAgendamento,
             String cliente
@@ -52,6 +52,7 @@ public class AgendamentoService {
         agendamentoRepository.deleteByDataHoraAgendamentoAndCliente(dataHoraAgendamento, cliente);
     }
 
+    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public List<Agendamento> buscarAgendamentosDia(
             LocalDate data,
             String cliente
@@ -70,6 +71,7 @@ public class AgendamentoService {
         return agendamentoRepository.findByDataHoraAgendamentoBetween(primeiraHoraDia, horaFinalDia);
     }
 
+    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public Agendamento alterarAgendamento(
             Agendamento agendamento,
             String cliente,

@@ -3,6 +3,7 @@ package com.Luciano.agendador_horarios.service;
 import com.Luciano.agendador_horarios.infrastructure.entity.Cliente;
 import com.Luciano.agendador_horarios.infrastructure.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,14 +26,17 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public void deletarCliente(String nomeCliente) {
         clienteRepository.deleteByNomeCliente(nomeCliente);
     }
 
+    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public List<Cliente> buscarCliente(long idCliente, String nomeCliente) {
         return clienteRepository.findByIdClienteAndNomeCliente(idCliente, nomeCliente);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Cliente alterarNomeCliente(Cliente cliente, String nomeCliente) {
         Cliente clienteExistente = clienteRepository.findByNomeCliente(nomeCliente);
 
@@ -44,6 +48,7 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Cliente alterarTelefoneCliente(Cliente cliente, String telefoneCliente) {
         Cliente clienteComTelefone = clienteRepository.findByTelefoneCliente(telefoneCliente);
 
@@ -55,6 +60,7 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Cliente alterarDadosCliente(Cliente cliente, String nomeCliente, String telefoneCliente) {
         Cliente clienteExistente = clienteRepository.findByNomeCliente(nomeCliente);
 

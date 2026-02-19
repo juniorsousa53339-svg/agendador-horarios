@@ -3,6 +3,7 @@ package com.Luciano.agendador_horarios.service;
 import com.Luciano.agendador_horarios.infrastructure.entity.Proprietario;
 import com.Luciano.agendador_horarios.infrastructure.repository.ProprietarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +15,9 @@ import java.util.Objects;
 public class ProprietarioService {
 
     private final ProprietarioRepository proprietarioRepository;
-    private final PasswordValidatorService passwordValidatorService;
     private final BCryptPasswordEncoder passwordEncoder;
 
+//     VER Se presisa de autorizacão
     public Proprietario salvarProprietario(Proprietario proprietario) {
 
         Proprietario proprietarioExistente =
@@ -32,6 +33,7 @@ public class ProprietarioService {
         return proprietarioRepository.save(proprietario);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public void deletarProprietario(String nome) {
 
         Proprietario proprietario = proprietarioRepository.findByNome(nome);
@@ -42,7 +44,7 @@ public class ProprietarioService {
 
         proprietarioRepository.deleteByNome(nome);
     }
-
+    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public List<Proprietario> buscarProprietario(
             long idProprietario,
             String nome,
@@ -60,6 +62,7 @@ public class ProprietarioService {
                 (idProprietario, nome, email);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Proprietario alterarNome(String nomeAtual,
                                     String novoNome) {
 
@@ -77,6 +80,7 @@ public class ProprietarioService {
                 (proprietarioExistente);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Proprietario alterarTelefone(
             String telefoneAtual,
             String telefoneNovo
@@ -97,6 +101,7 @@ public class ProprietarioService {
                 (proprietarioComTelefone);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Proprietario alterarEmail(
             String emailAtual,
             String emailNovo

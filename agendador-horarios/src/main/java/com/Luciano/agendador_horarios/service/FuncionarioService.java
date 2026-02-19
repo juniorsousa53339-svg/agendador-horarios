@@ -3,6 +3,7 @@ package com.Luciano.agendador_horarios.service;
 import com.Luciano.agendador_horarios.infrastructure.entity.Funcionario;
 import com.Luciano.agendador_horarios.infrastructure.repository.FuncionarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public class FuncionarioService {
 
     private final FuncionarioRepository funcionarioRepository;
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Funcionario salvarFuncionario(Funcionario funcionario) {
 
         String nomeFuncionario = funcionario.getNomeFuncionario();
@@ -26,14 +28,17 @@ public class FuncionarioService {
         return funcionarioRepository.save(funcionario);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public void deletarFuncionario(String nomeFuncionario) {
         funcionarioRepository.deleteByNomeFuncionario(nomeFuncionario);
     }
 
+    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public List<Funcionario> buscarFuncionario(long idFuncionario, String nomeFuncionario) {
         return funcionarioRepository.findByIdFuncionarioAndNomeFuncionario(idFuncionario, nomeFuncionario);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Funcionario alterarNomeFuncionario(Funcionario funcionario, String nomeFuncionario) {
         Funcionario funcionarioExistente = funcionarioRepository.findByNomeFuncionario(nomeFuncionario);
 
@@ -45,6 +50,7 @@ public class FuncionarioService {
         return funcionarioRepository.save(funcionario);
     }
 
+    @PreAuthorize("hasRole('Proprietario')")
     public Funcionario alterarTelefoneFuncionario(Funcionario funcionario, String telefoneFuncionario) {
         Funcionario funcionarioComTelefone = funcionarioRepository.findByTelefoneFuncionario(telefoneFuncionario);
 
