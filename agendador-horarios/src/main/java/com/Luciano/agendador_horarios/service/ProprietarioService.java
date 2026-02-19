@@ -30,16 +30,10 @@ public class ProprietarioService {
             throw new RuntimeException("Proprietário já está cadastrado.");
         }
 
-        String senhaCodificada = passwordEncoder.encode
-                (proprietario.getSenha());
-
-        proprietario.setSenha(senhaCodificada);
-
-
         return proprietarioRepository.save(proprietario);
     }
 
-    public void deletarProprietario(String nome, String senhaDigitada) {
+    public void deletarProprietario(String nome) {
 
         Proprietario proprietario = proprietarioRepository.findByNome(nome);
 
@@ -47,15 +41,13 @@ public class ProprietarioService {
             throw new RuntimeException("Proprietário não encontrado!");
         }
 
-        passwordValidatorService.validarSenha(proprietario, senhaDigitada);
-
         proprietarioRepository.deleteByNome(nome);
     }
 
-    public List<Proprietario> buscarProprietario(long idProprietario,
-                                                 String nome,
-                                                 String email,
-                                                 String senhaDigitada
+    public List<Proprietario> buscarProprietario(
+            long idProprietario,
+            String nome,
+            String email
     ) {
 
         Proprietario proprietario =
@@ -65,19 +57,12 @@ public class ProprietarioService {
             throw new RuntimeException("Proprietário não encontrado!");
         }
 
-        passwordValidatorService.validarSenha(
-                proprietario, senhaDigitada
-        );
-
         return proprietarioRepository.findByIdProprietarioAndNomeAndEmail
                 (idProprietario, nome, email);
     }
 
     public Proprietario alterarNome(String nomeAtual,
-                                    String novoNome,
-                                    String senhaDigitada,
-                                    Proprietario proprietario
-    ) {
+                                    String novoNome) {
 
         Proprietario proprietarioExistente =
                 proprietarioRepository.findByNome(nomeAtual);
@@ -85,9 +70,6 @@ public class ProprietarioService {
         if (Objects.isNull(proprietarioExistente)) {
             throw new RuntimeException("Proprietário não encontrado.");
         }
-
-        passwordValidatorService.validarSenha
-                (proprietario, senhaDigitada);
 
         proprietarioExistente.setNome
                 (novoNome);
@@ -98,9 +80,7 @@ public class ProprietarioService {
 
     public Proprietario alterarTelefone(
             String telefoneAtual,
-            String senhaDigitada,
-            String telefoneNovo,
-            Proprietario proprietario
+            String telefoneNovo
     ) {
 
         Proprietario proprietarioComTelefone =
@@ -111,9 +91,6 @@ public class ProprietarioService {
             throw new RuntimeException("Telefone não encontrado.");
         }
 
-        passwordValidatorService.validarSenha
-                (proprietario, senhaDigitada);
-
         proprietarioComTelefone.setTelefone
                 (telefoneNovo);
 
@@ -123,9 +100,7 @@ public class ProprietarioService {
 
     public Proprietario alterarEmail(
             String emailAtual,
-            String senhaDigitada,
-            String emailNovo,
-            Proprietario proprietario
+            String emailNovo
     ) {
 
         Proprietario proprietarioComEmail =
@@ -135,9 +110,6 @@ public class ProprietarioService {
         if (Objects.isNull(proprietarioComEmail)) {
             throw new RuntimeException("Email não encontrado.");
         }
-
-        passwordValidatorService.validarSenha
-                (proprietario, senhaDigitada);
 
         return proprietarioRepository.save
                 (proprietarioComEmail);
