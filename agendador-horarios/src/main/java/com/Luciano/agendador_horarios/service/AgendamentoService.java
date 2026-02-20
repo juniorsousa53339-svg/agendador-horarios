@@ -4,7 +4,6 @@ import com.Luciano.agendador_horarios.infrastructure.entity.Agendamento;
 import com.Luciano.agendador_horarios.infrastructure.repository.AgendamentoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,14 +22,14 @@ public class AgendamentoService {
         LocalDateTime horaAgendamento = agendamento.getDataHoraAgendamento();
         LocalDateTime horaFim = agendamento.getDataHoraAgendamento().plusMinutes(1);
 
-        Agendamento agendados =
-                agendamentoRepository.findByServicoAndDataHoraAgendamentoBetween(
-                        String.valueOf(agendamento.getServico())
-                        , horaAgendamento
-                        , horaFim
-                );
+        Agendamento agendamentoExistente = null;
+        agendamentoExistente = agendamentoRepository.findByServicoAndDataHoraAgendamentoBetween(
+                String.valueOf(agendamento.getServico()),
+                horaAgendamento,
+                horaFim
+        );
 
-        if (Objects.nonNull(agendados)) {
+        if (Objects.nonNull(agendamentoExistente)) {
             throw new RuntimeException("Horário já está preenchido");
         }
 
@@ -43,11 +42,12 @@ public class AgendamentoService {
             String cliente
     ) {
 
-      Agendamento agendamento = agendamentoRepository.findByCliete(cliente);
+        Agendamento agendamento = null;
+        agendamento = agendamentoRepository.findByDataHoraAgendamentoAndCliente(dataHoraAgendamento, cliente);
 
-       if (Objects.nonNull(agendamento)) {
-           throw new RuntimeException("Agendamento não encontrado!");
-       }
+        if (Objects.isNull(agendamento)) {
+            throw new RuntimeException("Agendamento não encontrado!");
+        }
 
         agendamentoRepository.deleteByDataHoraAgendamentoAndCliente(dataHoraAgendamento, cliente);
     }
@@ -58,17 +58,24 @@ public class AgendamentoService {
             String cliente
     ) {
 
-        Agendamento agendamento =
-                agendamentoRepository.findByCliete(cliente);
+        Agendamento agendamento = null;
+        agendamento = agendamentoRepository.findByCliente(cliente);
 
-        if (Objects.nonNull(agendamento)) {
+        if (Objects.isNull(agendamento)) {
             throw new RuntimeException("Agendamento não encontrado!");
         }
 
         LocalDateTime primeiraHoraDia = data.atStartOfDay();
         LocalDateTime horaFinalDia = data.atTime(20, 59, 59);
 
-        return agendamentoRepository.findByDataHoraAgendamentoBetween(primeiraHoraDia, horaFinalDia);
+        List<Agendamento> agendamentosDia = null;
+        agendamentosDia = agendamentoRepository.findByDataHoraAgendamentoBetween(primeiraHoraDia, horaFinalDia);
+
+        if (Objects.isNull(agendamentosDia) || agendamentosDia.isEmpty()) {
+            throw new RuntimeException("Nenhum agendamento encontrado para o dia informado!");
+        }
+
+        return agendamentosDia;
     }
 
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
@@ -77,16 +84,15 @@ public class AgendamentoService {
             String cliente,
             LocalDateTime dataHoraAgendamento
     ) {
-        Agendamento agenda = agendamentoRepository.
-                findByDataHoraAgendamentoAndCliente(
-                dataHoraAgendamento, cliente
-        );
 
-        if (Objects.isNull(agenda)) {
+        Agendamento agendamentoExistente = null;
+        agendamentoExistente = agendamentoRepository.findByDataHoraAgendamentoAndCliente(dataHoraAgendamento, cliente);
+
+        if (Objects.isNull(agendamentoExistente)) {
             throw new RuntimeException("Horário não está preenchido");
         }
 
-        agendamento.setIdAgendamento(agenda.getIdAgendamento());
+        agendamento.setIdAgendamento(agendamentoExistente.getIdAgendamento());
         return agendamentoRepository.save(agendamento);
     }
 }

@@ -53,6 +53,9 @@ class AgendamentoServiceTest {
         LocalDateTime dataHora = LocalDateTime.now();
         String cliente = "Luciano";
 
+        when(agendamentoRepository.findByDataHoraAgendamentoAndCliente(dataHora, cliente))
+                .thenReturn(new Agendamento());
+
         agendamentoService.deletarAgendamento(dataHora, cliente);
 
         verify(agendamentoRepository, times(1))
@@ -65,10 +68,12 @@ class AgendamentoServiceTest {
 
         LocalDate data = LocalDate.now();
 
+        when(agendamentoRepository.findByCliente(anyString()))
+                .thenReturn(new Agendamento());
         when(agendamentoRepository.findByDataHoraAgendamentoBetween(any(), any()))
                 .thenReturn(List.of(new Agendamento()));
 
-        List<Agendamento> resultado = agendamentoService.buscarAgendamentosDia(data);
+        List<Agendamento> resultado = agendamentoService.buscarAgendamentosDia(data, "Luciano");
 
         assertNotNull(resultado);
         verify(agendamentoRepository, times(1))
