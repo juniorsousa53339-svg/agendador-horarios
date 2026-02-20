@@ -4,7 +4,6 @@ import com.Luciano.agendador_horarios.infrastructure.entity.Proprietario;
 import com.Luciano.agendador_horarios.infrastructure.repository.ProprietarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,16 +14,13 @@ import java.util.Objects;
 public class ProprietarioService {
 
     private final ProprietarioRepository proprietarioRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
-
-//     VER Se presisa de autorizacão
     public Proprietario salvarProprietario(Proprietario proprietario) {
 
-        Proprietario proprietarioExistente =
-                proprietarioRepository.findByNomeAndTelefone(
-                        proprietario.getNome(),
-                        proprietario.getTelefone()
-                );
+        Proprietario proprietarioExistente = null;
+        proprietarioExistente = proprietarioRepository.findByNomeAndTelefone(
+                proprietario.getNome(),
+                proprietario.getTelefone()
+        );
 
         if (Objects.nonNull(proprietarioExistente)) {
             throw new RuntimeException("Proprietário já está cadastrado.");
@@ -33,17 +29,19 @@ public class ProprietarioService {
         return proprietarioRepository.save(proprietario);
     }
 
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public void deletarProprietario(String nome) {
 
-        Proprietario proprietario = proprietarioRepository.findByNome(nome);
+        Proprietario proprietario = null;
+        proprietario = proprietarioRepository.findByNome(nome);
 
-        if (proprietario == null) {
+        if (Objects.isNull(proprietario)) {
             throw new RuntimeException("Proprietário não encontrado!");
         }
 
         proprietarioRepository.deleteByNome(nome);
     }
+
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public List<Proprietario> buscarProprietario(
             long idProprietario,
@@ -51,71 +49,62 @@ public class ProprietarioService {
             String email
     ) {
 
-        Proprietario proprietario =
-                proprietarioRepository.findByNome(nome);
+        List<Proprietario> proprietarios = null;
+        proprietarios = proprietarioRepository.findByIdProprietarioAndNomeAndEmail(idProprietario, nome, email);
 
-        if (proprietario == null) {
+        if (Objects.isNull(proprietarios) || proprietarios.isEmpty()) {
             throw new RuntimeException("Proprietário não encontrado!");
         }
 
-        return proprietarioRepository.findByIdProprietarioAndNomeAndEmail
-                (idProprietario, nome, email);
+        return proprietarios;
     }
 
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Proprietario alterarNome(String nomeAtual,
                                     String novoNome) {
 
-        Proprietario proprietarioExistente =
-                proprietarioRepository.findByNome(nomeAtual);
+        Proprietario proprietarioExistente = null;
+        proprietarioExistente = proprietarioRepository.findByNome(nomeAtual);
 
         if (Objects.isNull(proprietarioExistente)) {
             throw new RuntimeException("Proprietário não encontrado.");
         }
 
-        proprietarioExistente.setNome
-                (novoNome);
-
-        return proprietarioRepository.save
-                (proprietarioExistente);
+        proprietarioExistente.setNome(novoNome);
+        return proprietarioRepository.save(proprietarioExistente);
     }
 
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Proprietario alterarTelefone(
             String telefoneAtual,
             String telefoneNovo
     ) {
 
-        Proprietario proprietarioComTelefone =
-                proprietarioRepository.findByTelefone
-                        (telefoneAtual);
+        Proprietario proprietarioComTelefone = null;
+        proprietarioComTelefone = proprietarioRepository.findByTelefone(telefoneAtual);
 
         if (Objects.isNull(proprietarioComTelefone)) {
             throw new RuntimeException("Telefone não encontrado.");
         }
 
-        proprietarioComTelefone.setTelefone
-                (telefoneNovo);
-
-        return proprietarioRepository.save
-                (proprietarioComTelefone);
+        proprietarioComTelefone.setTelefone(telefoneNovo);
+        return proprietarioRepository.save(proprietarioComTelefone);
     }
 
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Proprietario alterarEmail(
             String emailAtual,
             String emailNovo
     ) {
 
-        Proprietario proprietarioComEmail =
-                proprietarioRepository.
-                        findByEmail(emailAtual);
+        Proprietario proprietarioComEmail = null;
+        proprietarioComEmail = proprietarioRepository.findByEmail(emailAtual);
 
         if (Objects.isNull(proprietarioComEmail)) {
             throw new RuntimeException("Email não encontrado.");
         }
 
-        return proprietarioRepository.save
-                (proprietarioComEmail);
+        proprietarioComEmail.setEmail(emailNovo);
+        return proprietarioRepository.save(proprietarioComEmail);
     }
 }
