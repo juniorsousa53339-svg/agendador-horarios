@@ -1,6 +1,7 @@
 package com.Luciano.agendador_horarios.controller;
 
 import com.Luciano.agendador_horarios.infrastructure.entity.Agendamento;
+import com.Luciano.agendador_horarios.infrastructure.entity.Cliente;
 import com.Luciano.agendador_horarios.service.AgendamentoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,16 +24,16 @@ public class AgendamentoController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deletarAgendamento(@RequestParam String cliente,
+    public ResponseEntity<Void> deletarAgendamento(@RequestParam Cliente clienteNome,
                                                    @RequestParam LocalDateTime dataHoraAgendamento) {
 
-        agendamentoService.deletarAgendamento(dataHoraAgendamento, cliente);
+        agendamentoService.deletarAgendamento(dataHoraAgendamento, clienteNome);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<Agendamento>> buscarAgendamentosDia(@RequestParam LocalDate data,String cliente) {
-        return ResponseEntity.ok().body(agendamentoService.buscarAgendamentosDia(data,cliente));
+    public ResponseEntity<List<Agendamento>> buscarAgendamentosDia(@RequestParam LocalDate data, Cliente clienteNome) {
+        return ResponseEntity.ok().body(agendamentoService.buscarAgendamentosDia(data,clienteNome));
     }
 
     @PutMapping
