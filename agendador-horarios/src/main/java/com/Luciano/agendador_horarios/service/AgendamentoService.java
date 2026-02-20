@@ -1,10 +1,10 @@
 package com.Luciano.agendador_horarios.service;
 
 import com.Luciano.agendador_horarios.infrastructure.entity.Agendamento;
+import com.Luciano.agendador_horarios.infrastructure.entity.Cliente;
 import com.Luciano.agendador_horarios.infrastructure.repository.AgendamentoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -40,7 +40,7 @@ public class AgendamentoService {
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public void deletarAgendamento(
             LocalDateTime dataHoraAgendamento,
-            String cliente
+            Cliente cliente
     ) {
 
       Agendamento agendamento = agendamentoRepository.findByCliete(cliente);
@@ -49,16 +49,17 @@ public class AgendamentoService {
            throw new RuntimeException("Agendamento não encontrado!");
        }
 
-        agendamentoRepository.deleteByDataHoraAgendamentoAndCliente(dataHoraAgendamento, cliente);
+        agendamentoRepository.deleteByDataHoraAgendamentoAndCliente(dataHoraAgendamento,cliente);
     }
 
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public List<Agendamento> buscarAgendamentosDia(
             LocalDate data,
-            String cliente
+            Cliente cliente
     ) {
+         Agendamento agendamento = null;
 
-        Agendamento agendamento =
+        agendamento =
                 agendamentoRepository.findByCliete(cliente);
 
         if (Objects.nonNull(agendamento)) {
