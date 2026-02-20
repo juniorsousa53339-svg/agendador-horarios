@@ -49,17 +49,16 @@ public class AgendamentoService {
            throw new RuntimeException("Agendamento não encontrado!");
        }
 
-        agendamentoRepository.deleteByDataHoraAgendamentoAndCliente(dataHoraAgendamento,cliente);
+        agendamentoRepository.deleteByDataHoraAgendamentoAndCliente(dataHoraAgendamento, cliente);
     }
 
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public List<Agendamento> buscarAgendamentosDia(
             LocalDate data,
-            Cliente cliente
+          Cliente cliente
     ) {
-         Agendamento agendamento = null;
 
-        agendamento =
+        Agendamento agendamento =
                 agendamentoRepository.findByCliete(cliente);
 
         if (Objects.nonNull(agendamento)) {
@@ -75,7 +74,7 @@ public class AgendamentoService {
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public Agendamento alterarAgendamento(
             Agendamento agendamento,
-            String cliente,
+            Cliente cliente,
             LocalDateTime dataHoraAgendamento
     ) {
         Agendamento agenda = agendamentoRepository.
