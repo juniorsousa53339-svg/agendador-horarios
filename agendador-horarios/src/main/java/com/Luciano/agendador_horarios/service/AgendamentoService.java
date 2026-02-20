@@ -1,6 +1,7 @@
 package com.Luciano.agendador_horarios.service;
 
 import com.Luciano.agendador_horarios.infrastructure.entity.Agendamento;
+import com.Luciano.agendador_horarios.infrastructure.entity.Cliente;
 import com.Luciano.agendador_horarios.infrastructure.repository.AgendamentoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,7 +40,7 @@ public class AgendamentoService {
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public void deletarAgendamento(
             LocalDateTime dataHoraAgendamento,
-            String cliente
+            Cliente cliente
     ) {
 
         Agendamento agendamento = null;
@@ -55,7 +56,7 @@ public class AgendamentoService {
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public List<Agendamento> buscarAgendamentosDia(
             LocalDate data,
-            String cliente
+          Cliente cliente
     ) {
 
         Agendamento agendamento = null;
@@ -81,7 +82,7 @@ public class AgendamentoService {
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public Agendamento alterarAgendamento(
             Agendamento agendamento,
-            String cliente,
+            Cliente cliente,
             LocalDateTime dataHoraAgendamento
     ) {
 
