@@ -31,8 +31,8 @@ public class AgendamentoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Agendamento>> buscarAgendamentosDia(@RequestParam LocalDate data) {
-        return ResponseEntity.ok().body(agendamentoService.buscarAgendamentosDia(data));
+    public ResponseEntity<List<Agendamento>> buscarAgendamentosDia(@RequestParam LocalDate data,String cliente) {
+        return ResponseEntity.ok().body(agendamentoService.buscarAgendamentosDia(data,cliente));
     }
 
     @PutMapping

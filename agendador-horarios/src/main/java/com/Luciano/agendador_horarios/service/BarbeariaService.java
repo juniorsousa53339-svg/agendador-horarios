@@ -23,7 +23,8 @@ public class BarbeariaService {
         String nomeBarbearia = barbearia.getNomeBarbearia();
         Proprietario proprietario = barbearia.getProprietario();
 
-        Barbearia barbeariaExistente = barbeariaRepository.findByNomeBarbeariaAndProprietario(nomeBarbearia, proprietario);
+        Barbearia barbeariaExistente =
+                barbeariaRepository.findByNomeBarbeariaAndProprietario(nomeBarbearia, proprietario);
 
         if (Objects.nonNull(barbeariaExistente)) {
             throw new RuntimeException("Barbearia já está cadastrada.");
