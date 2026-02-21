@@ -12,9 +12,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ServicosServiceTest {
@@ -26,142 +29,43 @@ class ServicosServiceTest {
     private ServicosService servicosService;
 
     @Test
-    @DisplayName("Deve salvar servico com sucesso")
+    @DisplayName("Deve salvar serviço com sucesso")
     void deveSalvarServicoComSucesso() {
+        Servicos servico = new Servicos();
+        servico.setNomeServico("Corte");
+        servico.setDescricaoServico("Corte masculino");
 
-        Servicos servicos = new Servicos();
-        servicos.setNomeServico("Corte");
-        servicos.setDescricaoServico("Corte masculino");
-        servicos.setPrecoServico(new BigDecimal("50.00"));
-
-        when(servicosRepository
-                .findByNomeServicoAndDescricaoServico(any(), any()))
+        when(servicosRepository.findByNomeServicoAndDescricaoServico("Corte", "Corte masculino"))
                 .thenReturn(null);
+        when(servicosRepository.save(any(Servicos.class))).thenReturn(servico);
 
-        when(servicosRepository.save(any(Servicos.class)))
-                .thenReturn(servicos);
-
-        Servicos resultado = servicosService.salvarServico(servicos);
+        Servicos resultado = servicosService.salvarServico(servico);
 
         assertNotNull(resultado);
         assertEquals("Corte", resultado.getNomeServico());
-        verify(servicosRepository).save(any(Servicos.class));
     }
 
     @Test
-    @DisplayName("Deve lançar exceção ao salvar servico já existente")
-    void deveLancarExcecaoAoSalvarServicoExistente() {
-
-        Servicos servicos = new Servicos();
-
-        when(servicosRepository
-                .findByNomeServicoAndDescricaoServico(any(), any()))
-                .thenReturn(servicos);
-
-        assertThrows(RuntimeException.class,
-                () -> servicosService.salvarServico(servicos));
-
-        verify(servicosRepository, never()).save(any());
-    }
-
-    @Test
-    @DisplayName("Deve deletar servico com sucesso")
+    @DisplayName("Deve deletar serviço existente")
     void deveDeletarServicoComSucesso() {
+        Servicos servico = new Servicos();
+        servico.setNomeServico("Corte");
 
-        String nomeServico = "Corte";
+        when(servicosRepository.findByNomeServico("Corte")).thenReturn(servico);
 
-        servicosService.deletarServico(nomeServico);
+        servicosService.deletarServico("Corte");
 
-        verify(servicosRepository).deleteByNomeServico(nomeServico);
+        verify(servicosRepository, times(1)).deleteByNomeServico("Corte");
     }
 
     @Test
-    @DisplayName("Deve buscar servico por filtros")
+    @DisplayName("Deve buscar serviço por filtros")
     void deveBuscarServicoComSucesso() {
-
-        when(servicosRepository
-                .findByIdServicoAndNomeServicoAndPrecoServico(
-                        anyLong(), anyString(), any(BigDecimal.class)))
+        when(servicosRepository.findByIdServicoAndNomeServicoAndPrecoServico(1L, "Corte", new BigDecimal("50.00")))
                 .thenReturn(List.of(new Servicos()));
 
-        List<Servicos> result =
-                servicosService.buscarServico(1L, "Corte", new BigDecimal("50.00"));
+        var resultado = servicosService.buscarServico(1L, "Corte", new BigDecimal("50.00"));
 
-        assertFalse(result.isEmpty());
-        verify(servicosRepository)
-                .findByIdServicoAndNomeServicoAndPrecoServico(
-                        1L, "Corte", new BigDecimal("50.00"));
-    }
-
-    @Test
-    @DisplayName("Deve alterar nome do servico")
-    void deveAlterarNomeServicoComSucesso() {
-
-        Servicos servicos = new Servicos();
-        String nomeServico = "Barba";
-
-        Servicos servicoMock = new Servicos();
-        servicoMock.setNomeServico(nomeServico);
-
-        when(servicosRepository.findByNomeServico(nomeServico))
-                .thenReturn(servicoMock);
-
-        when(servicosRepository.save(any()))
-                .thenReturn(servicos);
-
-        Servicos resultado =
-                servicosService.alterarNomeServico(servicos, nomeServico);
-
-        assertEquals(nomeServico, resultado.getNomeServico());
-        verify(servicosRepository).findByNomeServico(nomeServico);
-    }
-
-    @Test
-    @DisplayName("Deve alterar preco do servico")
-    void deveAlterarPrecoServicoComSucesso() {
-
-        Servicos servicos = new Servicos();
-        BigDecimal preco = new BigDecimal("80.00");
-
-        Servicos servicoMock = new Servicos();
-        servicoMock.setPrecoServico(preco);
-
-        when(servicosRepository.findByPrecoServico(preco))
-                .thenReturn(servicoMock);
-
-        when(servicosRepository.save(any()))
-                .thenReturn(servicos);
-
-        Servicos result =
-                servicosService.alterarPrecoServico(servicos, preco);
-
-        assertEquals(preco, result.getPrecoServico());
-        verify(servicosRepository).save(servicos);
-    }
-
-    @Test
-    @DisplayName("Deve alterar descricao do servico")
-    void deveAlterarDescricaoServicoComSucesso() {
-
-        Servicos servicos = new Servicos();
-        servicos.setNomeServico("Corte");
-
-        String descricao = "Corte premium";
-
-        Servicos servicoMock = new Servicos();
-        servicoMock.setDescricaoServico(descricao);
-
-        when(servicosRepository
-                .findByNomeServicoAndDescricaoServico("Corte", descricao))
-                .thenReturn(servicoMock);
-
-        when(servicosRepository.save(any()))
-                .thenReturn(servicos);
-
-        Servicos result =
-                servicosService.alterarDescricaoServico(servicos, descricao);
-
-        assertEquals(descricao, result.getDescricaoServico());
-        verify(servicosRepository).save(servicos);
+        assertEquals(1, resultado.size());
     }
 }

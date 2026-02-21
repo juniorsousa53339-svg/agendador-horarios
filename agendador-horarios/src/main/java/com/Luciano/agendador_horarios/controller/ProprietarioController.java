@@ -4,7 +4,14 @@ import com.Luciano.agendador_horarios.infrastructure.entity.Proprietario;
 import com.Luciano.agendador_horarios.service.ProprietarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -22,42 +29,48 @@ public class ProprietarioController {
 
     @DeleteMapping
     public ResponseEntity<Void> deletarProprietario(@RequestParam String nome) {
-
         proprietarioService.deletarProprietario(nome);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<Proprietario>> buscarProprietario
-            (@RequestParam String nome,
-             @RequestParam long id_proprietario,
-             @RequestParam String email) {
-
-        return ResponseEntity.ok()
-                .body(proprietarioService.buscarProprietario(id_proprietario, nome, email));
+    public ResponseEntity<List<Proprietario>> buscarProprietario(
+            @RequestParam String nome,
+            @RequestParam long idProprietario,
+            @RequestParam String email
+    ) {
+        return ResponseEntity.ok().body(
+                proprietarioService.buscarProprietario(idProprietario, nome, email)
+        );
     }
 
-    @PutMapping("/proprietarios/alterar-nome")
-    public ResponseEntity<Proprietario> alterarNome(@RequestBody Proprietario proprietario,
-                                                    @RequestParam String nome) {
-
-        return ResponseEntity.accepted()
-                .body(proprietarioService.alterarNome(proprietario, nome));
+    @PutMapping("/alterar-nome")
+    public ResponseEntity<Proprietario> alterarNome(
+            @RequestParam String nomeAtual,
+            @RequestParam String novoNome
+    ) {
+        return ResponseEntity.accepted().body(
+                proprietarioService.alterarNome(nomeAtual, novoNome)
+        );
     }
 
-    @PutMapping("/proprietarios/alterar-telefone")
-    public ResponseEntity<Proprietario> alterarTelefone(@RequestBody Proprietario proprietario,
-                                                        @RequestParam String telefone) {
-
-        return ResponseEntity.accepted()
-                .body(proprietarioService.alterarTelefone(proprietario, telefone));
+    @PutMapping("/alterar-telefone")
+    public ResponseEntity<Proprietario> alterarTelefone(
+            @RequestParam String telefoneAtual,
+            @RequestParam String telefoneNovo
+    ) {
+        return ResponseEntity.accepted().body(
+                proprietarioService.alterarTelefone(telefoneAtual, telefoneNovo)
+        );
     }
 
-    @PutMapping("/proprietarios/alterar-email")
-    public ResponseEntity<Proprietario> alterarEmail(@RequestBody Proprietario proprietario,
-                                                     @RequestParam String email) {
-
-        return ResponseEntity.accepted()
-                .body(proprietarioService.alterarEmail(proprietario, email));
+    @PutMapping("/alterar-email")
+    public ResponseEntity<Proprietario> alterarEmail(
+            @RequestParam String emailAtual,
+            @RequestParam String emailNovo
+    ) {
+        return ResponseEntity.accepted().body(
+                proprietarioService.alterarEmail(emailAtual, emailNovo)
+        );
     }
 }

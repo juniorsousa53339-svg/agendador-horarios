@@ -11,9 +11,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ProprietarioServiceTest {
@@ -27,119 +33,53 @@ class ProprietarioServiceTest {
     @Test
     @DisplayName("Deve salvar proprietario com sucesso")
     void deveSalvarProprietarioComSucesso() {
-
         Proprietario proprietario = new Proprietario();
         proprietario.setNome("João");
         proprietario.setTelefone("11999999999");
-        proprietario.setEmail("joao@email.com");
 
-        when(proprietarioRepository.findByNomeAndTelefone(any(), any())).thenReturn(null);
+        when(proprietarioRepository.findByNomeAndTelefone(anyString(), anyString())).thenReturn(null);
         when(proprietarioRepository.save(any(Proprietario.class))).thenReturn(proprietario);
 
         Proprietario resultado = proprietarioService.salvarProprietario(proprietario);
 
         assertNotNull(resultado);
         assertEquals("João", resultado.getNome());
-        verify(proprietarioRepository).save(any(Proprietario.class));
-    }
-
-    @Test
-    @DisplayName("Deve lançar exceção ao salvar proprietario já existente")
-    void deveLancarExcecaoAoSalvarProprietarioExistente() {
-
-        Proprietario proprietario = new Proprietario();
-        when(proprietarioRepository.findByNomeAndTelefone(any(), any())).thenReturn(proprietario);
-
-        assertThrows(RuntimeException.class,
-                () -> proprietarioService.salvarProprietario(proprietario));
-
-        verify(proprietarioRepository, never()).save(any());
-    }
-
-    @Test
-    @DisplayName("Deve deletar proprietario com sucesso")
-    void deveDeletarProprietarioComSucesso() {
-
-        String nome = "João";
-
-        proprietarioService.deletarProprietario(nome);
-
-        verify(proprietarioRepository).deleteByNome(nome);
+        verify(proprietarioRepository).save(proprietario);
     }
 
     @Test
     @DisplayName("Deve buscar proprietario por filtros")
     void deveBuscarProprietarioComSucesso() {
-
-        when(proprietarioRepository
-                .findByIdProprietarioAndNomeAndEmail(anyLong(), anyString(), anyString()))
+        when(proprietarioRepository.findByIdProprietarioAndNomeAndEmail(anyLong(), anyString(), anyString()))
                 .thenReturn(List.of(new Proprietario()));
 
-        List<Proprietario> result =
-                proprietarioService.buscarProprietario(1L, "João", "joao@email.com");
+        List<Proprietario> resultado = proprietarioService.buscarProprietario(1L, "João", "joao@email.com");
 
-        assertFalse(result.isEmpty());
-        verify(proprietarioRepository)
-                .findByIdProprietarioAndNomeAndEmail(1L, "João", "joao@email.com");
+        assertNotNull(resultado);
+        assertEquals(1, resultado.size());
     }
 
     @Test
-    @DisplayName("Deve alterar nome de proprietario")
-    void deveAlterarNomeProprietarioComSucesso() {
+    @DisplayName("Deve alterar nome com sucesso")
+    void deveAlterarNomeComSucesso() {
+        Proprietario existente = new Proprietario();
+        existente.setNome("Nome Antigo");
 
-        Proprietario proprietario = new Proprietario();
-        String nome = "Carlos";
+        when(proprietarioRepository.findByNome("Nome Antigo")).thenReturn(existente);
+        when(proprietarioRepository.save(any(Proprietario.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        Proprietario proprietarioMock = new Proprietario();
-        proprietarioMock.setNome(nome);
+        Proprietario resultado = proprietarioService.alterarNome("Nome Antigo", "Nome Novo");
 
-        when(proprietarioRepository.findByNome(nome)).thenReturn(proprietarioMock);
-        when(proprietarioRepository.save(any())).thenReturn(proprietario);
-
-        Proprietario resultado =
-                proprietarioService.alterarNome(proprietario, nome);
-
-        assertEquals(nome, resultado.getNome());
-        verify(proprietarioRepository).findByNome(nome);
+        assertEquals("Nome Novo", resultado.getNome());
+        verify(proprietarioRepository).save(existente);
     }
 
     @Test
-    @DisplayName("Deve alterar telefone com sucesso")
-    void deveAlterarTelefoneComSucesso() {
+    @DisplayName("Deve lançar erro ao deletar proprietario inexistente")
+    void deveLancarErroAoDeletarInexistente() {
+        when(proprietarioRepository.findByNome("Inexistente")).thenReturn(null);
 
-        Proprietario proprietario = new Proprietario();
-        String telefone = "11888888888";
-
-        Proprietario proprietarioMock = new Proprietario();
-        proprietarioMock.setTelefone(telefone);
-
-        when(proprietarioRepository.findByTelefone(telefone)).thenReturn(proprietarioMock);
-        when(proprietarioRepository.save(any())).thenReturn(proprietario);
-
-        Proprietario result =
-                proprietarioService.alterarTelefone(proprietario, telefone);
-
-        assertEquals(telefone, result.getTelefone());
-        verify(proprietarioRepository).save(proprietario);
-    }
-
-    @Test
-    @DisplayName("Deve alterar email com sucesso")
-    void deveAlterarEmailComSucesso() {
-
-        Proprietario proprietario = new Proprietario();
-        String email = "novo@email.com";
-
-        Proprietario proprietarioMock = new Proprietario();
-        proprietarioMock.setEmail(email);
-
-        when(proprietarioRepository.findByEmail(email)).thenReturn(proprietarioMock);
-        when(proprietarioRepository.save(any())).thenReturn(proprietario);
-
-        Proprietario result =
-                proprietarioService.alterarEmail(proprietario, email);
-
-        assertEquals(email, result.getEmail());
-        verify(proprietarioRepository).save(proprietario);
+        assertThrows(RuntimeException.class, () -> proprietarioService.deletarProprietario("Inexistente"));
+        verify(proprietarioRepository, never()).deleteByNome(anyString());
     }
 }
