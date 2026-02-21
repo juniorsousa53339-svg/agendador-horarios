@@ -20,7 +20,8 @@ public class AgendamentoService {
 
     public Agendamento salvarAgendamento(Agendamento agendamento) {
 
-
+        LocalDateTime horaAgendamento = agendamento.getDataHoraAgendamento();
+        LocalDateTime horaFim = agendamento.getDataHoraAgendamento().plusMinutes(1);
 
         Agendamento agendados =
                 agendamentoRepository.findByServicoAndDataHoraAgendamentoBetween(
@@ -42,7 +43,7 @@ public class AgendamentoService {
             Cliente cliente
     ) {
 
-      Agendamento agendamento = agendamentoRepository.findByCliente(cliente);
+      Agendamento agendamento = agendamentoRepository.findByCliete(cliente);
 
        if (Objects.nonNull(agendamento)) {
            throw new RuntimeException("Agendamento não encontrado!");
@@ -58,7 +59,7 @@ public class AgendamentoService {
     ) {
 
         Agendamento agendamento =
-                agendamentoRepository.findByCliente(cliente);
+                agendamentoRepository.findByCliete(cliente);
 
         if (Objects.nonNull(agendamento)) {
             throw new RuntimeException("Agendamento não encontrado!");
@@ -81,7 +82,7 @@ public class AgendamentoService {
                 dataHoraAgendamento, cliente
         );
 
-        if (Objects.nonNull(agenda)) {
+        if (Objects.isNull(agenda)) {
             throw new RuntimeException("Horário não está preenchido");
         }
 
