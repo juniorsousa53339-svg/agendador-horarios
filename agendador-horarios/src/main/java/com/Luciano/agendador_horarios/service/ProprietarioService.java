@@ -61,7 +61,7 @@ public class ProprietarioService {
 
     @PreAuthorize("hasRole('PROPRIETARIO')")
     public Proprietario alterarNome(String nomeAtual,
-                                    String novoNome) {
+                                    String nomeNovo) {
 
         Proprietario proprietarioExistente = null;
         proprietarioExistente = proprietarioRepository.findByNome(nomeAtual);
@@ -70,7 +70,7 @@ public class ProprietarioService {
             throw new RuntimeException("Proprietário não encontrado.");
         }
 
-        proprietarioExistente.setNome(novoNome);
+        proprietarioExistente.setNome(nomeNovo);
         return proprietarioRepository.save(proprietarioExistente);
     }
 

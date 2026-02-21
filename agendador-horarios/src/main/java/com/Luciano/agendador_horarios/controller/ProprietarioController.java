@@ -38,26 +38,27 @@ public class ProprietarioController {
     }
 
     @PutMapping("/proprietarios/alterar-nome")
-    public ResponseEntity<Proprietario> alterarNome(@RequestBody Proprietario proprietario,
-                                                    @RequestParam String nome) {
+    public ResponseEntity<Proprietario> alterarNome(@RequestParam String nomeNovo,@RequestParam String nomeAtual) {
 
         return ResponseEntity.accepted()
-                .body(proprietarioService.alterarNome(proprietario, nome));
+                .body(proprietarioService.alterarNome(nomeAtual,nomeNovo));
     }
 
     @PutMapping("/proprietarios/alterar-telefone")
     public ResponseEntity<Proprietario> alterarTelefone(@RequestBody Proprietario proprietario,
-                                                        @RequestParam String telefone) {
+                                                        @RequestParam String telefoneAtual,
+                                                        @RequestParam String telefoneNovo) {
 
         return ResponseEntity.accepted()
-                .body(proprietarioService.alterarTelefone(proprietario, telefone));
+                .body(proprietarioService.alterarTelefone(telefoneAtual,telefoneNovo));
     }
 
     @PutMapping("/proprietarios/alterar-email")
     public ResponseEntity<Proprietario> alterarEmail(@RequestBody Proprietario proprietario,
-                                                     @RequestParam String email) {
+                                                     @RequestParam String emailAtual,
+                                                     @RequestParam String emailNovo) {
 
         return ResponseEntity.accepted()
-                .body(proprietarioService.alterarEmail(proprietario, email));
+                .body(proprietarioService.alterarEmail(emailAtual,emailNovo));
     }
 }
