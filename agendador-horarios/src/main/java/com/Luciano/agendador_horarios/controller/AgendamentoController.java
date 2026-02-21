@@ -19,29 +19,47 @@ public class AgendamentoController {
     private final AgendamentoService agendamentoService;
 
     @PostMapping
-    public ResponseEntity<Agendamento> salvarAgendamento(@RequestBody Agendamento agendamento) {
+    public ResponseEntity<Agendamento> salvarAgendamento
+
+            (
+                    @RequestBody Agendamento agendamento
+            ) {
+
         return ResponseEntity.accepted().body(agendamentoService.salvarAgendamento(agendamento));
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deletarAgendamento(@RequestParam Cliente cliente,
-                                                   @RequestParam LocalDateTime dataHoraAgendamento) {
+    public ResponseEntity<Void> deletarAgendamento
+
+            (
+                    @RequestParam Cliente cliente,
+                    @RequestParam LocalDateTime dataHoraAgendamento
+            ) {
 
         agendamentoService.deletarAgendamento(dataHoraAgendamento, cliente);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<Agendamento>> buscarAgendamentosDia(@RequestParam LocalDate data,
-                                                                   @RequestParam Cliente cliente) {
+    public ResponseEntity<List<Agendamento>> buscarAgendamentosDia
 
-        return ResponseEntity.ok().body(agendamentoService.buscarAgendamentosDia(data,cliente));
+            (
+                    @RequestParam LocalDate data,
+                    @RequestBody Cliente cliente
+            ) {
+
+        return ResponseEntity.ok().body(agendamentoService.buscarAgendamentosDia(data, cliente));
     }
 
     @PutMapping
-    public ResponseEntity<Agendamento> alterarAgendamentos(@RequestBody Agendamento agendamento,
-                                                           @RequestParam Cliente cliente,
-                                                           @RequestParam LocalDateTime dataHoraAgendamento) {
+    public ResponseEntity<Agendamento> alterarAgendamentos
+
+            (
+                    @RequestBody Agendamento agendamento,
+                    @RequestBody Cliente cliente,
+                    @RequestParam LocalDateTime dataHoraAgendamento
+            ) {
+
         return ResponseEntity.accepted().body(agendamentoService.alterarAgendamento(agendamento,
                 cliente, dataHoraAgendamento));
     }

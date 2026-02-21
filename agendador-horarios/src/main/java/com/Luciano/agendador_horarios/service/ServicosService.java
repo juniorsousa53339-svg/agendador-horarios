@@ -19,11 +19,14 @@ public class ServicosService {
     @PreAuthorize("hasRole('PROPRIETARIO')")
     public Servicos salvarServico(Servicos servicos) {
 
-        String nomeServico = servicos.getNomeServico();
-        String descricaoServico = servicos.getDescricaoServico();
+        Servicos servicoExistente =
+                servicosRepository.findByNomeServicoAndDescricaoServico(
 
-        Servicos servicoExistente = null;
-        servicoExistente = servicosRepository.findByNomeServicoAndDescricaoServico(nomeServico, descricaoServico);
+                        servicos.getNomeServico(),
+                        servicos.getDescricaoServico(),
+                        servicos.getPrecoServico()
+
+                );
 
         if (Objects.nonNull(servicoExistente)) {
             throw new RuntimeException("Serviço já está cadastrado.");
@@ -35,8 +38,8 @@ public class ServicosService {
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public void deletarServico(String nomeServico) {
 
-        Servicos servico = null;
-        servico = servicosRepository.findByNomeServico(nomeServico);
+        Servicos servico =
+                servicosRepository.findByNomeServico(nomeServico);
 
         if (Objects.isNull(servico)) {
             throw new RuntimeException("Serviço não encontrado.");
@@ -51,8 +54,8 @@ public class ServicosService {
                                         String nomeServico,
                                         BigDecimal precoServico) {
 
-        List<Servicos> servicos = null;
-        servicos = servicosRepository
+        List<Servicos> servicos =
+                servicosRepository
                 .findByIdServicoAndNomeServicoAndPrecoServico(idServico, nomeServico, precoServico);
 
         if (Objects.isNull(servicos) || servicos.isEmpty()) {
@@ -63,47 +66,45 @@ public class ServicosService {
     }
 
     @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Servicos alterarNomeServico(Servicos servicos, String nomeServico) {
+    public Servicos alterarNomeServico(String nomeServicoAtual, String nomeServicoNovo) {
 
-        Servicos servicoExistente = null;
-        servicoExistente = servicosRepository.findByNomeServico(nomeServico);
+        Servicos servicoExistente =
+                servicosRepository.findByNomeServico(nomeServicoAtual);
 
         if (Objects.isNull(servicoExistente)) {
             throw new RuntimeException("Serviço não encontrado.");
         }
 
-        servicos.setNomeServico(servicoExistente.getNomeServico());
-        return servicosRepository.save(servicos);
+        servicoExistente.setNomeServico(nomeServicoNovo);
+        return servicosRepository.save(servicoExistente);
     }
 
     @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Servicos alterarPrecoServico(Servicos servicos, BigDecimal precoServico) {
+    public Servicos alterarPrecoServico(BigDecimal precoServicoAtual, BigDecimal precoServicoNovo) {
 
-        Servicos servicoComPreco = null;
-        servicoComPreco = servicosRepository.findByPrecoServico(precoServico);
+        Servicos servicoComPreco =
+                servicosRepository.findByPrecoServico(precoServicoAtual);
 
         if (Objects.isNull(servicoComPreco)) {
             throw new RuntimeException("Preço não encontrado.");
         }
 
-        servicos.setPrecoServico(servicoComPreco.getPrecoServico());
-        return servicosRepository.save(servicos);
+        servicoComPreco.setPrecoServico(precoServicoNovo);
+        return servicosRepository.save(servicoComPreco);
     }
 
     @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Servicos alterarDescricaoServico(Servicos servicos, String descricaoServico) {
+    public Servicos alterarDescricaoServico( String descricaoAtual,String descricaoNova) {
 
-        Servicos servicoExistente = null;
-        servicoExistente = servicosRepository.findByNomeServicoAndDescricaoServico(
-                servicos.getNomeServico(),
-                descricaoServico
-        );
+        Servicos servicoExistente =
+                servicosRepository.findByDescricaoServico(
+                        descricaoAtual);
 
         if (Objects.isNull(servicoExistente)) {
             throw new RuntimeException("Descrição não encontrada.");
         }
 
-        servicos.setDescricaoServico(servicoExistente.getDescricaoServico());
-        return servicosRepository.save(servicos);
+        servicoExistente.setDescricaoServico(descricaoNova);
+        return servicosRepository.save(servicoExistente);
     }
 }

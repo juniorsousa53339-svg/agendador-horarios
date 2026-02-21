@@ -43,7 +43,7 @@ public class AgendamentoService {
             Cliente cliente
     ) {
 
-      Agendamento agendamento = agendamentoRepository.findByCliete(cliente);
+      Agendamento agendamento = agendamentoRepository.findByCliente(cliente);
 
        if (Objects.nonNull(agendamento)) {
            throw new RuntimeException("Agendamento não encontrado!");
@@ -59,7 +59,7 @@ public class AgendamentoService {
     ) {
 
         Agendamento agendamento =
-                agendamentoRepository.findByCliete(cliente);
+                agendamentoRepository.findByCliente(cliente);
 
         if (Objects.nonNull(agendamento)) {
             throw new RuntimeException("Agendamento não encontrado!");
@@ -82,7 +82,7 @@ public class AgendamentoService {
                 dataHoraAgendamento, cliente
         );
 
-        if (Objects.isNull(agenda)) {
+        if (Objects.nonNull(agenda)) {
             throw new RuntimeException("Horário não está preenchido");
         }
 

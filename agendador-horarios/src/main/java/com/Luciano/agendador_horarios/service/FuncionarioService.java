@@ -50,7 +50,8 @@ public class FuncionarioService {
     public List<Funcionario> buscarFuncionario(long idFuncionario, String nomeFuncionario) {
 
         List<Funcionario> funcionarios =
-                funcionarioRepository.findByIdFuncionarioAndNomeFuncionario(idFuncionario, nomeFuncionario);
+                funcionarioRepository.findByIdFuncionarioAndNomeFuncionario
+                        (idFuncionario, nomeFuncionario);
 
         if (Objects.isNull(funcionarios) || funcionarios.isEmpty()) {
             throw new RuntimeException("Funcionário não encontrado.");

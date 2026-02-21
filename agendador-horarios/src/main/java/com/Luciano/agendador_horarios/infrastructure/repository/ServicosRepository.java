@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ServicosRepository extends JpaRepository<Servicos, Long> {
 
-    Servicos findByNomeServicoAndDescricaoServico(String nomeServico, String descricaoServico);
+    Servicos findByNomeServicoAndDescricaoServico(String nomeServico, String descricaoServico, BigDecimal precoServico);
 
     @Transactional
     void deleteByNomeServico(String nomeServico);
@@ -21,4 +21,6 @@ public interface ServicosRepository extends JpaRepository<Servicos, Long> {
     Servicos findByNomeServico(String nomeServico);
 
     Servicos findByPrecoServico(BigDecimal precoServico);
+
+    Servicos findByDescricaoServico(String descricaoAtual);
 }
