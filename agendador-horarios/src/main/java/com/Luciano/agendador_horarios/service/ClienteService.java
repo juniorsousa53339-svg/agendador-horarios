@@ -17,9 +17,10 @@ public class ClienteService {
 
     public Cliente salvarCliente(Cliente cliente) {
 
-        String nomeCliente = cliente.getNomeCliente();
-        Cliente clienteExistente = null;
-        clienteExistente = clienteRepository.findByNomeCliente(nomeCliente);
+
+        Cliente clienteExistente =
+        clienteRepository.findByNomeCliente(
+                cliente.getNomeCliente());
 
         if (Objects.nonNull(clienteExistente)) {
             throw new RuntimeException("Cliente já cadastrado.");
@@ -30,8 +31,8 @@ public class ClienteService {
     @PreAuthorize("hasRole('PROPRIETARIO')")
     public void deletarCliente(String nomeCliente) {
 
-        Cliente cliente = null;
-        cliente = clienteRepository.findByNomeCliente(nomeCliente);
+        Cliente cliente =
+         clienteRepository.findByNomeCliente(nomeCliente);
 
         if (Objects.isNull(cliente)) {
             throw new RuntimeException("Cliente não encontrado.");
@@ -43,8 +44,8 @@ public class ClienteService {
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public List<Cliente> buscarCliente(long idCliente, String nomeCliente) {
 
-        List<Cliente> clientes = null;
-        clientes = clienteRepository.findByIdClienteAndNomeCliente(idCliente, nomeCliente);
+        List<Cliente> clientes =
+         clienteRepository.findByIdClienteAndNomeCliente(idCliente, nomeCliente);
 
         if (Objects.isNull(clientes) || clientes.isEmpty()) {
             throw new RuntimeException("Cliente não encontrado.");
@@ -54,45 +55,31 @@ public class ClienteService {
     }
 
     @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Cliente alterarNomeCliente(Cliente cliente, String nomeCliente) {
+    public Cliente alterarNomeCliente(String atualNomeCliente,
+                                      String novoNomeCliente) {
 
-        Cliente clienteExistente = null;
-        clienteExistente = clienteRepository.findByNomeCliente(nomeCliente);
+        Cliente clienteExistente =
+         clienteRepository.findByNomeCliente(atualNomeCliente);
 
         if (Objects.isNull(clienteExistente)) {
             throw new RuntimeException("Cliente não encontrado.");
         }
 
-        cliente.setNomeCliente(nomeCliente);
-        return clienteRepository.save(cliente);
+        clienteExistente.setNomeCliente(novoNomeCliente);
+        return clienteRepository.save(clienteExistente);
     }
 
     @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Cliente alterarTelefoneCliente(Cliente cliente, String telefoneCliente) {
+    public Cliente alterarTelefoneCliente(String telefoneAtual, String TelefoneNovo) {
 
-        Cliente clienteComTelefone = null;
-        clienteComTelefone = clienteRepository.findByTelefoneCliente(telefoneCliente);
+        Cliente clienteComTelefone =
+        clienteRepository.findByTelefoneCliente(telefoneAtual);
 
         if (Objects.isNull(clienteComTelefone)) {
             throw new RuntimeException("Telefone não encontrado.");
         }
 
-        cliente.setTelefoneCliente(clienteComTelefone.getTelefoneCliente());
-        return clienteRepository.save(cliente);
-    }
-
-    @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Cliente alterarDadosCliente(Cliente cliente, String nomeCliente, String telefoneCliente) {
-
-        Cliente clienteExistente = null;
-        clienteExistente = clienteRepository.findByNomeCliente(nomeCliente);
-
-        if (Objects.isNull(clienteExistente)) {
-            throw new RuntimeException("Cliente não encontrado.");
-        }
-
-        cliente.setNomeCliente(nomeCliente);
-        cliente.setTelefoneCliente(telefoneCliente);
-        return clienteRepository.save(cliente);
+        clienteComTelefone.setTelefoneCliente(TelefoneNovo);
+        return clienteRepository.save(clienteComTelefone);
     }
 }

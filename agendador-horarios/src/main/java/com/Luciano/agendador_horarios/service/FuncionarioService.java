@@ -18,10 +18,14 @@ public class FuncionarioService {
     @PreAuthorize("hasRole('PROPRIETARIO')")
     public Funcionario salvarFuncionario(Funcionario funcionario) {
 
-        String nomeFuncionario = funcionario.getNomeFuncionario();
 
-        Funcionario funcionarioExistente = null;
-        funcionarioExistente = funcionarioRepository.findByNomeFuncionario(nomeFuncionario);
+        Funcionario funcionarioExistente =
+         funcionarioRepository.findByNomeFuncionarioAndTelefoneAndEspecialidade(
+
+                 funcionario.getNomeFuncionario(),
+                 funcionario.getTelefoneFuncionario(),
+                funcionario.getEspecialidade()
+         );
 
         if (Objects.nonNull(funcionarioExistente)) {
             throw new RuntimeException("Funcionário já está cadastrado.");
@@ -32,8 +36,8 @@ public class FuncionarioService {
     @PreAuthorize("hasRole('PROPRIETARIO')")
     public void deletarFuncionario(String nomeFuncionario) {
 
-        Funcionario funcionario = null;
-        funcionario = funcionarioRepository.findByNomeFuncionario(nomeFuncionario);
+        Funcionario funcionario =
+                funcionarioRepository.findByNomeFuncionario(nomeFuncionario);
 
         if (Objects.isNull(funcionario)) {
             throw new RuntimeException("Funcionário não encontrado.");
@@ -45,8 +49,8 @@ public class FuncionarioService {
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public List<Funcionario> buscarFuncionario(long idFuncionario, String nomeFuncionario) {
 
-        List<Funcionario> funcionarios = null;
-        funcionarios = funcionarioRepository.findByIdFuncionarioAndNomeFuncionario(idFuncionario, nomeFuncionario);
+        List<Funcionario> funcionarios =
+                funcionarioRepository.findByIdFuncionarioAndNomeFuncionario(idFuncionario, nomeFuncionario);
 
         if (Objects.isNull(funcionarios) || funcionarios.isEmpty()) {
             throw new RuntimeException("Funcionário não encontrado.");
@@ -56,30 +60,30 @@ public class FuncionarioService {
     }
 
     @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Funcionario alterarNomeFuncionario(Funcionario funcionario, String nomeFuncionario) {
+    public Funcionario alterarNomeFuncionario(String nomeAtual, String nomeNovo) {
 
-        Funcionario funcionarioExistente = null;
-        funcionarioExistente = funcionarioRepository.findByNomeFuncionario(nomeFuncionario);
+        Funcionario funcionarioExistente =
+                funcionarioRepository.findByNomeFuncionario(nomeAtual);
 
         if (Objects.isNull(funcionarioExistente)) {
             throw new RuntimeException("Funcionário não encontrado.");
         }
 
-        funcionario.setNomeFuncionario(nomeFuncionario);
-        return funcionarioRepository.save(funcionario);
+        funcionarioExistente.setNomeFuncionario(nomeNovo);
+        return funcionarioRepository.save(funcionarioExistente);
     }
 
     @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Funcionario alterarTelefoneFuncionario(Funcionario funcionario, String telefoneFuncionario) {
+    public Funcionario alterarTelefoneFuncionario(String telefoneAtual, String nomeNovo) {
 
-        Funcionario funcionarioComTelefone = null;
-        funcionarioComTelefone = funcionarioRepository.findByTelefoneFuncionario(telefoneFuncionario);
+        Funcionario funcionarioComTelefone =
+                funcionarioRepository.findByTelefoneFuncionario(telefoneAtual);
 
         if (Objects.isNull(funcionarioComTelefone)) {
             throw new RuntimeException("Telefone não encontrado.");
         }
 
-        funcionario.setTelefoneFuncionario(funcionarioComTelefone.getTelefoneFuncionario());
-        return funcionarioRepository.save(funcionario);
+        funcionarioComTelefone.setTelefoneFuncionario(nomeNovo);
+        return funcionarioRepository.save(funcionarioComTelefone);
     }
 }
