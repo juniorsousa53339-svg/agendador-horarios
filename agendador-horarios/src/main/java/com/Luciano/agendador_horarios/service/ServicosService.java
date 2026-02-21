@@ -16,14 +16,14 @@ public class ServicosService {
 
     private final ServicosRepository servicosRepository;
 
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Servicos salvarServico(Servicos servicos) {
 
         String nomeServico = servicos.getNomeServico();
         String descricaoServico = servicos.getDescricaoServico();
 
-        Servicos servicoExistente =
-                servicosRepository.findByNomeServicoAndDescricaoServico(nomeServico, descricaoServico);
+        Servicos servicoExistente = null;
+        servicoExistente = servicosRepository.findByNomeServicoAndDescricaoServico(nomeServico, descricaoServico);
 
         if (Objects.nonNull(servicoExistente)) {
             throw new RuntimeException("Serviço já está cadastrado.");
@@ -34,6 +34,14 @@ public class ServicosService {
 
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public void deletarServico(String nomeServico) {
+
+        Servicos servico = null;
+        servico = servicosRepository.findByNomeServico(nomeServico);
+
+        if (Objects.isNull(servico)) {
+            throw new RuntimeException("Serviço não encontrado.");
+        }
+
         servicosRepository.deleteByNomeServico(nomeServico);
     }
 
@@ -43,14 +51,22 @@ public class ServicosService {
                                         String nomeServico,
                                         BigDecimal precoServico) {
 
-        return servicosRepository
+        List<Servicos> servicos = null;
+        servicos = servicosRepository
                 .findByIdServicoAndNomeServicoAndPrecoServico(idServico, nomeServico, precoServico);
+
+        if (Objects.isNull(servicos) || servicos.isEmpty()) {
+            throw new RuntimeException("Serviço não encontrado.");
+        }
+
+        return servicos;
     }
 
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Servicos alterarNomeServico(Servicos servicos, String nomeServico) {
 
-        Servicos servicoExistente = servicosRepository.findByNomeServico(nomeServico);
+        Servicos servicoExistente = null;
+        servicoExistente = servicosRepository.findByNomeServico(nomeServico);
 
         if (Objects.isNull(servicoExistente)) {
             throw new RuntimeException("Serviço não encontrado.");
@@ -60,10 +76,11 @@ public class ServicosService {
         return servicosRepository.save(servicos);
     }
 
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Servicos alterarPrecoServico(Servicos servicos, BigDecimal precoServico) {
 
-        Servicos servicoComPreco = servicosRepository.findByPrecoServico(precoServico);
+        Servicos servicoComPreco = null;
+        servicoComPreco = servicosRepository.findByPrecoServico(precoServico);
 
         if (Objects.isNull(servicoComPreco)) {
             throw new RuntimeException("Preço não encontrado.");
@@ -73,12 +90,14 @@ public class ServicosService {
         return servicosRepository.save(servicos);
     }
 
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Servicos alterarDescricaoServico(Servicos servicos, String descricaoServico) {
 
-        Servicos servicoExistente =
-                servicosRepository.findByNomeServicoAndDescricaoServico(servicos.getNomeServico(),
-                        descricaoServico);
+        Servicos servicoExistente = null;
+        servicoExistente = servicosRepository.findByNomeServicoAndDescricaoServico(
+                servicos.getNomeServico(),
+                descricaoServico
+        );
 
         if (Objects.isNull(servicoExistente)) {
             throw new RuntimeException("Descrição não encontrada.");
