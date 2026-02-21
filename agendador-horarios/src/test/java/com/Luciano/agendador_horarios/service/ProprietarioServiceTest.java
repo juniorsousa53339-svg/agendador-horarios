@@ -85,22 +85,26 @@ class ProprietarioServiceTest {
 
     @Test
     @DisplayName("Deve alterar nome de proprietario")
-    void deveAlterarNomeProprietarioComSucesso() {
+    void deveAlterarNomeProprietarioComSucesso(String nomeAtual, String nomeNovo) {
 
         Proprietario proprietario = new Proprietario();
-        String nome = "Carlos";
+         nomeAtual = "Carlos";
+         nomeNovo = "Marcus";
 
         Proprietario proprietarioMock = new Proprietario();
-        proprietarioMock.setNome(nome);
+        proprietarioMock.setNome(nomeAtual);
 
-        when(proprietarioRepository.findByNome(nome)).thenReturn(proprietarioMock);
-        when(proprietarioRepository.save(any())).thenReturn(proprietario);
+        when(proprietarioRepository.findByNome(nomeAtual))
+                .thenReturn(proprietarioMock);
+
+        when(proprietarioRepository.save(any()))
+                .thenReturn(proprietarioMock);
 
         Proprietario resultado =
-                proprietarioService.alterarNome(proprietario, nome);
+                proprietarioService.alterarNome(nomeAtual,nomeNovo);
 
-        assertEquals(nome, resultado.getNome());
-        verify(proprietarioRepository).findByNome(nome);
+        assertEquals(nomeNovo, resultado.getNome());
+        verify(proprietarioRepository).findByNome(nomeAtual);
     }
 
     @Test
