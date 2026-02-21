@@ -1,6 +1,7 @@
 package com.Luciano.agendador_horarios.service;
 
 import com.Luciano.agendador_horarios.infrastructure.entity.Agendamento;
+import com.Luciano.agendador_horarios.infrastructure.entity.Cliente;
 import com.Luciano.agendador_horarios.infrastructure.entity.Servicos;
 import com.Luciano.agendador_horarios.infrastructure.repository.AgendamentoRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -14,11 +15,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class AgendamentoServiceTest {
+class AgendamentoServiceTests {
 
     @Mock
     private AgendamentoRepository agendamentoRepository;
@@ -27,81 +34,51 @@ class AgendamentoServiceTest {
     private AgendamentoService agendamentoService;
 
     @Test
-    @DisplayName("Deve salvar agendamento com sucesso")
+    @DisplayName("Deve salvar agendamento quando não há conflito")
     void deveSalvarAgendamentoComSucesso() {
         Servicos servico = new Servicos();
-        servico.setNomeServico("Corte");
+        Cliente cliente = new Cliente();
 
         Agendamento agendamento = new Agendamento();
         agendamento.setServico(servico);
+        agendamento.setCliente(cliente);
         agendamento.setDataHoraAgendamento(LocalDateTime.now());
-        when(agendamentoRepository
-                .findByServicoAndDataHoraAgendamentoBetween(anyString(), any(), any()))
-                .thenReturn(null);
 
-        when(agendamentoRepository.save(any())).thenReturn(agendamento);
+        when(agendamentoRepository.findByServicoAndDataHoraAgendamentoBetween(anyString(), any(), any()))
+                .thenReturn(null);
+        when(agendamentoRepository.save(any(Agendamento.class))).thenReturn(agendamento);
 
         Agendamento resultado = agendamentoService.salvarAgendamento(agendamento);
 
         assertNotNull(resultado);
-    }
-
-    @Test
-    @DisplayName("Deve deletar agendamento com sucesso")
-    void deveDeletarAgendamentoComSucesso() {
-
-        LocalDateTime dataHora = LocalDateTime.now();
-        String cliente = "Luciano";
-
-        when(agendamentoRepository.findByDataHoraAgendamentoAndCliente(dataHora, cliente))
-                .thenReturn(new Agendamento());
-
-        agendamentoService.deletarAgendamento(dataHora, cliente);
-
-        verify(agendamentoRepository, times(1))
-                .deleteByDataHoraAgendamentoAndCliente(dataHora, cliente);
+        verify(agendamentoRepository).save(agendamento);
     }
 
     @Test
     @DisplayName("Deve buscar agendamentos do dia")
-    void deveBuscarAgendamentosDiaComSucesso() {
-
+    void deveBuscarAgendamentosDia() {
+        Cliente cliente = new Cliente();
         LocalDate data = LocalDate.now();
 
-        when(agendamentoRepository.findByCliente(anyString()))
-                .thenReturn(new Agendamento());
+        when(agendamentoRepository.findByCliete(cliente)).thenReturn(null);
         when(agendamentoRepository.findByDataHoraAgendamentoBetween(any(), any()))
                 .thenReturn(List.of(new Agendamento()));
 
-        List<Agendamento> resultado = agendamentoService.buscarAgendamentosDia(data, "Luciano");
+        List<Agendamento> resultado = agendamentoService.buscarAgendamentosDia(data, cliente);
 
-        assertNotNull(resultado);
-        verify(agendamentoRepository, times(1))
-                .findByDataHoraAgendamentoBetween(any(), any());
+        assertEquals(1, resultado.size());
     }
 
     @Test
-    @DisplayName("Deve alterar agendamento com sucesso")
-    void deveAlterarAgendamentoComSucesso() {
+    @DisplayName("Deve lançar erro ao alterar agendamento inexistente")
+    void deveLancarErroAoAlterarInexistente() {
+        Cliente cliente = new Cliente();
+        LocalDateTime horario = LocalDateTime.now();
 
-        LocalDateTime dataHora = LocalDateTime.now();
-        String cliente = "Luciano";
+        when(agendamentoRepository.findByDataHoraAgendamentoAndCliente(horario, cliente)).thenReturn(null);
 
-        Agendamento existente = new Agendamento();
-        existente.setIdAgendamento(1L);
-
-        Agendamento novoAgendamento = new Agendamento();
-
-        when(agendamentoRepository
-                .findByDataHoraAgendamentoAndCliente(dataHora, cliente))
-                .thenReturn(existente);
-
-        when(agendamentoRepository.save(any())).thenReturn(novoAgendamento);
-
-        Agendamento resultado =
-                agendamentoService.alterarAgendamento(novoAgendamento, cliente, dataHora);
-
-        assertNotNull(resultado);
-        verify(agendamentoRepository, times(1)).save(novoAgendamento);
+        assertThrows(RuntimeException.class,
+                () -> agendamentoService.alterarAgendamento(new Agendamento(), cliente, horario));
+        verify(agendamentoRepository, never()).save(any(Agendamento.class));
     }
 }

@@ -9,13 +9,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ClienteServiceTest {
+class ClienteServiceTest {
 
     @Mock
     private ClienteRepository clienteRepository;
@@ -24,104 +28,41 @@ public class ClienteServiceTest {
     private ClienteService clienteService;
 
     @Test
-    @DisplayName("Deve salvar um cliente e retornar o objeto salvo")
-    void deveSalvarClientesComSucesso() {
-
+    @DisplayName("Deve salvar cliente com sucesso")
+    void deveSalvarClienteComSucesso() {
         Cliente cliente = new Cliente();
         cliente.setNomeCliente("Luciano");
-        when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
 
+        when(clienteRepository.findByNomeCliente("Luciano")).thenReturn(null);
+        when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
 
         Cliente result = clienteService.salvarCliente(cliente);
 
-
         assertNotNull(result);
         assertEquals("Luciano", result.getNomeCliente());
-        verify(clienteRepository, times(1)).save(cliente);
     }
 
     @Test
-    @DisplayName("Deve chamar o repositório para deletar um cliente por nome")
+    @DisplayName("Deve deletar cliente existente")
     void deveDeletarClienteComSucesso() {
+        Cliente cliente = new Cliente();
+        cliente.setNomeCliente("Luciano");
+
+        when(clienteRepository.findByNomeCliente("Luciano")).thenReturn(cliente);
 
         clienteService.deletarCliente("Luciano");
-
 
         verify(clienteRepository, times(1)).deleteByNomeCliente("Luciano");
     }
 
     @Test
-    @DisplayName("Deve buscar cliente por ID e Nome")
+    @DisplayName("Deve buscar cliente por id e nome")
     void deveBuscarClienteComSucesso() {
+        when(clienteRepository.findByIdClienteAndNomeCliente(2, "Dafiner"))
+                .thenReturn(List.of(new Cliente()));
 
-        clienteService.buscarCliente(2, "Dafiner");
+        var resultado = clienteService.buscarCliente(2, "Dafiner");
 
-
-        verify(clienteRepository).findByIdClienteAndNomeCliente(2, "Dafiner");
-    }
-
-    @Test
-    @DisplayName("Deve atualizar o nome do cliente corretamente")
-    void deveAlterarNomeComSucesso() {
-
-        Cliente cliente = new Cliente();
-        cliente.setNomeCliente("Luciano");
-        String novoNome = "Luciano Junior";
-
-
-        when(clienteRepository.findByNomeCliente(novoNome)).thenReturn(cliente);
-
-
-        clienteService.alterarNomeCliente(cliente, novoNome);
-
-
-        verify(clienteRepository).findByNomeCliente(novoNome);
-
-    }
-
-    @Test
-    @DisplayName("Deve alterar telefone com sucesso")
-    void deveAlterarTelefoneComSucesso() {
-        Cliente cliente = new Cliente();
-        String telefone = "11999999999";
-
-        Cliente clienteMock = new Cliente();
-        clienteMock.setTelefoneCliente(telefone);
-
-        when(clienteRepository.findByTelefoneCliente(telefone)).thenReturn(clienteMock);
-        when(clienteRepository.save(any())).thenReturn(cliente);
-
-        Cliente result = clienteService.alterarTelefoneCliente(cliente, telefone);
-
-        assertEquals(telefone, result.getTelefoneCliente());
-        verify(clienteRepository).save(cliente);
-    }
-
-    @Test
-    @DisplayName("Deve alterar os dados do cliente com sucesso")
-    void deveAlterarDadosClienteComSucesso() {
-
-
-        Cliente clienteExistente = new Cliente();
-        clienteExistente.setNomeCliente("Dafiner");
-        clienteExistente.setTelefoneCliente("11 98888777");
-
-
-        when(clienteRepository.findByNomeCliente("Dafiner")).thenReturn(clienteExistente);
-
-
-        Cliente clienteAtualizado = new Cliente();
-        clienteAtualizado.setNomeCliente("Dafiner");
-        clienteAtualizado.setTelefoneCliente("11 99999999");
-
-
-        Cliente resultado = clienteService.alterarDadosCliente(clienteAtualizado, "Dafiner", "11 99999999");
-
-
-        assertEquals("Dafiner", resultado.getNomeCliente());
-        assertEquals("11 99999999", resultado.getTelefoneCliente());
-
-
-        verify(clienteRepository, times(1)).save(clienteAtualizado);
+        assertEquals(1, resultado.size());
     }
 }

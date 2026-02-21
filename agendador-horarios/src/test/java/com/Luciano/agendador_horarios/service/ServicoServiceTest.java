@@ -35,7 +35,7 @@ class ServicosServiceTest {
         servicos.setPrecoServico(new BigDecimal("50.00"));
 
         when(servicosRepository
-                .findByNomeServicoAndDescricaoServico(any(), any(), servicos.getPrecoServico()))
+                .findByNomeServicoAndDescricaoServico(any(), any()))
                 .thenReturn(null);
 
         when(servicosRepository.save(any(Servicos.class)))
@@ -55,7 +55,7 @@ class ServicosServiceTest {
         Servicos servicos = new Servicos();
 
         when(servicosRepository
-                .findByNomeServicoAndDescricaoServico(any(), any(), servicos.getPrecoServico()))
+                .findByNomeServicoAndDescricaoServico(any(), any()))
                 .thenReturn(servicos);
 
         assertThrows(RuntimeException.class,
@@ -152,7 +152,7 @@ class ServicosServiceTest {
         servicoMock.setDescricaoServico(descricao);
 
         when(servicosRepository
-                .findByNomeServicoAndDescricaoServico("Corte", descricao, servicos.getPrecoServico()))
+                .findByNomeServicoAndDescricaoServico("Corte", descricao))
                 .thenReturn(servicoMock);
 
         when(servicosRepository.save(any()))

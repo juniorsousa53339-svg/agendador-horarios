@@ -53,8 +53,7 @@ class ProprietarioServiceTest {
         assertThrows(RuntimeException.class,
                 () -> proprietarioService.salvarProprietario(proprietario));
 
-        verify(proprietarioRepository, never())
-                .save(any(Proprietario.class));
+        verify(proprietarioRepository, never()).save(any());
     }
 
     @Test
@@ -88,72 +87,59 @@ class ProprietarioServiceTest {
     @DisplayName("Deve alterar nome de proprietario")
     void deveAlterarNomeProprietarioComSucesso() {
 
-        String nomeAtual = "Carlos";
-        String nomeNovo = "Marcus";
+        Proprietario proprietario = new Proprietario();
+        String nome = "Carlos";
 
         Proprietario proprietarioMock = new Proprietario();
-        proprietarioMock.setNome(nomeAtual);
+        proprietarioMock.setNome(nome);
 
-        when(proprietarioRepository.findByNome(nomeAtual))
-                .thenReturn(proprietarioMock);
-
-        when(proprietarioRepository.save(any(Proprietario.class)))
-                .thenReturn(proprietarioMock);
+        when(proprietarioRepository.findByNome(nome)).thenReturn(proprietarioMock);
+        when(proprietarioRepository.save(any())).thenReturn(proprietario);
 
         Proprietario resultado =
-                proprietarioService.alterarNome(nomeAtual, nomeNovo);
+                proprietarioService.alterarNome(proprietario, nome);
 
-        assertEquals(nomeNovo, resultado.getNome());
-        verify(proprietarioRepository).findByNome(nomeAtual);
+        assertEquals(nome, resultado.getNome());
+        verify(proprietarioRepository).findByNome(nome);
     }
 
     @Test
     @DisplayName("Deve alterar telefone com sucesso")
     void deveAlterarTelefoneComSucesso() {
 
-        String telefoneAtual = "11888888888";
-        String telefoneNovo = "1177777777";
+        Proprietario proprietario = new Proprietario();
+        String telefone = "11888888888";
 
         Proprietario proprietarioMock = new Proprietario();
-        proprietarioMock.setTelefone(telefoneAtual);
+        proprietarioMock.setTelefone(telefone);
 
-        when(proprietarioRepository.findByTelefone(telefoneAtual))
-                .thenReturn(proprietarioMock);
-
-        when(proprietarioRepository.save(any(Proprietario.class)))
-                .thenReturn(proprietarioMock);
+        when(proprietarioRepository.findByTelefone(telefone)).thenReturn(proprietarioMock);
+        when(proprietarioRepository.save(any())).thenReturn(proprietario);
 
         Proprietario result =
-                proprietarioService.alterarTelefone(telefoneAtual, telefoneNovo);
+                proprietarioService.alterarTelefone(proprietario, telefone);
 
-        assertEquals(telefoneNovo, result.getTelefone());
-
-        verify(proprietarioRepository).findByTelefone(telefoneAtual);
-
+        assertEquals(telefone, result.getTelefone());
+        verify(proprietarioRepository).save(proprietario);
     }
 
     @Test
     @DisplayName("Deve alterar email com sucesso")
     void deveAlterarEmailComSucesso() {
 
-        String emailAtual = "atual@email.com";
-        String emailNovo = "novo@email.com";
-
+        Proprietario proprietario = new Proprietario();
+        String email = "novo@email.com";
 
         Proprietario proprietarioMock = new Proprietario();
-        proprietarioMock.setEmail(emailAtual);
+        proprietarioMock.setEmail(email);
 
-        when(proprietarioRepository.findByEmail(emailAtual))
-                .thenReturn(proprietarioMock);
-
-        when(proprietarioRepository.save(any(Proprietario.class)))
-                .thenReturn(proprietarioMock);
+        when(proprietarioRepository.findByEmail(email)).thenReturn(proprietarioMock);
+        when(proprietarioRepository.save(any())).thenReturn(proprietario);
 
         Proprietario result =
-                proprietarioService.alterarEmail(emailAtual, emailNovo);
+                proprietarioService.alterarEmail(proprietario, email);
 
-        assertEquals(emailNovo, result.getEmail());
-
-        verify(proprietarioRepository).findByEmail(emailAtual);
+        assertEquals(email, result.getEmail());
+        verify(proprietarioRepository).save(proprietario);
     }
 }
