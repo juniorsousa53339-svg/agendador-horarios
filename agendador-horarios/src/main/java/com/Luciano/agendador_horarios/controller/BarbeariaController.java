@@ -19,12 +19,15 @@ public class BarbeariaController {
     private final BarbeariaService barbeariaService;
 
     @PostMapping
-    public ResponseEntity<Barbearia> salvarBarbearia(@RequestBody Barbearia barbearia) {
-        return ResponseEntity.accepted().body(barbeariaService.salvarBarbearia(barbearia));
+    public ResponseEntity<Barbearia> salvarBarbearia(@RequestBody Barbearia barbearia,
+                                                     @RequestBody Proprietario proprietario) {
+
+        return ResponseEntity.accepted().body
+                (barbeariaService.salvarBarbearia(barbearia, proprietario));
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deletarBarbearia( @RequestParam String nomeBarbearia) {
+    public ResponseEntity<Void> deletarBarbearia(@RequestParam String nomeBarbearia) {
 
         barbeariaService.deletarBarbearia(nomeBarbearia);
         return ResponseEntity.noContent().build();
@@ -32,42 +35,73 @@ public class BarbeariaController {
 
     @GetMapping
     public ResponseEntity<List<Barbearia>> buscarBarbearia
-            (@RequestParam String nomeBarbearia, @RequestParam long idBarbearia, @RequestParam String rua) {
-        return ResponseEntity.ok().body(barbeariaService.buscarBarbearia(idBarbearia,nomeBarbearia,rua));
+            (
+                    @RequestParam String nomeBarbearia,
+                    @RequestParam long idBarbearia,
+                    @RequestParam String rua
+            ) {
+
+        return ResponseEntity.ok().body
+                (barbeariaService.buscarBarbearia
+                        (idBarbearia, nomeBarbearia, rua));
     }
 
     @PutMapping("/barbearias/alterar-nome")
-    public ResponseEntity<Barbearia> alterarNomeBarbearia(@RequestBody Barbearia barbearia,
-                                                          @RequestParam String nomeBarbearia) {
+    public ResponseEntity<Barbearia> alterarNomeBarbearia(@RequestParam String nomeBarbeariaAtual,
+                                                          @RequestParam String nomeBarbeariaNovo) {
 
-        return ResponseEntity.accepted().body(barbeariaService.alterarNomeBarbearia(barbearia, nomeBarbearia));
+        return ResponseEntity.accepted().body
+                (barbeariaService.alterarNomeBarbearia
+                        (nomeBarbeariaAtual, nomeBarbeariaNovo));
     }
 
-    @PutMapping("/barbearias/alterar-horarios")
-    public ResponseEntity<Barbearia> alterarHorariosFun(@RequestBody Barbearia barbearia,
-                                                        @RequestParam LocalTime horarioAbertura,
-                                                        @RequestParam LocalTime horarioFechamento) {
+    @PutMapping("/barbearias/alterar-horarios-funcionamento")
+    public ResponseEntity<Barbearia> alterarHorariosFun
+            (
+                    @RequestParam LocalTime horarioAberturaAtual,
+                    @RequestParam LocalTime horarioAberturaNovo,
+                    @RequestParam LocalTime horarioFechamentoAtual,
+                    @RequestParam LocalTime horarioFechamentoNovo
+
+            ) {
         return ResponseEntity.accepted().body(barbeariaService.alterarHorariosFun
-                (barbearia, horarioAbertura, horarioFechamento));
+                (horarioAberturaAtual, horarioAberturaNovo, horarioFechamentoAtual, horarioFechamentoNovo));
     }
 
     @PutMapping("/barbearias/alterar-telefone")
-    public ResponseEntity<Barbearia> alterarTelefone(@RequestBody Barbearia barbearia,
-                                                     @RequestParam String telefoneBarbearia) {
+    public ResponseEntity<Barbearia> alterarTelefone(@RequestParam String telefoneBarbeariaAtual,
+                                                     @RequestParam String telefoneBarbeariaNovo) {
 
-        return ResponseEntity.accepted().body(barbeariaService.alterarTelefone(barbearia, telefoneBarbearia));
+        return ResponseEntity.accepted().body
+                (barbeariaService.alterarTelefone
+                        (telefoneBarbeariaAtual, telefoneBarbeariaNovo));
     }
 
     @PutMapping("/barbearias/alterar-endereco")
-    public ResponseEntity<Barbearia> alterarEndereco(@RequestBody Barbearia barbearia,
-                                                     @RequestParam String rua,
-                                                     @RequestParam String numeroRua) {
-        return ResponseEntity.accepted().body(barbeariaService.alterarEndereco(barbearia, rua, numeroRua));
+    public ResponseEntity<Barbearia> alterarEndereco
+            (
+                    @RequestParam String ruaAtual,
+                    @RequestParam String ruaNova,
+                    @RequestParam String numeroRuaAtual,
+                    @RequestParam String numeroRuaNovo
+
+            ) {
+        return ResponseEntity.accepted().body
+                (barbeariaService.alterarEndereco
+                        (
+                                ruaAtual, ruaNova,
+                                numeroRuaAtual, numeroRuaNovo
+                        ));
     }
+
     @PutMapping("/barbearias/alterar-proprietario")
-    public ResponseEntity<Barbearia> alterarProprietario(@RequestBody Barbearia barbearia,
-                                                         @RequestParam Proprietario proprietario) {
-        return ResponseEntity.accepted().body(barbeariaService.alterarProprietario(barbearia,proprietario));
+    public ResponseEntity<Barbearia> alterarProprietario(@RequestParam Proprietario proprietarioAtual,
+                                                         @RequestParam Proprietario proprietarioNovo) {
+
+
+        return ResponseEntity.accepted().body
+                (barbeariaService.alterarProprietario
+                        (proprietarioAtual, proprietarioNovo));
 
     }
 }
