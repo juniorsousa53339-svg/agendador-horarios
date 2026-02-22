@@ -39,6 +39,7 @@ public class BarbeariaController {
     @PutMapping("/barbearias/alterar-nome")
     public ResponseEntity<Barbearia> alterarNomeBarbearia(@RequestBody Barbearia barbearia,
                                                           @RequestParam String nomeBarbearia) {
+
         return ResponseEntity.accepted().body(barbeariaService.alterarNomeBarbearia(barbearia, nomeBarbearia));
     }
 

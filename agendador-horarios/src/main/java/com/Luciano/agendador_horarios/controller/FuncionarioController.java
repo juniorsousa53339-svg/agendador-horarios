@@ -17,29 +17,52 @@ public class FuncionarioController {
 
     @PostMapping
     public ResponseEntity<Funcionario> salvarFuncionario(@RequestBody Funcionario funcionario) {
-        return ResponseEntity.accepted().body(funcionarioService.salvarFuncionario(funcionario));
+
+        return ResponseEntity.accepted().body(funcionarioService.
+                salvarFuncionario(funcionario));
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deletarFuncionario(@RequestParam String nomeFuncionario) {
+
         funcionarioService.deletarFuncionario(nomeFuncionario);
+
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
     public ResponseEntity<List<Funcionario>> buscarFuncionario(
             @RequestParam long idFuncionario, @RequestParam String nomeFuncionario) {
-        return ResponseEntity.ok().body(funcionarioService.buscarFuncionario(idFuncionario, nomeFuncionario));
+
+        return ResponseEntity.ok().body
+                (funcionarioService.buscarFuncionario
+                        (idFuncionario, nomeFuncionario));
     }
 
     @PutMapping("/alterar-nome")
-    public ResponseEntity<Funcionario> alterarNomeFuncionario(@RequestBody Funcionario funcionario, @RequestParam String nomeFuncionario) {
-        return ResponseEntity.accepted().body(funcionarioService.alterarNomeFuncionario(funcionario, nomeFuncionario));
+    public ResponseEntity<Funcionario> alterarNomeFuncionario
+            (
+                    @RequestBody Funcionario funcionario,
+                    @RequestParam String nomeFuncionario
+            ) {
+
+        return ResponseEntity.accepted().body
+                (funcionarioService.alterarNomeFuncionario
+                        (funcionario, nomeFuncionario));
     }
 
     @PutMapping("/alterar-telefone")
-    public ResponseEntity<Funcionario> alterarTelefoneFuncionario(@RequestBody Funcionario funcionario, @RequestParam String telefoneFuncionario) {
-        return ResponseEntity.accepted().body(funcionarioService.alterarTelefoneFuncionario(funcionario, telefoneFuncionario));
+    public ResponseEntity<Funcionario> alterarTelefoneFuncionario
+            (
+                    @RequestBody Funcionario funcionario,
+                    @RequestParam String telefoneFuncionario
+            ) {
+
+        return ResponseEntity.accepted().body
+                (
+                        funcionarioService.alterarTelefoneFuncionario
+                                (funcionario, telefoneFuncionario)
+                );
     }
 
 }

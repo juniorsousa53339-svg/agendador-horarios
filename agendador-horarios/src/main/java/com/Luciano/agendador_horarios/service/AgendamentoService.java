@@ -20,14 +20,12 @@ public class AgendamentoService {
 
     public Agendamento salvarAgendamento(Agendamento agendamento) {
 
-        LocalDateTime horaAgendamento = agendamento.getDataHoraAgendamento();
-        LocalDateTime horaFim = agendamento.getDataHoraAgendamento().plusMinutes(1);
-
         Agendamento agendados =
-                agendamentoRepository.findByServicoAndDataHoraAgendamentoBetween(
-                        String.valueOf(agendamento.getServico())
-                        , horaAgendamento
-                        , horaFim
+                agendamentoRepository.findByServicoAndDataHoraAgendamentoAndClienteBetween(
+
+                       agendamento.getServico(),
+                        agendamento.getDataHoraAgendamento(),
+                        agendamento.getCliente()
                 );
 
         if (Objects.nonNull(agendados)) {
@@ -43,13 +41,15 @@ public class AgendamentoService {
             Cliente cliente
     ) {
 
-      Agendamento agendamento = agendamentoRepository.findByCliete(cliente);
+      Agendamento agendamento =
+              agendamentoRepository.findByAndNomeCliete(cliente);
 
        if (Objects.nonNull(agendamento)) {
            throw new RuntimeException("Agendamento não encontrado!");
        }
 
-        agendamentoRepository.deleteByDataHoraAgendamentoAndCliente(dataHoraAgendamento, cliente);
+        agendamentoRepository.deleteByDataHoraAgendamentoAndCliente
+                (dataHoraAgendamento, cliente);
     }
 
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
@@ -58,35 +58,38 @@ public class AgendamentoService {
           Cliente cliente
     ) {
 
-        Agendamento agendamento =
+       List <Agendamento> agendamento =
                 agendamentoRepository.findByCliete(cliente);
 
         if (Objects.nonNull(agendamento)) {
             throw new RuntimeException("Agendamento não encontrado!");
         }
 
-        LocalDateTime primeiraHoraDia = data.atStartOfDay();
-        LocalDateTime horaFinalDia = data.atTime(20, 59, 59);
-
-        return agendamentoRepository.findByDataHoraAgendamentoBetween(primeiraHoraDia, horaFinalDia);
+        return agendamento;
     }
 
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
+
     public Agendamento alterarAgendamento(
             Agendamento agendamento,
-            Cliente cliente,
-            LocalDateTime dataHoraAgendamento
+            Cliente clienteAtual,
+            Cliente clienteNovo,
+            LocalDateTime dataHoraAgendamentoAtual,
+            LocalDateTime dataHoraAgendamentoNovo
+
     ) {
-        Agendamento agenda = agendamentoRepository.
-                findByDataHoraAgendamentoAndCliente(
-                dataHoraAgendamento, cliente
+        Agendamento agenda =
+                agendamentoRepository.findByDataHoraAgendamentoAndCliente(
+                dataHoraAgendamentoAtual, clienteAtual
         );
 
         if (Objects.isNull(agenda)) {
             throw new RuntimeException("Horário não está preenchido");
         }
 
-        agendamento.setIdAgendamento(agenda.getIdAgendamento());
-        return agendamentoRepository.save(agendamento);
+        agenda.setDataHoraAgendamento(dataHoraAgendamentoNovo);
+        agenda.setCliente(clienteNovo);
+
+        return agendamentoRepository.save(agenda);
     }
 }

@@ -14,13 +14,14 @@ import java.util.Objects;
 public class ProprietarioService {
 
     private final ProprietarioRepository proprietarioRepository;
+
     public Proprietario salvarProprietario(Proprietario proprietario) {
 
-        Proprietario proprietarioExistente = null;
-        proprietarioExistente = proprietarioRepository.findByNomeAndTelefone(
-                proprietario.getNome(),
-                proprietario.getTelefone()
-        );
+        Proprietario proprietarioExistente =
+                proprietarioRepository.findByNomeAndTelefone(
+                        proprietario.getNome(),
+                        proprietario.getTelefone()
+                );
 
         if (Objects.nonNull(proprietarioExistente)) {
             throw new RuntimeException("Proprietário já está cadastrado.");
@@ -32,10 +33,10 @@ public class ProprietarioService {
     @PreAuthorize("hasRole('PROPRIETARIO')")
     public void deletarProprietario(String nome) {
 
-        Proprietario proprietario = null;
-        proprietario = proprietarioRepository.findByNome(nome);
+        Proprietario proprietario =
+                proprietarioRepository.findByNome(nome);
 
-        if (Objects.isNull(proprietario)) {
+        if (Objects.nonNull(proprietario)){
             throw new RuntimeException("Proprietário não encontrado!");
         }
 
@@ -49,8 +50,9 @@ public class ProprietarioService {
             String email
     ) {
 
-        List<Proprietario> proprietarios = null;
-        proprietarios = proprietarioRepository.findByIdProprietarioAndNomeAndEmail(idProprietario, nome, email);
+        List<Proprietario> proprietarios =
+                proprietarioRepository.findByIdProprietarioAndNomeAndEmail
+                        (idProprietario, nome, email);
 
         if (Objects.isNull(proprietarios) || proprietarios.isEmpty()) {
             throw new RuntimeException("Proprietário não encontrado!");
@@ -63,15 +65,16 @@ public class ProprietarioService {
     public Proprietario alterarNome(String nomeAtual,
                                     String novoNome) {
 
-        Proprietario proprietarioExistente = null;
-        proprietarioExistente = proprietarioRepository.findByNome(nomeAtual);
+        Proprietario proprietarioExistente =
+         proprietarioRepository.findByNome(nomeAtual);
 
         if (Objects.isNull(proprietarioExistente)) {
             throw new RuntimeException("Proprietário não encontrado.");
         }
 
         proprietarioExistente.setNome(novoNome);
-        return proprietarioRepository.save(proprietarioExistente);
+        return proprietarioRepository.save
+                (proprietarioExistente);
     }
 
     @PreAuthorize("hasRole('PROPRIETARIO')")
@@ -80,15 +83,16 @@ public class ProprietarioService {
             String telefoneNovo
     ) {
 
-        Proprietario proprietarioComTelefone = null;
-        proprietarioComTelefone = proprietarioRepository.findByTelefone(telefoneAtual);
+        Proprietario proprietarioComTelefone =
+                proprietarioRepository.findByTelefone(telefoneAtual);
 
         if (Objects.isNull(proprietarioComTelefone)) {
             throw new RuntimeException("Telefone não encontrado.");
         }
 
         proprietarioComTelefone.setTelefone(telefoneNovo);
-        return proprietarioRepository.save(proprietarioComTelefone);
+        return proprietarioRepository.save
+                (proprietarioComTelefone);
     }
 
     @PreAuthorize("hasRole('PROPRIETARIO')")
@@ -97,8 +101,8 @@ public class ProprietarioService {
             String emailNovo
     ) {
 
-        Proprietario proprietarioComEmail = null;
-        proprietarioComEmail = proprietarioRepository.findByEmail(emailAtual);
+        Proprietario proprietarioComEmail =
+                proprietarioRepository.findByEmail(emailAtual);
 
         if (Objects.isNull(proprietarioComEmail)) {
             throw new RuntimeException("Email não encontrado.");

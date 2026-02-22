@@ -17,7 +17,9 @@ public class ProprietarioController {
 
     @PostMapping
     public ResponseEntity<Proprietario> salvarProprietario(@RequestBody Proprietario proprietario) {
-        return ResponseEntity.accepted().body(proprietarioService.salvarProprietario(proprietario));
+
+        return ResponseEntity.accepted().body
+                (proprietarioService.salvarProprietario(proprietario));
     }
 
     @DeleteMapping
