@@ -19,6 +19,7 @@ public class ProprietarioService {
 
         Proprietario proprietarioExistente =
                 proprietarioRepository.findByNomeAndTelefone(
+
                         proprietario.getNome(),
                         proprietario.getTelefone()
                 );

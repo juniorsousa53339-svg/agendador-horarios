@@ -56,7 +56,8 @@ public class ServicosService {
 
         List<Servicos> servicos =
                 servicosRepository
-                .findByIdServicoAndNomeServicoAndPrecoServico(idServico, nomeServico, precoServico);
+                .findByIdServicoAndNomeServicoAndPrecoServico
+                        (idServico, nomeServico, precoServico);
 
         if (Objects.isNull(servicos) || servicos.isEmpty()) {
             throw new RuntimeException("Serviço não encontrado.");
