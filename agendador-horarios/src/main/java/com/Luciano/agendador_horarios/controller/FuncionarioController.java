@@ -42,26 +42,27 @@ public class FuncionarioController {
     @PutMapping("/alterar-nome")
     public ResponseEntity<Funcionario> alterarNomeFuncionario
             (
-                    @RequestBody Funcionario funcionario,
-                    @RequestParam String nomeFuncionario
+                    @RequestParam String nomeFuncionarioAtual,
+                    @RequestParam String nomeFuncionarioNovo
+
             ) {
 
         return ResponseEntity.accepted().body
                 (funcionarioService.alterarNomeFuncionario
-                        (funcionario, nomeFuncionario));
+                        (nomeFuncionarioAtual, nomeFuncionarioNovo));
     }
 
     @PutMapping("/alterar-telefone")
     public ResponseEntity<Funcionario> alterarTelefoneFuncionario
             (
-                    @RequestBody Funcionario funcionario,
-                    @RequestParam String telefoneFuncionario
+                    @RequestParam String telefoneAtual,
+                    @RequestParam String telefoneNovo
             ) {
 
         return ResponseEntity.accepted().body
                 (
                         funcionarioService.alterarTelefoneFuncionario
-                                (funcionario, telefoneFuncionario)
+                                (telefoneAtual, telefoneNovo)
                 );
     }
 

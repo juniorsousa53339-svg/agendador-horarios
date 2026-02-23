@@ -37,7 +37,8 @@ public class FuncionarioService {
     public void deletarFuncionario(String nomeFuncionario) {
 
         Funcionario funcionario =
-                funcionarioRepository.findByNomeFuncionario(nomeFuncionario);
+                funcionarioRepository.findByNomeFuncionario
+                        (nomeFuncionario);
 
         if (Objects.isNull(funcionario)) {
             throw new RuntimeException("Funcionário não encontrado.");
@@ -61,21 +62,26 @@ public class FuncionarioService {
     }
 
     @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Funcionario alterarNomeFuncionario(String nomeAtual, String nomeNovo) {
+    public Funcionario alterarNomeFuncionario
+            (
+                    String nomeFuncionarioAtual,
+                    String nomeFuncionarioNovo
+            ) {
 
         Funcionario funcionarioExistente =
-                funcionarioRepository.findByNomeFuncionario(nomeAtual);
+                funcionarioRepository.findByNomeFuncionario
+                        (nomeFuncionarioAtual);
 
         if (Objects.isNull(funcionarioExistente)) {
             throw new RuntimeException("Funcionário não encontrado.");
         }
 
-        funcionarioExistente.setNomeFuncionario(nomeNovo);
+        funcionarioExistente.setNomeFuncionario(nomeFuncionarioNovo);
         return funcionarioRepository.save(funcionarioExistente);
     }
 
     @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Funcionario alterarTelefoneFuncionario(String telefoneAtual, String nomeNovo) {
+    public Funcionario alterarTelefoneFuncionario(String telefoneAtual, String telefoneNovo) {
 
         Funcionario funcionarioComTelefone =
                 funcionarioRepository.findByTelefoneFuncionario(telefoneAtual);
@@ -84,7 +90,7 @@ public class FuncionarioService {
             throw new RuntimeException("Telefone não encontrado.");
         }
 
-        funcionarioComTelefone.setTelefoneFuncionario(nomeNovo);
+        funcionarioComTelefone.setTelefoneFuncionario(telefoneNovo);
         return funcionarioRepository.save(funcionarioComTelefone);
     }
 }
