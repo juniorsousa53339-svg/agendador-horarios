@@ -19,8 +19,11 @@ public class ClienteService {
 
 
         Cliente clienteExistente =
-        clienteRepository.findByNomeCliente(
-                cliente.getNomeCliente());
+        clienteRepository.findByNomeClienteAndTelefone(
+
+                cliente.getNomeCliente(),
+                cliente.getTelefoneCliente()
+        );
 
         if (Objects.nonNull(clienteExistente)) {
             throw new RuntimeException("Cliente já cadastrado.");
@@ -45,7 +48,8 @@ public class ClienteService {
     public List<Cliente> buscarCliente(long idCliente, String nomeCliente) {
 
         List<Cliente> clientes =
-         clienteRepository.findByIdClienteAndNomeCliente(idCliente, nomeCliente);
+         clienteRepository.findByIdClienteAndNomeCliente
+                 (idCliente, nomeCliente);
 
         if (Objects.isNull(clientes) || clientes.isEmpty()) {
             throw new RuntimeException("Cliente não encontrado.");

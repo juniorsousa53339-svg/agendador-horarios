@@ -95,8 +95,11 @@ public class BarbeariaController {
     }
 
     @PutMapping("/barbearias/alterar-proprietario")
-    public ResponseEntity<Barbearia> alterarProprietario(@RequestParam Proprietario proprietarioAtual,
-                                                         @RequestParam Proprietario proprietarioNovo) {
+    public ResponseEntity<Barbearia> alterarProprietario
+            (
+                    @RequestParam Proprietario proprietarioAtual,
+                    @RequestParam Proprietario proprietarioNovo
+            ) {
 
 
         return ResponseEntity.accepted().body
