@@ -19,7 +19,7 @@ public class ClienteService {
 
 
         Cliente clienteExistente =
-        clienteRepository.findByNomeClienteAndTelefone(
+        clienteRepository.findByNomeClienteAndTelefoneCliente(
 
                 cliente.getNomeCliente(),
                 cliente.getTelefoneCliente()

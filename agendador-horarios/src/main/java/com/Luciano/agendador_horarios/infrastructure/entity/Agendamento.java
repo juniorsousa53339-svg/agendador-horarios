@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.antlr.v4.runtime.misc.NotNull;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 
@@ -29,6 +29,10 @@ public class Agendamento {
     @ManyToOne
     @JoinColumn(name = "servico")
     private Servicos servico;
+
+    @ManyToOne
+    @JoinColumn(name = "funcionario")
+    private Funcionario funcionario;
 
     @ManyToOne
     @JoinColumn(name = "cliente")

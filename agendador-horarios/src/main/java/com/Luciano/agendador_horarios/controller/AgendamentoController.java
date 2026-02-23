@@ -1,9 +1,12 @@
 package com.Luciano.agendador_horarios.controller;
 
+import com.Luciano.agendador_horarios.DTO.AgendamentoRequestDTO;
+import com.Luciano.agendador_horarios.DTO.AgendamentoResponseDTO;
 import com.Luciano.agendador_horarios.infrastructure.entity.Agendamento;
-import com.Luciano.agendador_horarios.infrastructure.entity.Cliente;
 import com.Luciano.agendador_horarios.service.AgendamentoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,52 +22,30 @@ public class AgendamentoController {
     private final AgendamentoService agendamentoService;
 
     @PostMapping
-    public ResponseEntity<Agendamento> salvarAgendamento(@RequestBody Agendamento agendamento) {
-
-        return ResponseEntity.accepted().body
-                (agendamentoService.salvarAgendamento(agendamento));
+    public ResponseEntity<AgendamentoResponseDTO> criar(@RequestBody @Valid AgendamentoRequestDTO dto) {
+        var criado = agendamentoService.criar(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(criado);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deletarAgendamento(@RequestBody Cliente cliente,
-                                                   @RequestParam LocalDateTime dataHoraAgendamento) {
-
-        agendamentoService.deletarAgendamento
-                (dataHoraAgendamento, cliente);
-
+    public ResponseEntity<Void> deletar(@RequestParam LocalDateTime dataHora,
+                                        @RequestParam Long idCliente) {
+        agendamentoService.deletar(dataHora, idCliente);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<Agendamento>> buscarAgendamentosDia(@RequestParam LocalDate data,
-                                                                   @RequestBody Cliente cliente) {
-
-        return ResponseEntity.ok().body
-                (agendamentoService.buscarAgendamentosDia
-                        (data, cliente));
+    public ResponseEntity<List<Agendamento>> listarDoDia(@RequestParam LocalDate data,
+                                                         @RequestParam Long idCliente) {
+        return ResponseEntity.ok(agendamentoService.buscarDoDia(data, idCliente));
     }
 
-    @PutMapping("/agendamento/alterar-agendamento")
-    public ResponseEntity<Agendamento> alterarAgendamentos
-
-            (
-                    @RequestBody Agendamento agendamento,
-                    @RequestBody Cliente clienteAtual,
-                    @RequestBody Cliente clienteNovo,
-                    @RequestParam LocalDateTime dataHoraAgendamentoAtual,
-                    @RequestParam LocalDateTime dataHoraAgendamentoNovo
-            ) {
-
-        return ResponseEntity.accepted().body
-                (agendamentoService.alterarAgendamento
-                        (
-                                agendamento,
-                                clienteAtual,
-                                clienteNovo,
-                                dataHoraAgendamentoAtual,
-                                dataHoraAgendamentoNovo
-                        )
-                );
+    @PutMapping
+    public ResponseEntity<AgendamentoResponseDTO> alterar(@RequestParam LocalDateTime dataHoraAtual,
+                                                          @RequestParam Long idClienteAtual,
+                                                          @RequestParam LocalDateTime dataHoraNova,
+                                                          @RequestParam Long idClienteNovo) {
+        var atualizado = agendamentoService.alterar(dataHoraAtual, idClienteAtual, dataHoraNova, idClienteNovo);
+        return ResponseEntity.ok(atualizado);
     }
 }
-

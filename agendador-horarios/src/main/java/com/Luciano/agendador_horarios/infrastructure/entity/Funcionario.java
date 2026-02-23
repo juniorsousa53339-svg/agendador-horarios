@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.antlr.v4.runtime.misc.NotNull;
+import jakarta.validation.constraints.*;
 
 
 @Getter
@@ -21,12 +22,12 @@ public class Funcionario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idFuncionario;
 
-    @NotNull
+    @NotBlank
     private String nomeFuncionario;
 
-    @NotNull
+    @NotBlank
     private String telefoneFuncionario;
 
-    @NotNull
+    @NotBlank
     private String especialidade;
 }

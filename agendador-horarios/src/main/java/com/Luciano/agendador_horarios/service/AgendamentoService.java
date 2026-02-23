@@ -1,95 +1,143 @@
 package com.Luciano.agendador_horarios.service;
 
+import com.Luciano.agendador_horarios.DTO.AgendamentoRequestDTO;
+import com.Luciano.agendador_horarios.DTO.AgendamentoResponseDTO;
 import com.Luciano.agendador_horarios.infrastructure.entity.Agendamento;
 import com.Luciano.agendador_horarios.infrastructure.entity.Cliente;
+import com.Luciano.agendador_horarios.infrastructure.entity.Funcionario;
+import com.Luciano.agendador_horarios.infrastructure.entity.Servicos;
 import com.Luciano.agendador_horarios.infrastructure.repository.AgendamentoRepository;
+import com.Luciano.agendador_horarios.infrastructure.repository.ClienteRepository;
+import com.Luciano.agendador_horarios.infrastructure.repository.FuncionarioRepository;
+import com.Luciano.agendador_horarios.infrastructure.repository.ServicosRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class AgendamentoService {
 
     private final AgendamentoRepository agendamentoRepository;
+    private final ClienteRepository clienteRepository;
+    private final FuncionarioRepository funcionarioRepository;
+    private final ServicosRepository servicosRepository;
 
-    public Agendamento salvarAgendamento(Agendamento agendamento) {
+    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
+    @Transactional
+    public AgendamentoResponseDTO criar(AgendamentoRequestDTO dto) {
 
-        Agendamento agendados =
-                agendamentoRepository.findByServicoAndDataHoraAgendamentoAndClienteBetween(
+        Cliente cliente = clienteRepository.findById(dto.idCliente())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
 
-                       agendamento.getServico(),
-                        agendamento.getDataHoraAgendamento(),
-                        agendamento.getCliente()
-                );
+        Funcionario funcionario = funcionarioRepository.findById(dto.idFuncionario())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Funcionário não encontrado"));
 
-        if (Objects.nonNull(agendados)) {
-            throw new RuntimeException("Horário já está preenchido");
+        Servicos servico = servicosRepository.findById(dto.idServico())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Serviço não encontrado"));
+
+
+        if (agendamentoRepository.existsByFuncionarioAndDataHoraAgendamento(funcionario, dto.dataHoraAgendamento())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Funcionário já possui agendamento nesse horário.");
         }
 
-        return agendamentoRepository.save(agendamento);
-    }
+        Agendamento entity = new Agendamento();
+        entity.setCliente(cliente);
+        entity.setFuncionario(funcionario);
+        entity.setServico(servico);
+        entity.setDataHoraAgendamento(dto.dataHoraAgendamento());
 
-    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
-    public void deletarAgendamento(
-            LocalDateTime dataHoraAgendamento,
-            Cliente cliente
-    ) {
 
-      Agendamento agendamento =
-              agendamentoRepository.findByAndNomeCliete(cliente);
+        Agendamento salvo = agendamentoRepository.save(entity);
 
-       if (Objects.nonNull(agendamento)) {
-           throw new RuntimeException("Agendamento não encontrado!");
-       }
-
-        agendamentoRepository.deleteByDataHoraAgendamentoAndCliente
-                (dataHoraAgendamento, cliente);
-    }
-
-    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
-    public List<Agendamento> buscarAgendamentosDia(
-            LocalDate data,
-          Cliente cliente
-    ) {
-
-       List <Agendamento> agendamento =
-                agendamentoRepository.findByCliete(cliente);
-
-        if (Objects.nonNull(agendamento)) {
-            throw new RuntimeException("Agendamento não encontrado!");
-        }
-
-        return agendamento;
-    }
-
-    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
-
-    public Agendamento alterarAgendamento(
-            Agendamento agendamento,
-            Cliente clienteAtual,
-            Cliente clienteNovo,
-            LocalDateTime dataHoraAgendamentoAtual,
-            LocalDateTime dataHoraAgendamentoNovo
-
-    ) {
-        Agendamento agenda =
-                agendamentoRepository.findByDataHoraAgendamentoAndCliente(
-                dataHoraAgendamentoAtual, clienteAtual
+        return new AgendamentoResponseDTO(
+                salvo.getIdAgendamento(),
+                salvo.getCliente().getIdCliente(),
+                salvo.getCliente().getNomeCliente(),
+                salvo.getFuncionario().getIdFuncionario(),
+                salvo.getFuncionario().getNomeFuncionario(),
+                salvo.getServico().getIdServico(),
+                salvo.getServico().getNomeServico(),
+                salvo.getDataHoraAgendamento(),
+                "MARCADO"
         );
+    }
 
-        if (Objects.isNull(agenda)) {
-            throw new RuntimeException("Horário não está preenchido");
+    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
+    @Transactional
+    public void deletar(LocalDateTime dataHoraAgendamento, Long idCliente) {
+        Cliente cliente = clienteRepository.findById(idCliente)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+
+        Agendamento agendamento = agendamentoRepository.findByDataHoraAgendamentoAndCliente(dataHoraAgendamento, cliente);
+        if (agendamento == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Agendamento não encontrado");
+        }
+        agendamentoRepository.deleteByDataHoraAgendamentoAndCliente(dataHoraAgendamento, cliente);
+    }
+
+    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
+    @Transactional(readOnly = true)
+    public List<Agendamento> buscarDoDia(LocalDate data, Long idCliente) {
+        Cliente cliente = clienteRepository.findById(idCliente)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+
+        LocalDateTime inicio = data.atStartOfDay();
+        LocalDateTime fim = data.atTime(LocalTime.MAX);
+
+        List<Agendamento> lista = agendamentoRepository
+                .findByClienteAndDataHoraAgendamentoBetween(cliente, inicio, fim);
+
+        if (lista == null || lista.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhum agendamento para o dia selecionado");
+        }
+        return lista;
+    }
+
+    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
+    @Transactional
+    public AgendamentoResponseDTO alterar(LocalDateTime dataHoraAtual, Long idCliente,
+                                          LocalDateTime dataHoraNova, Long idClienteNovo) {
+
+        Cliente clienteAtual = clienteRepository.findById(idCliente)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente atual não encontrado"));
+
+        Agendamento agenda = agendamentoRepository.findByDataHoraAgendamentoAndCliente(dataHoraAtual, clienteAtual);
+        if (agenda == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Horário não está preenchido");
         }
 
-        agenda.setDataHoraAgendamento(dataHoraAgendamentoNovo);
-        agenda.setCliente(clienteNovo);
+        Cliente clienteNovo = clienteRepository.findById(idClienteNovo)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente novo não encontrado"));
 
-        return agendamentoRepository.save(agenda);
+
+        if (agendamentoRepository.existsByFuncionarioAndDataHoraAgendamento(agenda.getFuncionario(), dataHoraNova)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Funcionário já possui agendamento nesse novo horário.");
+        }
+
+        agenda.setCliente(clienteNovo);
+        agenda.setDataHoraAgendamento(dataHoraNova);
+
+        Agendamento salvo = agendamentoRepository.save(agenda);
+
+        return new AgendamentoResponseDTO(
+                salvo.getIdAgendamento(),
+                salvo.getCliente().getIdCliente(),
+                salvo.getCliente().getNomeCliente(),
+                salvo.getFuncionario().getIdFuncionario(),
+                salvo.getFuncionario().getNomeFuncionario(),
+                salvo.getServico().getIdServico(),
+                salvo.getServico().getNomeServico(),
+                salvo.getDataHoraAgendamento(),
+                "MARCADO"
+        );
     }
 }

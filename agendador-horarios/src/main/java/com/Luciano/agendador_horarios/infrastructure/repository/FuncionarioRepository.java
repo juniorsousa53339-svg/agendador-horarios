@@ -1,21 +1,25 @@
 package com.Luciano.agendador_horarios.infrastructure.repository;
 
 import com.Luciano.agendador_horarios.infrastructure.entity.Funcionario;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> {
 
-    Funcionario findByNomeFuncionario(String nomeFuncionario);
+    // troque "Telefone" -> "TelefoneFuncionario"
+    Funcionario findByNomeFuncionarioAndTelefoneFuncionarioAndEspecialidade(
+            String nomeFuncionario, String telefoneFuncionario, String especialidade);
 
-    @Transactional
-    void deleteByNomeFuncionario(String nomeFuncionario);
+    Optional<Funcionario> findById(Long id);
 
+    List<Funcionario> findByNomeFuncionarioContainingIgnoreCase(String nome);
+
+    Funcionario findByNomeFuncionario(String nome);
+
+    // troque "Telefone" -> "TelefoneFuncionario"
     Funcionario findByTelefoneFuncionario(String telefoneFuncionario);
 
-    List<Funcionario> findByIdFuncionarioAndNomeFuncionario(long id_Funcionario, String nomeFuncionario);
-
-    Funcionario findByNomeFuncionarioAndTelefoneAndEspecialidade(String nomeFuncionario, String telefoneFuncionario, String especialidade);
+    void deleteByNomeFuncionario(String nome);
 }

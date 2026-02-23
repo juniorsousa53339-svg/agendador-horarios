@@ -3,7 +3,8 @@ package com.Luciano.agendador_horarios.infrastructure.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.antlr.v4.runtime.misc.NotNull;
+import jakarta.validation.constraints.*;
+
 
 import java.math.BigDecimal;
 
@@ -20,10 +21,10 @@ public class Servicos {
     @NotNull
     private long idServico;
 
-    @NotNull
+    @NotBlank
     private String nomeServico;
 
-    @NotNull
+    @NotBlank
     private String descricaoServico;
 
     @NotNull
