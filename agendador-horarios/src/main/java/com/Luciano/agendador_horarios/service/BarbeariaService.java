@@ -124,7 +124,7 @@ public class BarbeariaService {
             (
 
              String ruaAtual, String ruaNova,
-             String numeroRuaAtual, String numeroRuaNova
+             int numeroRuaAtual, String numeroRuaNova
 
             ) {
         Barbearia barbeariaComEndereco =

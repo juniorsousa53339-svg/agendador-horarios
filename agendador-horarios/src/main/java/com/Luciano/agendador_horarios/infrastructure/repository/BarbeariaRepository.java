@@ -24,7 +24,7 @@ public interface BarbeariaRepository extends JpaRepository<Barbearia, Long> {
 
     Barbearia findByTelefoneBarbearia(String telefoneBarbearia);
 
-    Barbearia findByRuaAndNumeroRua(String rua, String numeroRua);
+    Barbearia findByRuaAndNumeroRua(String rua, int numeroRua);
 
     Barbearia findByProprietario(Proprietario proprietario);
 }

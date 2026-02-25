@@ -20,7 +20,7 @@ public class ServicosService {
     public Servicos salvarServico(Servicos servicos) {
 
         Servicos servicoExistente =
-                servicosRepository.findByNomeServicoAndDescricaoServico(
+                servicosRepository.findByNomeServicoAndDescricaoServicoAndPrecoServico(
 
                         servicos.getNomeServico(),
                         servicos.getDescricaoServico(),
@@ -28,7 +28,7 @@ public class ServicosService {
 
                 );
 
-        if (Objects.nonNull(servicoExistente)) {
+        if (servicoExistente == null) {
             throw new RuntimeException("Serviço já está cadastrado.");
         }
 

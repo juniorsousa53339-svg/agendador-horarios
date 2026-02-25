@@ -34,7 +34,7 @@ public class Barbearia {
     private String rua;
 
 
-    private Integer numeroRua;
+    private int numeroRua;
 
     @NotBlank
     private String telefoneBarbearia;

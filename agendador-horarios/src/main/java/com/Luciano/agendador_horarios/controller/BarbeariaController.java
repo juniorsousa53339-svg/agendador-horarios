@@ -82,7 +82,7 @@ public class BarbeariaController {
             (
                     @RequestParam String ruaAtual,
                     @RequestParam String ruaNova,
-                    @RequestParam String numeroRuaAtual,
+                    @RequestParam int numeroRuaAtual,
                     @RequestParam String numeroRuaNovo
 
             ) {
