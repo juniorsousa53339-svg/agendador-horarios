@@ -20,15 +20,16 @@ public class ServicosService {
     public Servicos salvarServico(Servicos servicos) {
 
         Servicos servicoExistente =
-                servicosRepository.findByNomeServicoAndDescricaoServicoAndPrecoServico(
+                servicosRepository.findByNomeServicoAndDescricaoServicoAndPrecoServicoAndDuracaoMinutos(
 
                         servicos.getNomeServico(),
                         servicos.getDescricaoServico(),
-                        servicos.getPrecoServico()
+                        servicos.getPrecoServico(),
+                        servicos.getDuracaoMinutos()
 
                 );
 
-        if (servicoExistente == null) {
+        if (servicoExistente != null) {
             throw new RuntimeException("Serviço já está cadastrado.");
         }
 
@@ -107,5 +108,19 @@ public class ServicosService {
 
         servicoExistente.setDescricaoServico(descricaoNova);
         return servicosRepository.save(servicoExistente);
+    }
+
+    @PreAuthorize("hasRole('PROPRIETARIO')")
+    public Servicos alterarDuracaoServico(Integer duracaoAtual, Integer duracaoNova) {
+
+        Servicos servicoComDuracao =
+                servicosRepository.findByDuracaoMinutos(duracaoAtual);
+
+        if (Objects.isNull(servicoComDuracao)) {
+            throw new RuntimeException("Duração não encontrada.");
+        }
+
+        servicoComDuracao.setDuracaoMinutos(duracaoNova);
+        return servicosRepository.save(servicoComDuracao);
     }
 }

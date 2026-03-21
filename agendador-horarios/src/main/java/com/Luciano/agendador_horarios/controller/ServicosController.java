@@ -41,7 +41,7 @@ public class ServicosController {
                         (idServico, nomeServico, precoServico));
     }
 
-    @PutMapping("/servicos/alterar-nome")
+    @PutMapping("/alterar-nome")
     public ResponseEntity<Servicos> alterarNomeServico(
                                                        @RequestParam String nomeServicoAtual,
                                                        @RequestParam String nomeServicoNovo) {
@@ -51,7 +51,7 @@ public class ServicosController {
                         (nomeServicoAtual, nomeServicoNovo));
     }
 
-    @PutMapping("/servicos/alterar-preco")
+    @PutMapping("/alterar-preco")
     public ResponseEntity<Servicos> alterarPrecoServico(@RequestParam BigDecimal precoServicoAtual,
                                                         @RequestParam BigDecimal precoServicoNovo) {
 
@@ -60,12 +60,20 @@ public class ServicosController {
                         (precoServicoAtual, precoServicoNovo));
     }
 
-    @PutMapping("/servicos/alterar-descricao")
+    @PutMapping("/alterar-descricao")
     public ResponseEntity<Servicos> alterarDescricaoServico(@RequestBody String descricaoAtual,
                                                             @RequestParam String descricaoNova) {
 
         return ResponseEntity.accepted()
                 .body(servicosService.alterarDescricaoServico
                         (descricaoAtual, descricaoNova));
+    }
+
+    @PutMapping("/alterar-duracao")
+    public ResponseEntity<Servicos> alterarDuracaoServico(@RequestParam Integer duracaoAtual,
+                                                          @RequestParam Integer duracaoNova) {
+
+        return ResponseEntity.accepted()
+                .body(servicosService.alterarDuracaoServico(duracaoAtual, duracaoNova));
     }
 }

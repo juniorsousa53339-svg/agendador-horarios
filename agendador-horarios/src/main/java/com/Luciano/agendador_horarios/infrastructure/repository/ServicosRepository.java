@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface ServicosRepository extends JpaRepository<Servicos, Long> {
 
-    Servicos findByNomeServicoAndDescricaoServicoAndPrecoServico(
-            String nomeServico, String descricaoServico, BigDecimal precoServico
+    Servicos findByNomeServicoAndDescricaoServicoAndPrecoServicoAndDuracaoMinutos(
+            String nomeServico, String descricaoServico, BigDecimal precoServico, Integer duracaoMinutos
     );
 
 
@@ -17,5 +17,6 @@ public interface ServicosRepository extends JpaRepository<Servicos, Long> {
     Servicos findByNomeServico(String nome);
     Servicos findByPrecoServico(BigDecimal preco);
     Servicos findByDescricaoServico(String desc);
+    Servicos findByDuracaoMinutos(Integer duracaoMinutos);
     void deleteByNomeServico(String nome);
 }
