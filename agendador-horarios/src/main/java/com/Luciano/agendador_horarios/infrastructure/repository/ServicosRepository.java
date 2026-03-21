@@ -12,7 +12,7 @@ public interface ServicosRepository extends JpaRepository<Servicos, Long> {
             String nomeServico, String descricaoServico, BigDecimal precoServico
     );
 
-    // (mantenha os demais)
+
     List<Servicos> findByIdServicoAndNomeServicoAndPrecoServico(Long id, String nome, BigDecimal preco);
     Servicos findByNomeServico(String nome);
     Servicos findByPrecoServico(BigDecimal preco);
