@@ -39,7 +39,7 @@ public class ProprietarioController {
                 .body(proprietarioService.buscarProprietario(id_proprietario, nome, email));
     }
 
-    @PutMapping("/proprietarios/alterar-nome")
+    @PutMapping("/alterar-nome")
     public ResponseEntity<Proprietario> alterarNome(@RequestParam String nomeAtual,
                                                     @RequestParam String novoNome) {
 
@@ -47,7 +47,7 @@ public class ProprietarioController {
                 .body(proprietarioService.alterarNome(nomeAtual, novoNome));
     }
 
-    @PutMapping("/proprietarios/alterar-telefone")
+    @PutMapping("/alterar-telefone")
     public ResponseEntity<Proprietario> alterarTelefone(@RequestParam String telefoneAtual,
                                                         @RequestParam String telefoneNovo) {
 
@@ -55,7 +55,7 @@ public class ProprietarioController {
                 .body(proprietarioService.alterarTelefone(telefoneAtual, telefoneNovo));
     }
 
-    @PutMapping("/proprietarios/alterar-email")
+    @PutMapping("/alterar-email")
     public ResponseEntity<Proprietario> alterarEmail(@RequestParam String emailAtual,
                                                      @RequestParam String emailNovo) {
 

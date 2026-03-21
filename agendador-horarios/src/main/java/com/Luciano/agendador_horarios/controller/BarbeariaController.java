@@ -1,6 +1,7 @@
 package com.Luciano.agendador_horarios.controller;
 
 
+import com.Luciano.agendador_horarios.DTO.BarbeariaRequestDTO;
 import com.Luciano.agendador_horarios.infrastructure.entity.Barbearia;
 import com.Luciano.agendador_horarios.infrastructure.entity.Proprietario;
 import com.Luciano.agendador_horarios.service.BarbeariaService;
@@ -19,11 +20,10 @@ public class BarbeariaController {
     private final BarbeariaService barbeariaService;
 
     @PostMapping
-    public ResponseEntity<Barbearia> salvarBarbearia(@RequestBody Barbearia barbearia,
-                                                     @RequestBody Proprietario proprietario) {
+    public ResponseEntity<Barbearia> salvarBarbearia(@RequestBody BarbeariaRequestDTO request) {
 
         return ResponseEntity.accepted().body
-                (barbeariaService.salvarBarbearia(barbearia, proprietario));
+                (barbeariaService.salvarBarbearia(request.barbearia(), request.proprietario()));
     }
 
     @DeleteMapping
@@ -46,7 +46,7 @@ public class BarbeariaController {
                         (idBarbearia, nomeBarbearia, rua));
     }
 
-    @PutMapping("/barbearias/alterar-nome")
+    @PutMapping("/alterar-nome")
     public ResponseEntity<Barbearia> alterarNomeBarbearia(@RequestParam String nomeBarbeariaAtual,
                                                           @RequestParam String nomeBarbeariaNovo) {
 
@@ -55,7 +55,7 @@ public class BarbeariaController {
                         (nomeBarbeariaAtual, nomeBarbeariaNovo));
     }
 
-    @PutMapping("/barbearias/alterar-horarios-funcionamento")
+    @PutMapping("/alterar-horarios-funcionamento")
     public ResponseEntity<Barbearia> alterarHorariosFun
             (
                     @RequestParam LocalTime horarioAberturaAtual,
@@ -68,7 +68,7 @@ public class BarbeariaController {
                 (horarioAberturaAtual, horarioAberturaNovo, horarioFechamentoAtual, horarioFechamentoNovo));
     }
 
-    @PutMapping("/barbearias/alterar-telefone")
+    @PutMapping("/alterar-telefone")
     public ResponseEntity<Barbearia> alterarTelefone(@RequestParam String telefoneBarbeariaAtual,
                                                      @RequestParam String telefoneBarbeariaNovo) {
 
@@ -77,7 +77,7 @@ public class BarbeariaController {
                         (telefoneBarbeariaAtual, telefoneBarbeariaNovo));
     }
 
-    @PutMapping("/barbearias/alterar-endereco")
+    @PutMapping("/alterar-endereco")
     public ResponseEntity<Barbearia> alterarEndereco
             (
                     @RequestParam String ruaAtual,
@@ -94,7 +94,7 @@ public class BarbeariaController {
                         ));
     }
 
-    @PutMapping("/barbearias/alterar-proprietario")
+    @PutMapping("/alterar-proprietario")
     public ResponseEntity<Barbearia> alterarProprietario
             (
                     @RequestParam Proprietario proprietarioAtual,

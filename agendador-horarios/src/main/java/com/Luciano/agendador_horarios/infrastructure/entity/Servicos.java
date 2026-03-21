@@ -29,4 +29,8 @@ public class Servicos {
 
     @NotNull
     private BigDecimal precoServico;
+
+    @NotNull
+    @Min(5)
+    private Integer duracaoMinutos;
 }

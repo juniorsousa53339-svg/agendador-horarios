@@ -37,7 +37,7 @@ public class ClienteController {
                 (clienteService.buscarCliente(idCliente, nomeCliente));
     }
 
-    @PutMapping("/clientes/alterar-nome")
+    @PutMapping("/alterar-nome")
     public ResponseEntity<Cliente> alterarNomeCliente( @RequestParam String atualNomeCliente,
                                                        @RequestParam String novoNomeCliente)
     {
@@ -46,7 +46,7 @@ public class ClienteController {
                         (atualNomeCliente, novoNomeCliente));
     }
 
-    @PutMapping("/clientes/alterar-telefone")
+    @PutMapping("/alterar-telefone")
     public ResponseEntity<Cliente> alterarTelefoneCliente
             (
                     @RequestParam String telefoneAtual,
