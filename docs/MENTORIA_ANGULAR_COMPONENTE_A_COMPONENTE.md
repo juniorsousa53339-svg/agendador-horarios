@@ -5,6 +5,18 @@
 > - Funcionário visualizar agenda;
 > - Proprietário fazer gestão básica.
 
+## ✅ Escopo completo desta mentoria
+
+Esta mentoria cobre, de ponta a ponta:
+- [x] criação do projeto Angular no VS Code;
+- [x] configuração de ambiente e `HttpClient`;
+- [x] criação de **models**;
+- [x] criação de **services**;
+- [x] criação de **rotas**;
+- [x] criação de telas: Login, Agendar (cliente), Agenda (funcionário), Dashboard (proprietário), Gestão de Funcionários e Gestão de Serviços;
+- [x] criação de componentes compartilhados: Card, Page Header, Sidebar e Shell;
+- [x] estilo base e plano de execução para finalizar no mesmo dia.
+
 ---
 
 ## 0) Pré-requisitos e visão geral

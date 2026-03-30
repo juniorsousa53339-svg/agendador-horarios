@@ -1,8 +1,22 @@
-# Resumo Final do Sistema (Back-end + Guia Angular)
+# Resumo Final do Sistema (Back-end + Índice da Mentoria)
 
-Este é o documento principal do projeto. Ele substitui os documentos anteriores de planejamento e mentoria separados.
+Este é o documento principal do projeto e funciona como **mapa rápido**.
 
-> Mentoria Angular detalhada (componente a componente): `docs/MENTORIA_ANGULAR_COMPONENTE_A_COMPONENTE.md`.
+## Organização final dos documentos (enxuta)
+
+1. **Este documento (`RESUMO_FINAL_SISTEMA.md`)**
+   - visão geral do backend;
+   - contrato de API;
+   - separação por perfil (cliente, funcionário, proprietário);
+   - checklist final técnico.
+2. **Mentoria completa (`MENTORIA_ANGULAR_COMPONENTE_A_COMPONENTE.md`)**
+   - passo a passo completo do Angular;
+   - criação de projeto;
+   - criação de componentes;
+   - criação de telas;
+   - layout, rotas e próximos passos.
+
+> Mentoria detalhada (componente a componente): `docs/MENTORIA_ANGULAR_COMPONENTE_A_COMPONENTE.md`.
 
 ## 1) O que foi revisado no back-end
 
@@ -234,3 +248,11 @@ export class AgendamentoApiService {
 - Criar autenticação real (JWT ou sessão) para diferenciar proprietário/funcionário.
 - Criar endpoint específico para “agenda por funcionário por data”.
 - Padronizar nomes de parâmetros (`TelefoneNovo` -> `telefoneNovo`) para consistência.
+
+## 7) Checklist de revisão final
+
+- [x] Endpoints públicos para cliente separados dos endpoints internos.
+- [x] Rotas de agenda separadas por perfil (`FUNCIONARIO` e `PROPRIETARIO`).
+- [x] Validação de data futura em agendamento.
+- [x] Mentoria Angular completa com projeto + componentes + telas + layout.
+- [x] Encoder de senha configurado (`BCrypt`) para autenticação.
