@@ -197,7 +197,7 @@ export class ClienteApiService {
   }
 
   criar(payload: Cliente): Observable<Cliente> {
-    return this.http.post<Cliente>(this.endpoint, payload);
+    return this.http.post<Cliente>(`${this.endpoint}/publico`, payload);
   }
 
   buscar(idCliente: number, nomeCliente: string): Observable<Cliente[]> {
@@ -227,6 +227,10 @@ export class FuncionarioApiService {
   }
 
   buscar(idFuncionario: number, nomeFuncionario: string): Observable<Funcionario[]> {
+    if (idFuncionario === 0 && nomeFuncionario === '') {
+      return this.http.get<Funcionario[]>(`${this.endpoint}/publico`);
+    }
+
     const params = new HttpParams()
       .set('idFuncionario', idFuncionario)
       .set('nomeFuncionario', nomeFuncionario);
@@ -253,6 +257,10 @@ export class ServicoApiService {
   }
 
   buscar(idServico: number, nomeServico: string, precoServico: number): Observable<Servico[]> {
+    if (idServico === 0 && nomeServico === '' && precoServico === 0) {
+      return this.http.get<Servico[]>(`${this.endpoint}/publico`);
+    }
+
     const params = new HttpParams()
       .set('idServico', idServico)
       .set('nomeServico', nomeServico)
@@ -280,7 +288,7 @@ export class AgendamentoApiService {
   }
 
   criar(payload: AgendamentoRequest): Observable<AgendamentoResponse> {
-    return this.http.post<AgendamentoResponse>(this.endpoint, payload);
+    return this.http.post<AgendamentoResponse>(`${this.endpoint}/publico`, payload);
   }
 
   listarDoDia(data: string, idCliente: number): Observable<AgendamentoResponse[]> {
@@ -316,6 +324,14 @@ export const routes: Routes = [
   {
     path: 'proprietario/dashboard',
     loadComponent: () => import('./pages/proprietario/dashboard/dashboard.component').then(m => m.DashboardComponent)
+  },
+  {
+    path: 'proprietario/funcionarios',
+    loadComponent: () => import('./pages/proprietario/funcionarios/funcionarios.component').then(m => m.FuncionariosComponent)
+  },
+  {
+    path: 'proprietario/servicos',
+    loadComponent: () => import('./pages/proprietario/servicos/servicos.component').then(m => m.ServicosComponent)
   },
   { path: '**', redirectTo: 'agendar' }
 ];
@@ -582,6 +598,196 @@ Você pode chamar serviços existentes e mostrar totais em variáveis.
 
 ---
 
+## 6.5 Tela do Proprietário (Gestão de Funcionários)
+
+### Comando
+```bash
+ng g c pages/proprietario/funcionarios --standalone
+```
+
+### Objetivo
+- Proprietário listar funcionários;
+- Proprietário cadastrar funcionário;
+- Proprietário editar nome/telefone.
+
+### `funcionarios.component.ts` (base funcional)
+```ts
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FuncionarioApiService } from '../../../core/services/funcionario-api.service';
+import { Funcionario } from '../../../shared/models/funcionario.model';
+
+@Component({
+  selector: 'app-funcionarios',
+  standalone: true,
+  imports: [ReactiveFormsModule],
+  templateUrl: './funcionarios.component.html'
+})
+export class FuncionariosComponent implements OnInit {
+  lista: Funcionario[] = [];
+
+  form = this.fb.group({
+    nomeFuncionario: ['', Validators.required],
+    telefoneFuncionario: ['', Validators.required],
+    especialidade: ['', Validators.required]
+  });
+
+  constructor(private fb: FormBuilder, private funcionarioApi: FuncionarioApiService) {}
+
+  ngOnInit(): void {
+    this.carregar();
+  }
+
+  carregar(): void {
+    this.funcionarioApi.buscar(0, '').subscribe({
+      next: data => (this.lista = data),
+      error: () => (this.lista = [])
+    });
+  }
+
+  salvar(): void {
+    if (this.form.invalid) return;
+    // Dica: crie método POST no funcionario-api.service e chame aqui.
+    alert('Implementar POST /funcionarios no service e chamar aqui.');
+  }
+}
+```
+
+### `funcionarios.component.html`
+```html
+<section class="container">
+  <h1>Gestão de Funcionários</h1>
+
+  <form [formGroup]="form" (ngSubmit)="salvar()">
+    <input formControlName="nomeFuncionario" placeholder="Nome" />
+    <input formControlName="telefoneFuncionario" placeholder="Telefone" />
+    <input formControlName="especialidade" placeholder="Especialidade" />
+    <button type="submit">Salvar funcionário</button>
+  </form>
+
+  <div class="card" *ngFor="let item of lista">
+    <strong>{{ item.nomeFuncionario }}</strong>
+    <p>{{ item.especialidade }} - {{ item.telefoneFuncionario }}</p>
+  </div>
+</section>
+```
+
+---
+
+## 6.6 Tela do Proprietário (Gestão de Serviços)
+
+### Comando
+```bash
+ng g c pages/proprietario/servicos --standalone
+```
+
+### Objetivo
+- Proprietário listar serviços;
+- Proprietário cadastrar/editar serviço.
+
+### `servicos.component.ts` (base funcional)
+```ts
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ServicoApiService } from '../../../core/services/servico-api.service';
+import { Servico } from '../../../shared/models/servico.model';
+
+@Component({
+  selector: 'app-servicos',
+  standalone: true,
+  imports: [ReactiveFormsModule],
+  templateUrl: './servicos.component.html'
+})
+export class ServicosComponent implements OnInit {
+  lista: Servico[] = [];
+
+  form = this.fb.group({
+    nomeServico: ['', Validators.required],
+    descricaoServico: ['', Validators.required],
+    precoServico: [0, Validators.required],
+    duracaoMinutos: [30, Validators.required]
+  });
+
+  constructor(private fb: FormBuilder, private servicoApi: ServicoApiService) {}
+
+  ngOnInit(): void {
+    this.carregar();
+  }
+
+  carregar(): void {
+    this.servicoApi.buscar(0, '', 0).subscribe({
+      next: data => (this.lista = data),
+      error: () => (this.lista = [])
+    });
+  }
+}
+```
+
+### `servicos.component.html`
+```html
+<section class="container">
+  <h1>Gestão de Serviços</h1>
+
+  <form [formGroup]="form">
+    <input formControlName="nomeServico" placeholder="Nome do serviço" />
+    <input formControlName="descricaoServico" placeholder="Descrição" />
+    <input formControlName="precoServico" type="number" placeholder="Preço" />
+    <input formControlName="duracaoMinutos" type="number" placeholder="Duração (min)" />
+    <button type="button">Salvar serviço</button>
+  </form>
+
+  <div class="card" *ngFor="let item of lista">
+    <strong>{{ item.nomeServico }}</strong>
+    <p>{{ item.descricaoServico }}</p>
+    <p>{{ item.precoServico | currency:'BRL' }} · {{ item.duracaoMinutos }} min</p>
+  </div>
+</section>
+```
+
+---
+
+## 6.7 Componente de Navegação (menu lateral)
+
+### Comando
+```bash
+ng g c shared/components/sidebar --standalone
+```
+
+### `sidebar.component.html`
+```html
+<aside class="sidebar">
+  <a routerLink="/agendar">Agendar</a>
+  <a routerLink="/funcionario/agenda">Agenda Funcionário</a>
+  <a routerLink="/proprietario/dashboard">Dashboard</a>
+  <a routerLink="/proprietario/funcionarios">Funcionários</a>
+  <a routerLink="/proprietario/servicos">Serviços</a>
+</aside>
+```
+
+---
+
+## 6.8 Componente de Layout Principal (shell)
+
+### Comando
+```bash
+ng g c layout/shell --standalone
+```
+
+### `shell.component.html`
+```html
+<div class="app-shell">
+  <app-sidebar></app-sidebar>
+  <main class="app-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+```
+
+### Dica
+- Coloque o `ShellComponent` como layout padrão das rotas privadas.
+
+---
+
 ## 7) Componentes reutilizáveis (recomendado)
 
 ## 7.1 Card padrão
@@ -686,7 +892,10 @@ Depois você cria `role.guard` para bloquear rota de proprietário para funcion�
 5. Fazer login mockado (`/login`).
 6. Fazer agenda funcionário.
 7. Fazer dashboard proprietário.
-8. Melhorar layout e mensagens de erro.
+8. Fazer gestão de funcionários (proprietário).
+9. Fazer gestão de serviços (proprietário).
+10. Criar shell + sidebar.
+11. Melhorar layout e mensagens de erro.
 
 ---
 

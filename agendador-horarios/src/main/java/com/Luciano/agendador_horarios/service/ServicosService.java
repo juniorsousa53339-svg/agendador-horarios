@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,6 +16,13 @@ import java.util.Objects;
 public class ServicosService {
 
     private final ServicosRepository servicosRepository;
+
+    public List<Servicos> listarServicosPublico() {
+        return servicosRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparing(Servicos::getNomeServico, String.CASE_INSENSITIVE_ORDER))
+                .toList();
+    }
 
     @PreAuthorize("hasRole('PROPRIETARIO')")
     public Servicos salvarServico(Servicos servicos) {

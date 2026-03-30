@@ -22,6 +22,11 @@ public class FuncionarioController {
                 salvarFuncionario(funcionario));
     }
 
+    @GetMapping("/publico")
+    public ResponseEntity<List<Funcionario>> listarFuncionariosPublico() {
+        return ResponseEntity.ok(funcionarioService.listarFuncionariosPublico());
+    }
+
     @DeleteMapping
     public ResponseEntity<Void> deletarFuncionario(@RequestParam String nomeFuncionario) {
 

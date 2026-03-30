@@ -34,6 +34,15 @@ public class AgendamentoService {
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     @Transactional
     public AgendamentoResponseDTO criar(AgendamentoRequestDTO dto) {
+        return criarInterno(dto);
+    }
+
+    @Transactional
+    public AgendamentoResponseDTO criarPublico(AgendamentoRequestDTO dto) {
+        return criarInterno(dto);
+    }
+
+    private AgendamentoResponseDTO criarInterno(AgendamentoRequestDTO dto) {
         validarDataHoraFutura(dto.dataHoraAgendamento());
 
         Cliente cliente = clienteRepository.findById(dto.idCliente())

@@ -44,6 +44,17 @@ Este é o documento principal do projeto. Ele substitui os documentos anteriores
 
 ## 3) Contrato de API (resumo para o Angular)
 
+### Endpoints separados por perfil (novo)
+- **Cliente (público, sem login)**:
+  - `GET /funcionarios/publico`
+  - `GET /servicos/publico`
+  - `POST /clientes/publico`
+  - `POST /agendamentos/publico`
+- **Funcionário (com perfil FUNCIONARIO)**:
+  - `GET /agendamentos/funcionario`
+- **Proprietário (com perfil PROPRIETARIO)**:
+  - `GET /agendamentos/proprietario`
+
 ### Clientes
 - `POST /clientes`
 - `GET /clientes?idCliente=...&nomeCliente=...`
