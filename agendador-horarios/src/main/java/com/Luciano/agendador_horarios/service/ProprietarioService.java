@@ -37,7 +37,7 @@ public class ProprietarioService {
         Proprietario proprietario =
                 proprietarioRepository.findByNome(nome);
 
-        if (Objects.nonNull(proprietario)){
+        if (Objects.isNull(proprietario)){
             throw new RuntimeException("Proprietário não encontrado!");
         }
 

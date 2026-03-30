@@ -74,7 +74,7 @@ public class ClienteService {
     }
 
     @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Cliente alterarTelefoneCliente(String telefoneAtual, String TelefoneNovo) {
+    public Cliente alterarTelefoneCliente(String telefoneAtual, String telefoneNovo) {
 
         Cliente clienteComTelefone =
         clienteRepository.findByTelefoneCliente(telefoneAtual);
@@ -83,7 +83,7 @@ public class ClienteService {
             throw new RuntimeException("Telefone não encontrado.");
         }
 
-        clienteComTelefone.setTelefoneCliente(TelefoneNovo);
+        clienteComTelefone.setTelefoneCliente(telefoneNovo);
         return clienteRepository.save(clienteComTelefone);
     }
 }

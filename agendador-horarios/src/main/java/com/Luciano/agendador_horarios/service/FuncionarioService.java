@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,6 +15,13 @@ import java.util.Objects;
 public class FuncionarioService {
 
     private final FuncionarioRepository funcionarioRepository;
+
+    public List<Funcionario> listarFuncionariosPublico() {
+        return funcionarioRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparing(Funcionario::getNomeFuncionario, String.CASE_INSENSITIVE_ORDER))
+                .toList();
+    }
 
     @PreAuthorize("hasRole('PROPRIETARIO')")
     public Funcionario salvarFuncionario(Funcionario funcionario) {
@@ -50,9 +58,13 @@ public class FuncionarioService {
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public List<Funcionario> buscarFuncionario(long idFuncionario, String nomeFuncionario) {
 
-        List<Funcionario> funcionarios =
-                funcionarioRepository.findByNomeFuncionarioContainingIgnoreCase
-                        ( nomeFuncionario);
+        List<Funcionario> funcionarios;
+        if (idFuncionario > 0) {
+            funcionarios = funcionarioRepository
+                    .findByIdFuncionarioAndNomeFuncionarioContainingIgnoreCase(idFuncionario, nomeFuncionario);
+        } else {
+            funcionarios = funcionarioRepository.findByNomeFuncionarioContainingIgnoreCase(nomeFuncionario);
+        }
 
         if (Objects.isNull(funcionarios) || funcionarios.isEmpty()) {
             throw new RuntimeException("Funcionário não encontrado.");

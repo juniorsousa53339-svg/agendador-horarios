@@ -2,6 +2,7 @@ package com.Luciano.agendador_horarios.service;
 
 import com.Luciano.agendador_horarios.DTO.AgendamentoRequestDTO;
 import com.Luciano.agendador_horarios.DTO.AgendamentoResponseDTO;
+import com.Luciano.agendador_horarios.DTO.AgendamentoPublicoRequestDTO;
 import com.Luciano.agendador_horarios.infrastructure.entity.Agendamento;
 import com.Luciano.agendador_horarios.infrastructure.entity.Cliente;
 import com.Luciano.agendador_horarios.infrastructure.entity.Funcionario;
@@ -34,6 +35,35 @@ public class AgendamentoService {
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     @Transactional
     public AgendamentoResponseDTO criar(AgendamentoRequestDTO dto) {
+        return criarInterno(dto);
+    }
+
+    @Transactional
+    public AgendamentoResponseDTO criarPublico(AgendamentoRequestDTO dto) {
+        return criarInterno(dto);
+    }
+
+    @Transactional
+    public AgendamentoResponseDTO criarPublico(AgendamentoPublicoRequestDTO dto) {
+        Cliente cliente = clienteRepository.findByNomeClienteAndTelefoneCliente(dto.nomeCliente(), dto.telefoneCliente());
+
+        if (cliente == null) {
+            cliente = new Cliente();
+            cliente.setNomeCliente(dto.nomeCliente());
+            cliente.setTelefoneCliente(dto.telefoneCliente());
+            cliente = clienteRepository.save(cliente);
+        }
+
+        return criarInterno(new AgendamentoRequestDTO(
+                cliente.getIdCliente(),
+                dto.idFuncionario(),
+                dto.idServico(),
+                dto.dataHoraAgendamento()
+        ));
+    }
+
+    private AgendamentoResponseDTO criarInterno(AgendamentoRequestDTO dto) {
+        validarDataHoraFutura(dto.dataHoraAgendamento());
 
         Cliente cliente = clienteRepository.findById(dto.idCliente())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
@@ -106,6 +136,7 @@ public class AgendamentoService {
     @Transactional
     public AgendamentoResponseDTO alterar(LocalDateTime dataHoraAtual, Long idCliente,
                                           LocalDateTime dataHoraNova, Long idClienteNovo) {
+        validarDataHoraFutura(dataHoraNova);
 
         Cliente clienteAtual = clienteRepository.findById(idCliente)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente atual não encontrado"));
@@ -139,5 +170,11 @@ public class AgendamentoService {
                 salvo.getDataHoraAgendamento(),
                 "MARCADO"
         );
+    }
+
+    private void validarDataHoraFutura(LocalDateTime dataHoraAgendamento) {
+        if (dataHoraAgendamento == null || !dataHoraAgendamento.isAfter(LocalDateTime.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Data/hora do agendamento deve ser futura.");
+        }
     }
 }

@@ -2,12 +2,14 @@ package com.Luciano.agendador_horarios.controller;
 
 import com.Luciano.agendador_horarios.DTO.AgendamentoRequestDTO;
 import com.Luciano.agendador_horarios.DTO.AgendamentoResponseDTO;
+import com.Luciano.agendador_horarios.DTO.AgendamentoPublicoRequestDTO;
 import com.Luciano.agendador_horarios.infrastructure.entity.Agendamento;
 import com.Luciano.agendador_horarios.service.AgendamentoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -27,6 +29,12 @@ public class AgendamentoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(criado);
     }
 
+    @PostMapping("/publico")
+    public ResponseEntity<AgendamentoResponseDTO> criarPublico(@RequestBody @Valid AgendamentoPublicoRequestDTO dto) {
+        var criado = agendamentoService.criarPublico(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(criado);
+    }
+
     @DeleteMapping
     public ResponseEntity<Void> deletar(@RequestParam LocalDateTime dataHora,
                                         @RequestParam Long idCliente) {
@@ -35,8 +43,23 @@ public class AgendamentoController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public ResponseEntity<List<Agendamento>> listarDoDia(@RequestParam LocalDate data,
                                                          @RequestParam Long idCliente) {
+        return ResponseEntity.ok(agendamentoService.buscarDoDia(data, idCliente));
+    }
+
+    @GetMapping("/funcionario")
+    @PreAuthorize("hasRole('FUNCIONARIO')")
+    public ResponseEntity<List<Agendamento>> listarAgendaFuncionario(@RequestParam LocalDate data,
+                                                                     @RequestParam Long idCliente) {
+        return ResponseEntity.ok(agendamentoService.buscarDoDia(data, idCliente));
+    }
+
+    @GetMapping("/proprietario")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
+    public ResponseEntity<List<Agendamento>> listarAgendaProprietario(@RequestParam LocalDate data,
+                                                                      @RequestParam Long idCliente) {
         return ResponseEntity.ok(agendamentoService.buscarDoDia(data, idCliente));
     }
 

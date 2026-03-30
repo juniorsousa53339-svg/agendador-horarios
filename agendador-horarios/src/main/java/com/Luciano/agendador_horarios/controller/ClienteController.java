@@ -22,6 +22,11 @@ public class ClienteController {
                 .body(clienteService.salvarCliente(cliente));
     }
 
+    @PostMapping("/publico")
+    public ResponseEntity<Cliente> salvarClientePublico(@RequestBody Cliente cliente) {
+        return ResponseEntity.accepted().body(clienteService.salvarCliente(cliente));
+    }
+
     @DeleteMapping
     public ResponseEntity<Void> deletarCliente(@RequestParam String nomeCliente) {
 
@@ -50,14 +55,14 @@ public class ClienteController {
     public ResponseEntity<Cliente> alterarTelefoneCliente
             (
                     @RequestParam String telefoneAtual,
-                    @RequestParam String TelefoneNovo
+                    @RequestParam String telefoneNovo
 
             ) {
 
 
         return ResponseEntity.accepted().body
                 (clienteService.alterarTelefoneCliente
-                        (telefoneAtual, TelefoneNovo));
+                        (telefoneAtual, telefoneNovo));
     }
 
 }
