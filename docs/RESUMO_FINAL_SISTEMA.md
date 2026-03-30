@@ -2,6 +2,8 @@
 
 Este é o documento principal do projeto. Ele substitui os documentos anteriores de planejamento e mentoria separados.
 
+> Mentoria Angular detalhada (componente a componente): `docs/MENTORIA_ANGULAR_COMPONENTE_A_COMPONENTE.md`.
+
 ## 1) O que foi revisado no back-end
 
 ### Correções aplicadas
@@ -221,4 +223,3 @@ export class AgendamentoApiService {
 - Criar autenticação real (JWT ou sessão) para diferenciar proprietário/funcionário.
 - Criar endpoint específico para “agenda por funcionário por data”.
 - Padronizar nomes de parâmetros (`TelefoneNovo` -> `telefoneNovo`) para consistência.
-
