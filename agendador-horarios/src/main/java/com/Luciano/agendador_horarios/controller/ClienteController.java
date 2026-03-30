@@ -22,6 +22,11 @@ public class ClienteController {
                 .body(clienteService.salvarCliente(cliente));
     }
 
+    @PostMapping("/publico")
+    public ResponseEntity<Cliente> salvarClientePublico(@RequestBody Cliente cliente) {
+        return ResponseEntity.accepted().body(clienteService.salvarCliente(cliente));
+    }
+
     @DeleteMapping
     public ResponseEntity<Void> deletarCliente(@RequestParam String nomeCliente) {
 

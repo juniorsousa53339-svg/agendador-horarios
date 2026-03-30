@@ -23,6 +23,11 @@ public class ServicosController {
                 (servicosService.salvarServico(servicos));
     }
 
+    @GetMapping("/publico")
+    public ResponseEntity<List<Servicos>> listarServicosPublico() {
+        return ResponseEntity.ok(servicosService.listarServicosPublico());
+    }
+
     @DeleteMapping
     public ResponseEntity<Void> deletarServico(@RequestParam String nomeServico) {
 

@@ -34,6 +34,16 @@ public class AgendamentoService {
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     @Transactional
     public AgendamentoResponseDTO criar(AgendamentoRequestDTO dto) {
+        return criarInterno(dto);
+    }
+
+    @Transactional
+    public AgendamentoResponseDTO criarPublico(AgendamentoRequestDTO dto) {
+        return criarInterno(dto);
+    }
+
+    private AgendamentoResponseDTO criarInterno(AgendamentoRequestDTO dto) {
+        validarDataHoraFutura(dto.dataHoraAgendamento());
 
         Cliente cliente = clienteRepository.findById(dto.idCliente())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
@@ -106,6 +116,7 @@ public class AgendamentoService {
     @Transactional
     public AgendamentoResponseDTO alterar(LocalDateTime dataHoraAtual, Long idCliente,
                                           LocalDateTime dataHoraNova, Long idClienteNovo) {
+        validarDataHoraFutura(dataHoraNova);
 
         Cliente clienteAtual = clienteRepository.findById(idCliente)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente atual não encontrado"));
@@ -139,5 +150,11 @@ public class AgendamentoService {
                 salvo.getDataHoraAgendamento(),
                 "MARCADO"
         );
+    }
+
+    private void validarDataHoraFutura(LocalDateTime dataHoraAgendamento) {
+        if (dataHoraAgendamento == null || !dataHoraAgendamento.isAfter(LocalDateTime.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Data/hora do agendamento deve ser futura.");
+        }
     }
 }

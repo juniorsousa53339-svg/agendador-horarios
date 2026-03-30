@@ -48,7 +48,8 @@
 
 
 ## 📘 Mentoria de fechamento do back-end
-- Plano detalhado para concluir hoje até 21h: `docs/REVISAO_BACKEND_E_CRONOGRAMA.md`.
+- Plano detalhado para concluir hoje até 21h: `docs/RESUMO_FINAL_SISTEMA.md`.
+- Mentoria Angular detalhada por telas e componentes: `docs/MENTORIA_ANGULAR_COMPONENTE_A_COMPONENTE.md`.
 
 
 ## 🧯 Solução para erro `TypeTag :: UNKNOWN`
