@@ -17,7 +17,7 @@ public class BarbeariaService {
 
     private final BarbeariaRepository barbeariaRepository;
 
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Barbearia salvarBarbearia(Barbearia barbearia, Proprietario proprietario) {
 
         Barbearia barbeariaExistente =
@@ -33,13 +33,13 @@ public class BarbeariaService {
         return barbeariaRepository.save(barbearia);
     }
 
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public void deletarBarbearia(String nomeBarbearia) {
 
         Barbearia barbearia =
                 barbeariaRepository.findByNomeBarbearia(nomeBarbearia);
 
-        if (Objects.nonNull(barbearia)) {
+        if (Objects.isNull(barbearia)) {
             throw new RuntimeException("Barbearia não encontrada.");
         }
 
@@ -58,14 +58,14 @@ public class BarbeariaService {
                 barbeariaRepository.findByIdBarbeariaAndNomeBarbeariaAndRua
                         (idBarbearia, nomeBarbearia, rua);
 
-        if (Objects.nonNull(barbearias) || barbearias.isEmpty()) {
+        if (Objects.isNull(barbearias) || barbearias.isEmpty()) {
             throw new RuntimeException("Barbearia não encontrada.");
         }
 
         return barbearias;
     }
 
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Barbearia alterarNomeBarbearia(String nomeBarbeariaAtual,
                                           String nomeBarbeariaNovo) {
 
@@ -81,7 +81,7 @@ public class BarbeariaService {
                 (barbeariaExistente);
     }
 
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Barbearia alterarHorariosFun
             (
 
@@ -105,7 +105,7 @@ public class BarbeariaService {
         return barbeariaRepository.save(barbeariaComHorario);
     }
 
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Barbearia alterarTelefone(String telefoneAtual, String telefoneNovo) {
 
         Barbearia barbeariaComTelefone =
@@ -119,7 +119,7 @@ public class BarbeariaService {
         return barbeariaRepository.save(barbeariaComTelefone);
     }
 
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Barbearia alterarEndereco
             (
 
@@ -139,7 +139,7 @@ public class BarbeariaService {
         return barbeariaRepository.save(barbeariaComEndereco);
     }
 
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Barbearia alterarProprietario
             (
                     Proprietario proprietarioAtual,

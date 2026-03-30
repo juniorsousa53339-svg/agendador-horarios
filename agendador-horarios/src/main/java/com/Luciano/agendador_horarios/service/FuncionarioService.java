@@ -50,9 +50,13 @@ public class FuncionarioService {
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public List<Funcionario> buscarFuncionario(long idFuncionario, String nomeFuncionario) {
 
-        List<Funcionario> funcionarios =
-                funcionarioRepository.findByNomeFuncionarioContainingIgnoreCase
-                        ( nomeFuncionario);
+        List<Funcionario> funcionarios;
+        if (idFuncionario > 0) {
+            funcionarios = funcionarioRepository
+                    .findByIdFuncionarioAndNomeFuncionarioContainingIgnoreCase(idFuncionario, nomeFuncionario);
+        } else {
+            funcionarios = funcionarioRepository.findByNomeFuncionarioContainingIgnoreCase(nomeFuncionario);
+        }
 
         if (Objects.isNull(funcionarios) || funcionarios.isEmpty()) {
             throw new RuntimeException("Funcionário não encontrado.");
