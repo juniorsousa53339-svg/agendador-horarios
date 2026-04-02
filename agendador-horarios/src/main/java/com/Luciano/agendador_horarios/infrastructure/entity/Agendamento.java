@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import jakarta.validation.constraints.*;
-
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,9 +19,8 @@ import java.time.LocalDateTime;
 public class Agendamento {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    private Long idAgendamento;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID idAgendamento;
 
     @NotNull
     private LocalDateTime dataHoraAgendamento;

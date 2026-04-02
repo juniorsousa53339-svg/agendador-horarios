@@ -21,7 +21,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
 
+/**
+ * Service responsável pela lógica de negócio dos agendamentos.
+ * Gerencia validações de disponibilidade e permissões de acesso.
+ */
 @Service
 @RequiredArgsConstructor
 public class AgendamentoService {
@@ -31,20 +36,13 @@ public class AgendamentoService {
     private final FuncionarioRepository funcionarioRepository;
     private final ServicosRepository servicosRepository;
 
+    /**
+     * Registra um novo agendamento após validar a existência das entidades e conflitos de horário.
+     */
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     @Transactional
     public AgendamentoResponseDTO criar(AgendamentoRequestDTO dto) {
-        return criarInterno(dto);
-    }
-
-    @Transactional
-    public AgendamentoResponseDTO criarPublico(AgendamentoRequestDTO dto) {
-        return criarInterno(dto);
-    }
-
-    private AgendamentoResponseDTO criarInterno(AgendamentoRequestDTO dto) {
-        validarDataHoraFutura(dto.dataHoraAgendamento());
-
+        // Validação de existência das entidades relacionadas
         Cliente cliente = clienteRepository.findById(dto.idCliente())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
 
@@ -54,7 +52,7 @@ public class AgendamentoService {
         Servicos servico = servicosRepository.findById(dto.idServico())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Serviço não encontrado"));
 
-
+        // Regra de negócio: impede duplicidade de horário para o mesmo funcionário
         if (agendamentoRepository.existsByFuncionarioAndDataHoraAgendamento(funcionario, dto.dataHoraAgendamento())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Funcionário já possui agendamento nesse horário.");
         }
@@ -65,25 +63,17 @@ public class AgendamentoService {
         entity.setServico(servico);
         entity.setDataHoraAgendamento(dto.dataHoraAgendamento());
 
-
         Agendamento salvo = agendamentoRepository.save(entity);
 
-        return new AgendamentoResponseDTO(
-                salvo.getIdAgendamento(),
-                salvo.getCliente().getIdCliente(),
-                salvo.getCliente().getNomeCliente(),
-                salvo.getFuncionario().getIdFuncionario(),
-                salvo.getFuncionario().getNomeFuncionario(),
-                salvo.getServico().getIdServico(),
-                salvo.getServico().getNomeServico(),
-                salvo.getDataHoraAgendamento(),
-                "MARCADO"
-        );
+        return mapperParaResponse(salvo);
     }
 
+    /**
+     * Remove um agendamento específico baseado no horário e identificador do cliente.
+     */
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     @Transactional
-    public void deletar(LocalDateTime dataHoraAgendamento, Long idCliente) {
+    public void deletar(LocalDateTime dataHoraAgendamento, UUID idCliente) {
         Cliente cliente = clienteRepository.findById(idCliente)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
 
@@ -94,12 +84,16 @@ public class AgendamentoService {
         agendamentoRepository.deleteByDataHoraAgendamentoAndCliente(dataHoraAgendamento, cliente);
     }
 
+    /**
+     * Consulta agendamentos de um cliente em uma data específica.
+     */
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     @Transactional(readOnly = true)
-    public List<Agendamento> buscarDoDia(LocalDate data, Long idCliente) {
+    public List<Agendamento> buscarDoDia(LocalDate data, UUID idCliente) {
         Cliente cliente = clienteRepository.findById(idCliente)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
 
+        // Define o range do dia (00:00:00 até 23:59:59)
         LocalDateTime inicio = data.atStartOfDay();
         LocalDateTime fim = data.atTime(LocalTime.MAX);
 
@@ -112,11 +106,13 @@ public class AgendamentoService {
         return lista;
     }
 
+    /**
+     * Altera o horário ou o cliente de um agendamento existente, validando a nova disponibilidade.
+     */
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     @Transactional
-    public AgendamentoResponseDTO alterar(LocalDateTime dataHoraAtual, Long idCliente,
-                                          LocalDateTime dataHoraNova, Long idClienteNovo) {
-        validarDataHoraFutura(dataHoraNova);
+    public AgendamentoResponseDTO alterar(LocalDateTime dataHoraAtual, UUID idCliente,
+                                          LocalDateTime dataHoraNova, UUID idClienteNovo) {
 
         Cliente clienteAtual = clienteRepository.findById(idCliente)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente atual não encontrado"));
@@ -129,7 +125,7 @@ public class AgendamentoService {
         Cliente clienteNovo = clienteRepository.findById(idClienteNovo)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente novo não encontrado"));
 
-
+        // Valida se o novo horário está livre para o funcionário vinculado
         if (agendamentoRepository.existsByFuncionarioAndDataHoraAgendamento(agenda.getFuncionario(), dataHoraNova)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Funcionário já possui agendamento nesse novo horário.");
         }
@@ -139,6 +135,13 @@ public class AgendamentoService {
 
         Agendamento salvo = agendamentoRepository.save(agenda);
 
+        return mapperParaResponse(salvo);
+    }
+
+    /**
+     * Método auxiliar para converter a entidade em DTO de resposta.
+     */
+    private AgendamentoResponseDTO mapperParaResponse(Agendamento salvo) {
         return new AgendamentoResponseDTO(
                 salvo.getIdAgendamento(),
                 salvo.getCliente().getIdCliente(),
@@ -150,11 +153,5 @@ public class AgendamentoService {
                 salvo.getDataHoraAgendamento(),
                 "MARCADO"
         );
-    }
-
-    private void validarDataHoraFutura(LocalDateTime dataHoraAgendamento) {
-        if (dataHoraAgendamento == null || !dataHoraAgendamento.isAfter(LocalDateTime.now())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Data/hora do agendamento deve ser futura.");
-        }
     }
 }

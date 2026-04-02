@@ -7,7 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
+/**
+ * Controller responsável pela gestão dos perfis de proprietários.
+ * Centraliza as operações de cadastro e atualização dos administradores do sistema.
+ */
 @RestController
 @RequestMapping("/proprietarios")
 @RequiredArgsConstructor
@@ -15,51 +20,70 @@ public class ProprietarioController {
 
     private final ProprietarioService proprietarioService;
 
+    /**
+     * Endpoint para cadastrar um novo proprietário no sistema.
+     */
     @PostMapping
     public ResponseEntity<Proprietario> salvarProprietario(@RequestBody Proprietario proprietario) {
-
-        return ResponseEntity.accepted().body
-                (proprietarioService.salvarProprietario(proprietario));
+        var salvo = proprietarioService.salvarProprietario(proprietario);
+        return ResponseEntity.accepted().body(salvo);
     }
 
+    /**
+     * Endpoint para remover o registro de um proprietário pelo nome.
+     */
     @DeleteMapping
     public ResponseEntity<Void> deletarProprietario(@RequestParam String nome) {
-
         proprietarioService.deletarProprietario(nome);
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Endpoint para busca de proprietários utilizando filtros de Nome, ID e Email.
+     */
     @GetMapping
-    public ResponseEntity<List<Proprietario>> buscarProprietario
-            (@RequestParam String nome,
-             @RequestParam long id_proprietario,
-             @RequestParam String email) {
+    public ResponseEntity<List<Proprietario>> buscarProprietario(
+            @RequestParam String nome,
+            @RequestParam UUID id_proprietario,
+            @RequestParam String email) {
 
-        return ResponseEntity.ok()
-                .body(proprietarioService.buscarProprietario(id_proprietario, nome, email));
+        var lista = proprietarioService.buscarProprietario(id_proprietario, nome, email);
+        return ResponseEntity.ok().body(lista);
     }
 
+    /**
+     * Endpoint específico para atualização do nome do proprietário.
+     */
     @PutMapping("/alterar-nome")
-    public ResponseEntity<Proprietario> alterarNome(@RequestParam String nomeAtual,
-                                                    @RequestParam String novoNome) {
+    public ResponseEntity<Proprietario> alterarNome(
+            @RequestParam String nomeAtual,
+            @RequestParam String novoNome) {
 
-        return ResponseEntity.accepted()
-                .body(proprietarioService.alterarNome(nomeAtual, novoNome));
+        var atualizado = proprietarioService.alterarNome(nomeAtual, novoNome);
+        return ResponseEntity.accepted().body(atualizado);
     }
 
+    /**
+     * Endpoint específico para atualização do telefone de contato.
+     */
     @PutMapping("/alterar-telefone")
-    public ResponseEntity<Proprietario> alterarTelefone(@RequestParam String telefoneAtual,
-                                                        @RequestParam String telefoneNovo) {
+    public ResponseEntity<Proprietario> alterarTelefone(
+            @RequestParam String telefoneAtual,
+            @RequestParam String telefoneNovo) {
 
-        return ResponseEntity.accepted()
-                .body(proprietarioService.alterarTelefone(telefoneAtual, telefoneNovo));
+        var atualizado = proprietarioService.alterarTelefone(telefoneAtual, telefoneNovo);
+        return ResponseEntity.accepted().body(atualizado);
     }
 
+    /**
+     * Endpoint específico para atualização do e-mail de acesso/notificação.
+     */
     @PutMapping("/alterar-email")
-    public ResponseEntity<Proprietario> alterarEmail(@RequestParam String emailAtual,
-                                                     @RequestParam String emailNovo) {
+    public ResponseEntity<Proprietario> alterarEmail(
+            @RequestParam String emailAtual,
+            @RequestParam String emailNovo) {
 
-        return ResponseEntity.accepted()
-                .body(proprietarioService.alterarEmail(emailAtual, emailNovo));
+        var atualizado = proprietarioService.alterarEmail(emailAtual, emailNovo);
+        return ResponseEntity.accepted().body(atualizado);
     }
 }

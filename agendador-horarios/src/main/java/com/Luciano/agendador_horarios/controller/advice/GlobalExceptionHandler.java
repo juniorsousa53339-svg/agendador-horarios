@@ -9,25 +9,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 
 /**
- * Classe base para padronizar erros HTTP da API.
- *
- * COMO USAR:
- * 1) Deixe essa classe ativa no projeto.
- * 2) Quando criar exceções específicas (ex.: RecursoNaoEncontradoException),
- *    adicione novos métodos com @ExceptionHandler para cada tipo.
- * 3) O front-end passa a receber sempre o mesmo formato JSON de erro,
- *    facilitando exibição de mensagens na interface.
+ * Centralizador de exceções da API (AOP - Aspect Oriented Programming).
+ * Garante que qualquer erro no sistema seja devolvido em um formato JSON padronizado.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**
-     * Handler de fallback para regras de negócio simples
-     * (hoje seu código lança bastante RuntimeException).
-     *
-     * Dica de evolução:
-     * - Trocar RuntimeException por exceções próprias e
-     *   devolver status mais específico (404, 409, 422...).
+     * Captura falhas de lógica de negócio (RuntimeExceptions).
+     * Transforma exceções não tratadas em respostas HTTP 400 (Bad Request).
      */
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiErrorResponse> handleRuntimeException(
@@ -46,11 +36,8 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Handler genérico para erros inesperados.
-     *
-     * Dica de evolução:
-     * - Em produção, evitar expor detalhes internos da exceção.
-     * - Logar stacktrace com logger (SLF4J) para análise.
+     * Handler de fallback para erros críticos ou inesperados (Exception).
+     * Evita que o servidor exponha detalhes sensíveis do StackTrace no retorno 500.
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGenericException(
@@ -69,16 +56,8 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * DTO interno de resposta de erro.
-     *
-     * Exemplo de JSON retornado:
-     * {
-     *   "timestamp": "2026-01-01T10:00:00",
-     *   "status": 400,
-     *   "error": "Regra de negócio inválida",
-     *   "message": "Cliente não encontrado.",
-     *   "path": "/clientes"
-     * }
+     * DTO (Data Transfer Object) imutável para padronização das respostas de erro.
+     * Facilita o consumo pelo Front-end (Mobile/Web).
      */
     public record ApiErrorResponse(
             LocalDateTime timestamp,
@@ -86,6 +65,5 @@ public class GlobalExceptionHandler {
             String error,
             String message,
             String path
-    ) {
-    }
+    ) { }
 }

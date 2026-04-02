@@ -8,13 +8,17 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
+/**
+ * Endpoint para gestão de agendamentos.
+ * Coordena as requisições externas para as operações de criação, consulta e cancelamento.
+ */
 @RestController
 @RequestMapping("/agendamentos")
 @RequiredArgsConstructor
@@ -22,51 +26,45 @@ public class AgendamentoController {
 
     private final AgendamentoService agendamentoService;
 
+    /**
+     * Endpoint para criar um novo agendamento.
+     * Retorna 201 (Created) e os dados do agendamento confirmado.
+     */
     @PostMapping
     public ResponseEntity<AgendamentoResponseDTO> criar(@RequestBody @Valid AgendamentoRequestDTO dto) {
         var criado = agendamentoService.criar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(criado);
     }
 
-    @PostMapping("/publico")
-    public ResponseEntity<AgendamentoResponseDTO> criarPublico(@RequestBody @Valid AgendamentoRequestDTO dto) {
-        var criado = agendamentoService.criarPublico(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(criado);
-    }
-
+    /**
+     * Endpoint para cancelar um agendamento existente.
+     * Retorna 204 (No Content) após a remoção bem-sucedida.
+     */
     @DeleteMapping
     public ResponseEntity<Void> deletar(@RequestParam LocalDateTime dataHora,
-                                        @RequestParam Long idCliente) {
+                                        @RequestParam UUID idCliente) {
         agendamentoService.deletar(dataHora, idCliente);
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Endpoint para listar os agendamentos de um cliente em uma data específica.
+     */
     @GetMapping
-    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public ResponseEntity<List<Agendamento>> listarDoDia(@RequestParam LocalDate data,
-                                                         @RequestParam Long idCliente) {
-        return ResponseEntity.ok(agendamentoService.buscarDoDia(data, idCliente));
+                                                         @RequestParam UUID idCliente) {
+        var agendamentos = agendamentoService.buscarDoDia(data, idCliente);
+        return ResponseEntity.ok(agendamentos);
     }
 
-    @GetMapping("/funcionario")
-    @PreAuthorize("hasRole('FUNCIONARIO')")
-    public ResponseEntity<List<Agendamento>> listarAgendaFuncionario(@RequestParam LocalDate data,
-                                                                     @RequestParam Long idCliente) {
-        return ResponseEntity.ok(agendamentoService.buscarDoDia(data, idCliente));
-    }
-
-    @GetMapping("/proprietario")
-    @PreAuthorize("hasRole('PROPRIETARIO')")
-    public ResponseEntity<List<Agendamento>> listarAgendaProprietario(@RequestParam LocalDate data,
-                                                                      @RequestParam Long idCliente) {
-        return ResponseEntity.ok(agendamentoService.buscarDoDia(data, idCliente));
-    }
-
+    /**
+     * Endpoint para atualizar informações de um agendamento (como horário ou cliente).
+     */
     @PutMapping
     public ResponseEntity<AgendamentoResponseDTO> alterar(@RequestParam LocalDateTime dataHoraAtual,
-                                                          @RequestParam Long idClienteAtual,
+                                                          @RequestParam UUID idClienteAtual,
                                                           @RequestParam LocalDateTime dataHoraNova,
-                                                          @RequestParam Long idClienteNovo) {
+                                                          @RequestParam UUID idClienteNovo) {
         var atualizado = agendamentoService.alterar(dataHoraAtual, idClienteAtual, dataHoraNova, idClienteNovo);
         return ResponseEntity.ok(atualizado);
     }
