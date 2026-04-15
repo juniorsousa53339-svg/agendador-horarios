@@ -4,7 +4,9 @@ import com.Luciano.agendador_horarios.DTO.BarbeariaRequestDTO;
 import com.Luciano.agendador_horarios.infrastructure.entity.Barbearia;
 import com.Luciano.agendador_horarios.infrastructure.entity.Proprietario;
 import com.Luciano.agendador_horarios.service.BarbeariaService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +29,9 @@ public class BarbeariaController {
      * Endpoint para cadastrar uma nova barbearia vinculada a um proprietário.
      */
     @PostMapping
-    public ResponseEntity<Barbearia> salvarBarbearia(@RequestBody BarbeariaRequestDTO request) {
+    public ResponseEntity<Barbearia> salvarBarbearia(@RequestBody @Valid BarbeariaRequestDTO request) {
         var salvo = barbeariaService.salvarBarbearia(request.barbearia(), request.proprietario());
-        return ResponseEntity.accepted().body(salvo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }
 
     /**
