@@ -47,23 +47,4 @@
 </div>
 
 
-## 📘 Mentoria de fechamento do back-end
-- Plano detalhado para concluir hoje até 21h: `docs/RESUMO_FINAL_SISTEMA.md`.
-- Mentoria Angular detalhada por telas e componentes: `docs/MENTORIA_ANGULAR_COMPONENTE_A_COMPONENTE.md`.
 
-
-## 🧯 Solução para erro `TypeTag :: UNKNOWN`
-Se aparecer erro como `java.lang.ExceptionInInitializerError` + `com.sun.tools.javac.code.TypeTag :: UNKNOWN`, normalmente é incompatibilidade de JDK com o processador do Lombok.
-
-Use JDK 17 (ou 21) para compilar/rodar:
-```bash
-export JAVA_HOME=/root/.local/share/mise/installs/java/17.0.2
-export PATH="$JAVA_HOME/bin:$PATH"
-java -version
-mvn -version
-```
-
-O `pom.xml` foi ajustado para:
-- fixar `release` de compilação em Java 17;
-- atualizar Lombok para versão compatível;
-- falhar cedo com mensagem clara caso a JDK seja fora do range suportado.
