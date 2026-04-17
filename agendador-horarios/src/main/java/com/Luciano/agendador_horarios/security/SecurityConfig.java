@@ -1,55 +1,105 @@
 package com.Luciano.agendador_horarios.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.List;
 
 /**
- * Configuração central de segurança do Spring Security.
- * Define permissões de rotas, políticas de CORS e proteção contra ataques comuns.
+ * Configuração central de segurança.
+ *
+ * Objetivo desta versão:
+ * - ativar autenticação real por JWT;
+ * - definir claramente o que é público e o que é protegido;
+ * - manter método @PreAuthorize funcionando sobre usuário autenticado.
  */
 @Configuration
-@EnableMethodSecurity // Habilita o uso de @PreAuthorize nos Controllers e Services
+@EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final CustomUserDetailsService customUserDetailsService;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
     /**
-     * Define a corrente de filtros de segurança (Filter Chain).
-     * É aqui que o Spring decide se uma requisição HTTP deve ser barrada ou permitida.
+     * Cadeia principal de filtros de segurança.
      */
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // 1. Desabilita CSRF: Comum em APIs REST que usam JWT ou são Stateless.
+                // API REST sem sessão de servidor.
                 .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // 2. Configuração de CORS: Define quais endereços (Front-end) podem acessar esta API.
-                .cors(cors -> cors.configurationSource(request -> {
-                    var config = new CorsConfiguration();
+                // CORS explícito para front local em desenvolvimento.
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-                    // Permite acesso do React (3000) e Angular (4200) em ambiente de desenvolvimento.
-                    config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:4200"));
+                // Necessário para abrir H2 console em ambiente local.
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
 
-                    // Libera todos os verbos HTTP necessários para o CRUD.
-                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+                // Rotas públicas mínimas + demais rotas autenticadas.
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .anyRequest().authenticated()
+                )
 
-                    // Permite qualquer cabeçalho (Headers) na requisição.
-                    config.setAllowedHeaders(List.of("*"));
+                // Provider baseado em UserDetails + BCrypt.
+                .authenticationProvider(authenticationProvider())
 
-                    // Permite o envio de cookies ou credenciais de autenticação.
-                    config.setAllowCredentials(true);
-
-                    return config;
-                }))
-
-                // 3. Regras de Autorização: No momento (MVP), todas as rotas estão liberadas.
-                // Nota de Sênior: Futuramente, aqui será configurado o '.authenticated()'.
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+                // Filtro JWT antes do filtro padrão de usuário/senha.
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    /**
+     * Provider de autenticação para validar credenciais de usuário.
+     */
+    @Bean
+    DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(customUserDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return provider;
+    }
+
+    /**
+     * AuthenticationManager reutilizado no AuthController (/auth/login).
+     */
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    /**
+     * Fonte de configuração CORS centralizada.
+     */
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        return request -> {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:4200"));
+            config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+            config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+            config.setAllowCredentials(true);
+            return config;
+        };
     }
 }
