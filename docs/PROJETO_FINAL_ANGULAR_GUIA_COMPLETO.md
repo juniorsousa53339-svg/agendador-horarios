@@ -1,0 +1,408 @@
+# Projeto Final Angular: Guia Completo de Integração com Backend Spring Boot (Passo a Passo)
+
+> **Objetivo:** construir um frontend Angular completo que **apenas consome** o backend Spring Boot já existente, sem duplicar regras de negócio em TypeScript.
+
+---
+
+## Etapa 0 — Leitura do backend (o que foi analisado)
+
+Antes do Angular, o backend foi mapeado em:
+
+- Controllers REST:
+  - `ClienteController`
+  - `ProprietarioController`
+  - `FuncionarioController`
+  - `ServicosController`
+  - `BarbeariaController`
+  - `AgendamentoController`
+- DTOs:
+  - `AgendamentoRequestDTO`
+  - `AgendamentoResponseDTO`
+  - `BarbeariaRequestDTO`
+- Entidades principais:
+  - `Cliente`, `Proprietario`, `Funcionario`, `Servicos`, `Barbearia`, `Agendamento`
+
+### 0.1 Endpoints disponíveis
+
+#### Clientes (`/clientes`)
+- `POST /clientes`
+- `GET /clientes?idCliente={uuid}&nomeCliente={nome}`
+- `DELETE /clientes?nomeCliente={nome}`
+- `PUT /clientes/alterar-nome?atualNomeCliente={x}&novoNomeCliente={y}`
+- `PUT /clientes/alterar-telefone?telefoneAtual={x}&TelefoneNovo={y}`
+
+#### Proprietários (`/proprietarios`)
+- `POST /proprietarios`
+- `GET /proprietarios?nome={nome}&id_proprietario={uuid}&email={email}`
+- `DELETE /proprietarios?nome={nome}`
+- `PUT /proprietarios/alterar-nome?nomeAtual={x}&novoNome={y}`
+- `PUT /proprietarios/alterar-telefone?telefoneAtual={x}&telefoneNovo={y}`
+- `PUT /proprietarios/alterar-email?emailAtual={x}&emailNovo={y}`
+
+#### Funcionários (`/funcionarios`)
+- `POST /funcionarios`
+- `GET /funcionarios?idFuncionario={idLong}&nomeFuncionario={nome}`
+- `DELETE /funcionarios?nomeFuncionario={nome}`
+- `PUT /funcionarios/alterar-nome?nomeFuncionarioAtual={x}&nomeFuncionarioNovo={y}`
+- `PUT /funcionarios/alterar-telefone?telefoneAtual={x}&telefoneNovo={y}`
+
+#### Serviços (`/servicos`)
+- `POST /servicos`
+- `GET /servicos?idServico={uuid}&nomeServico={nome}&precoServico={decimal}`
+- `DELETE /servicos?nomeServico={nome}`
+- `PUT /servicos/alterar-nome?nomeServicoAtual={x}&nomeServicoNovo={y}`
+- `PUT /servicos/alterar-preco?precoServicoAtual={x}&precoServicoNovo={y}`
+- `PUT /servicos/alterar-descricao?descricaoNova={y}` + body (texto descrição atual)
+- `PUT /servicos/alterar-duracao?duracaoAtual={x}&duracaoNova={y}`
+
+#### Barbearias (`/barbearias`)
+- `POST /barbearias`
+- `GET /barbearias?nomeBarbearia={nome}&idBarbearia={uuid}&rua={rua}`
+- `DELETE /barbearias?nomeBarbearia={nome}`
+- `PUT /barbearias/alterar-nome?...`
+- `PUT /barbearias/alterar-horarios-funcionamento?...`
+- `PUT /barbearias/alterar-telefone?...`
+- `PUT /barbearias/alterar-endereco?...`
+- `PUT /barbearias/alterar-proprietario?...`
+
+#### Agendamentos (`/agendamentos`)
+- `POST /agendamentos` (usa `AgendamentoRequestDTO`)
+- `GET /agendamentos?data={yyyy-MM-dd}&idCliente={uuid}`
+- `PUT /agendamentos?dataHoraAtual={...}&idClienteAtual={...}&dataHoraNova={...}&idClienteNovo={...}`
+- `DELETE /agendamentos?dataHora={...}&idCliente={uuid}`
+
+---
+
+## Etapa 1 — Criar o projeto Angular do zero
+
+### 1.1 Criar aplicação
+
+```bash
+npm install -g @angular/cli
+ng new agendador-front --routing --style=scss
+cd agendador-front
+ng serve -o
+```
+
+### 1.2 Estrutura sugerida
+
+```txt
+src/app/
+  core/
+    http/
+      api-base.service.ts
+      error-handler.service.ts
+    interceptors/
+      auth.interceptor.ts
+  features/
+    clientes/
+      pages/
+        cliente-list/
+        cliente-create/
+        cliente-edit/
+      data/
+        cliente.service.ts
+      models/
+        cliente.model.ts
+    proprietarios/
+    funcionarios/
+    servicos/
+    agendamentos/
+  shared/
+    ui/
+    utils/
+```
+
+> **Por que essa estrutura?**
+> - Separa camada de dados (services) da camada visual (components/pages).
+> - Facilita manutenção e crescimento do projeto.
+
+---
+
+## Etapa 2 — Configurar integração HTTP
+
+### 2.1 `environment.ts`
+
+```ts
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:8080'
+};
+```
+
+### 2.2 Configurar `HttpClient`
+
+(Standalone Angular)
+
+```ts
+import { ApplicationConfig } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+
+export const appConfig: ApplicationConfig = {
+  providers: [provideHttpClient()]
+};
+```
+
+### 2.3 Criar serviço base
+
+```ts
+// src/app/core/http/api-base.service.ts
+import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
+
+@Injectable({ providedIn: 'root' })
+export class ApiBaseService {
+  readonly baseUrl = environment.apiUrl;
+}
+```
+
+---
+
+## Etapa 3 — Criar models (baseados em entidade/DTO do backend)
+
+> Aqui você **tipa payload/resposta**, não implementa regra de negócio.
+
+```ts
+// features/clientes/models/cliente.model.ts
+export interface Cliente {
+  idCliente?: string; // UUID
+  nomeCliente: string;
+  telefoneCliente: string;
+}
+```
+
+```ts
+// features/agendamentos/models/agendamento.model.ts
+export interface AgendamentoRequest {
+  idCliente: string;
+  idFuncionario: string;
+  idServico: string;
+  dataHoraAgendamento: string; // ISO string
+}
+
+export interface AgendamentoResponse {
+  idAgendamento: string;
+  idCliente: string;
+  nomeCliente: string;
+  idFuncionario: string;
+  nomeFuncionario: string;
+  idServico: string;
+  nomeServico: string;
+  dataHoraAgendamento: string;
+  status: string;
+}
+```
+
+Repita para `Proprietario`, `Funcionario`, `Servico` e `Barbearia` conforme campos das entidades Java.
+
+---
+
+## Etapa 4 — Services por entidade (consumo da API)
+
+## 4.1 Exemplo: ClienteService
+
+```ts
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { ApiBaseService } from '../../../core/http/api-base.service';
+import { Cliente } from '../models/cliente.model';
+
+@Injectable({ providedIn: 'root' })
+export class ClienteService {
+  private readonly url: string;
+
+  constructor(private http: HttpClient, api: ApiBaseService) {
+    this.url = `${api.baseUrl}/clientes`;
+  }
+
+  criar(payload: Cliente): Observable<Cliente> {
+    return this.http.post<Cliente>(this.url, payload);
+  }
+
+  listarPorFiltro(idCliente: string, nomeCliente: string): Observable<Cliente[]> {
+    const params = new HttpParams()
+      .set('idCliente', idCliente)
+      .set('nomeCliente', nomeCliente);
+    return this.http.get<Cliente[]>(this.url, { params });
+  }
+
+  atualizarNome(atualNomeCliente: string, novoNomeCliente: string): Observable<Cliente> {
+    const params = new HttpParams()
+      .set('atualNomeCliente', atualNomeCliente)
+      .set('novoNomeCliente', novoNomeCliente);
+    return this.http.put<Cliente>(`${this.url}/alterar-nome`, null, { params });
+  }
+
+  atualizarTelefone(telefoneAtual: string, TelefoneNovo: string): Observable<Cliente> {
+    const params = new HttpParams()
+      .set('telefoneAtual', telefoneAtual)
+      .set('TelefoneNovo', TelefoneNovo);
+    return this.http.put<Cliente>(`${this.url}/alterar-telefone`, null, { params });
+  }
+
+  remover(nomeCliente: string): Observable<void> {
+    const params = new HttpParams().set('nomeCliente', nomeCliente);
+    return this.http.delete<void>(this.url, { params });
+  }
+}
+```
+
+> **Importante:** observe que o service só faz transporte HTTP. Não decide regras de negócio.
+
+### 4.2 Exemplo: AgendamentoService
+
+```ts
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { ApiBaseService } from '../../../core/http/api-base.service';
+import { AgendamentoRequest, AgendamentoResponse } from '../models/agendamento.model';
+
+@Injectable({ providedIn: 'root' })
+export class AgendamentoService {
+  private readonly url: string;
+
+  constructor(private http: HttpClient, api: ApiBaseService) {
+    this.url = `${api.baseUrl}/agendamentos`;
+  }
+
+  criar(payload: AgendamentoRequest): Observable<AgendamentoResponse> {
+    return this.http.post<AgendamentoResponse>(this.url, payload);
+  }
+
+  listarDoDia(data: string, idCliente: string): Observable<AgendamentoResponse[]> {
+    const params = new HttpParams().set('data', data).set('idCliente', idCliente);
+    return this.http.get<AgendamentoResponse[]>(this.url, { params });
+  }
+
+  alterar(dataHoraAtual: string, idClienteAtual: string, dataHoraNova: string, idClienteNovo: string) {
+    const params = new HttpParams()
+      .set('dataHoraAtual', dataHoraAtual)
+      .set('idClienteAtual', idClienteAtual)
+      .set('dataHoraNova', dataHoraNova)
+      .set('idClienteNovo', idClienteNovo);
+    return this.http.put<AgendamentoResponse>(this.url, null, { params });
+  }
+
+  remover(dataHora: string, idCliente: string) {
+    const params = new HttpParams().set('dataHora', dataHora).set('idCliente', idCliente);
+    return this.http.delete<void>(this.url, { params });
+  }
+}
+```
+
+---
+
+## Etapa 5 — Componentes (listagem, cadastro, edição)
+
+A mesma receita vale para cada entidade.
+
+## 5.1 Componente de listagem
+
+- Busca dados com o service no `ngOnInit`.
+- Mostra tabela/lista.
+- Botões para editar/remover.
+
+```ts
+// cliente-list.component.ts
+export class ClienteListComponent implements OnInit {
+  clientes: Cliente[] = [];
+
+  constructor(private clienteService: ClienteService) {}
+
+  ngOnInit(): void {
+    this.clienteService.listarPorFiltro('00000000-0000-0000-0000-000000000000', '').subscribe({
+      next: (data) => (this.clientes = data),
+      error: (err) => console.error(err)
+    });
+  }
+}
+```
+
+## 5.2 Componente de cadastro (Reactive Forms)
+
+```ts
+export class ClienteCreateComponent {
+  form = this.fb.group({
+    nomeCliente: ['', [Validators.required, Validators.minLength(2)]],
+    telefoneCliente: ['', [Validators.required]]
+  });
+
+  constructor(private fb: FormBuilder, private clienteService: ClienteService) {}
+
+  salvar(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.clienteService.criar(this.form.getRawValue() as Cliente).subscribe({
+      next: () => alert('Cliente cadastrado com sucesso!'),
+      error: (err) => console.error(err)
+    });
+  }
+}
+```
+
+## 5.3 Componente de edição
+
+- Carrega dado atual.
+- Envia alteração por endpoint de update.
+- Não recalcula validação de negócio: backend decide.
+
+---
+
+## Etapa 6 — Rotas por feature
+
+```ts
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+  { path: 'clientes', loadComponent: () => import('./features/clientes/pages/cliente-list/cliente-list.component').then(m => m.ClienteListComponent) },
+  { path: 'clientes/novo', loadComponent: () => import('./features/clientes/pages/cliente-create/cliente-create.component').then(m => m.ClienteCreateComponent) },
+  { path: 'clientes/:id/editar', loadComponent: () => import('./features/clientes/pages/cliente-edit/cliente-edit.component').then(m => m.ClienteEditComponent) },
+  { path: '', redirectTo: 'clientes', pathMatch: 'full' }
+];
+```
+
+Repita o padrão para `proprietarios`, `funcionarios`, `servicos`, `barbearias` e `agendamentos`.
+
+---
+
+## Etapa 7 — Regras para não duplicar negócio no Angular
+
+Checklist obrigatório:
+
+- ✅ Frontend só envia dados e exibe respostas.
+- ✅ Validação de front apenas básica (`required`, `minlength`, formato local de data).
+- ✅ Erros de regra (ex.: horário inválido, conflito de agenda) vêm da API e são exibidos na tela.
+- ❌ Não bloquear horário por conta própria no TypeScript com regras complexas.
+- ❌ Não reproduzir regra de disponibilidade no Angular.
+
+---
+
+## Etapa 8 — Ordem de implementação (mentoria prática)
+
+1. Criar projeto e configurar `HttpClient`.
+2. Criar models de todas as entidades.
+3. Criar services de todas as entidades.
+4. Implementar telas de **Cliente** (lista, cadastro, edição).
+5. Implementar telas de **Funcionário**.
+6. Implementar telas de **Serviço**.
+7. Implementar telas de **Agendamento**.
+8. Implementar telas de **Proprietário** e **Barbearia**.
+9. Padronizar tratamento de erro HTTP.
+10. Refinar UX (loading, mensagens, confirmação de exclusão).
+
+---
+
+## Etapa 9 — Próximo passo imediato
+
+Para continuarmos em formato de mentoria real (com código do seu projeto Angular), o próximo passo é:
+
+1. Você rodar os comandos de criação (`ng new ...`),
+2. Me enviar a estrutura inicial do front (`src/app`),
+3. E eu te guio arquivo por arquivo na implementação dos services + componentes.
+
+> Se você quiser, no próximo passo eu já te entrego a **Etapa 10** com os arquivos iniciais prontos (`models`, `services`, `routes`) para copiar e colar.
