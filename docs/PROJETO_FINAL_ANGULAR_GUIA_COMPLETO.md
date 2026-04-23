@@ -406,3 +406,223 @@ Para continuarmos em formato de mentoria real (com código do seu projeto Angula
 3. E eu te guio arquivo por arquivo na implementação dos services + componentes.
 
 > Se você quiser, no próximo passo eu já te entrego a **Etapa 10** com os arquivos iniciais prontos (`models`, `services`, `routes`) para copiar e colar.
+
+---
+
+## Etapa 10 — Fechando o esqueleto funcional hoje (após etapas 1 a 4.2)
+
+Se você já concluiu setup + models + services, execute **agora** os comandos abaixo.
+
+### 10.1 Geração dos componentes (exatamente como pedido)
+
+```bash
+# CLIENTES
+ng g c features/clientes/pages/cliente-list --standalone --skip-tests
+ng g c features/clientes/pages/cliente-create --standalone --skip-tests
+ng g c features/clientes/pages/cliente-edit --standalone --skip-tests
+
+# FUNCIONÁRIOS
+ng g c features/funcionarios/pages/funcionario-list --standalone --skip-tests
+ng g c features/funcionarios/pages/funcionario-create --standalone --skip-tests
+ng g c features/funcionarios/pages/funcionario-edit --standalone --skip-tests
+
+# AGENDAMENTOS
+ng g c features/agendamentos/pages/agendamento-list --standalone --skip-tests
+ng g c features/agendamentos/pages/agendamento-create --standalone --skip-tests
+ng g c features/agendamentos/pages/agendamento-edit --standalone --skip-tests
+```
+
+> Se seu projeto **não** for standalone, remova `--standalone`.
+
+### 10.2 Mapeamento real de função (`salvar()` -> `ClienteService.criar()` -> `POST /clientes`)
+
+```ts
+// cliente-create.component.ts
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ClienteService } from '../../data/cliente.service';
+import { Cliente } from '../../models/cliente.model';
+
+@Component({
+  selector: 'app-cliente-create',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  template: `
+    <h2>Novo Cliente</h2>
+
+    <form [formGroup]="form" (ngSubmit)="salvar()">
+      <input type="text" formControlName="nomeCliente" placeholder="Nome" />
+      <input type="text" formControlName="telefoneCliente" placeholder="Telefone" />
+      <button type="submit">Salvar</button>
+    </form>
+
+    <p *ngIf="feedback" [style.color]="feedbackType === 'error' ? 'tomato' : 'lightgreen'">
+      {{ feedback }}
+    </p>
+  `
+})
+export class ClienteCreateComponent {
+  feedback = '';
+  feedbackType: 'success' | 'error' | '' = '';
+
+  form = this.fb.group({
+    nomeCliente: ['', [Validators.required, Validators.minLength(2)]],
+    telefoneCliente: ['', [Validators.required]]
+  });
+
+  constructor(
+    private fb: FormBuilder,
+    private clienteService: ClienteService,
+    private router: Router
+  ) {}
+
+  salvar(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const payload = this.form.getRawValue() as Cliente;
+
+    // Angular apenas envia dados e mostra retorno da API
+    this.clienteService.criar(payload).subscribe({
+      next: () => {
+        this.feedbackType = 'success';
+        this.feedback = 'Cliente cadastrado com sucesso.';
+        this.router.navigate(['/clientes/lista']);
+      },
+      error: (err) => {
+        this.feedbackType = 'error';
+        this.feedback = err?.error?.message ?? 'Erro ao salvar cliente.';
+      }
+    });
+  }
+}
+```
+
+### 10.3 Fluxo de dados sem regra de negócio no Frontend
+
+**Fluxo recomendado:**
+1. Componente captura input do usuário;
+2. Service envia request para API (`HttpClient`);
+3. Backend valida regra de negócio;
+4. Backend responde sucesso/erro;
+5. Componente apenas exibe feedback.
+
+Exemplo genérico para reaproveitar em qualquer componente:
+
+```ts
+this.algumService.operacao(payload).subscribe({
+  next: (response) => {
+    this.feedback = response?.mensagem ?? 'Operação concluída';
+  },
+  error: (err) => {
+    this.feedback = err?.error?.message ?? 'Falha na operação';
+  }
+});
+```
+
+> Não criar regra de disponibilidade, conflito de horário, política de cancelamento, etc., no Angular.
+
+### 10.4 `app.routes.ts` completo para começar a navegar hoje
+
+```ts
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+  // Clientes
+  {
+    path: 'clientes/lista',
+    loadComponent: () =>
+      import('./features/clientes/pages/cliente-list/cliente-list.component').then(
+        (m) => m.ClienteListComponent
+      )
+  },
+  {
+    path: 'clientes/novo',
+    loadComponent: () =>
+      import('./features/clientes/pages/cliente-create/cliente-create.component').then(
+        (m) => m.ClienteCreateComponent
+      )
+  },
+  {
+    path: 'clientes/:id/editar',
+    loadComponent: () =>
+      import('./features/clientes/pages/cliente-edit/cliente-edit.component').then(
+        (m) => m.ClienteEditComponent
+      )
+  },
+
+  // Funcionários
+  {
+    path: 'funcionarios/lista',
+    loadComponent: () =>
+      import('./features/funcionarios/pages/funcionario-list/funcionario-list.component').then(
+        (m) => m.FuncionarioListComponent
+      )
+  },
+  {
+    path: 'funcionarios/novo',
+    loadComponent: () =>
+      import('./features/funcionarios/pages/funcionario-create/funcionario-create.component').then(
+        (m) => m.FuncionarioCreateComponent
+      )
+  },
+  {
+    path: 'funcionarios/:id/editar',
+    loadComponent: () =>
+      import('./features/funcionarios/pages/funcionario-edit/funcionario-edit.component').then(
+        (m) => m.FuncionarioEditComponent
+      )
+  },
+
+  // Agendamentos
+  {
+    path: 'agendamentos/lista',
+    loadComponent: () =>
+      import('./features/agendamentos/pages/agendamento-list/agendamento-list.component').then(
+        (m) => m.AgendamentoListComponent
+      )
+  },
+  {
+    path: 'agendamentos/novo',
+    loadComponent: () =>
+      import('./features/agendamentos/pages/agendamento-create/agendamento-create.component').then(
+        (m) => m.AgendamentoCreateComponent
+      )
+  },
+  {
+    path: 'agendamentos/:id/editar',
+    loadComponent: () =>
+      import('./features/agendamentos/pages/agendamento-edit/agendamento-edit.component').then(
+        (m) => m.AgendamentoEditComponent
+      )
+  },
+
+  // Home e fallback
+  { path: '', redirectTo: 'clientes/lista', pathMatch: 'full' },
+  { path: '**', redirectTo: 'clientes/lista' }
+];
+```
+
+---
+
+## Etapa 11 — Prompt final (para usar na mentoria)
+
+Use este texto pronto quando quiser pedir continuidade ao mentor/IA:
+
+```txt
+Olá! Como meu mentor, preciso de ajuda para finalizar o esqueleto funcional do meu projeto hoje.
+Já concluí as etapas de 1 a 4.2 e meu objetivo é fechar o dia com a estrutura pronta para focar no visual amanhã.
+
+Ponto mais importante: o Frontend Angular deve ser “burro”, apenas consumindo dados e regras do backend Spring Boot,
+sem duplicar lógica de negócio em TypeScript.
+
+Baseado nos meus controllers (/clientes, /funcionarios, /agendamentos), quero:
+1) comandos ng g c para listagem/cadastro/edição;
+2) conexão de salvar() com service + endpoint real;
+3) fluxo de dados mostrando sucesso/erro vindos da API;
+4) app.routes.ts completo com rotas de navegação.
+```
