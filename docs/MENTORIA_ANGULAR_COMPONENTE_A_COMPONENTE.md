@@ -1,5 +1,8 @@
 # Mentoria Angular — Componente a Componente (Baseado no seu Back-end)
 
+> ⚠️ **Atualização de arquitetura (23/04/2026):** use este material junto com `docs/GUIA_FRONTEND_ANGULAR_CONSUMO_API.md`.
+> O Angular deve atuar como camada de apresentação + consumo de API, sem reimplementar regras de negócio do backend.
+
 > Objetivo: te ensinar **na prática** a montar o front Angular no VS Code, com telas simples e funcionais para:
 > - Cliente agendar sem login;
 > - Funcionário visualizar agenda;
