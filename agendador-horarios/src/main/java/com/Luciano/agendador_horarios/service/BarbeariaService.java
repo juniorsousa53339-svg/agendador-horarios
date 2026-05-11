@@ -25,7 +25,7 @@ public class BarbeariaService {
     /**
      * Registra uma nova unidade de barbearia após verificar duplicidade por nome e proprietário.
      */
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Barbearia salvarBarbearia(Barbearia barbearia, Proprietario proprietario) {
         Barbearia barbeariaExistente = barbeariaRepository.findByNomeBarbeariaAndProprietario(
                 barbearia.getNomeBarbearia(),
@@ -41,7 +41,7 @@ public class BarbeariaService {
     /**
      * Remove o registro de uma barbearia pelo nome.
      */
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public void deletarBarbearia(String nomeBarbearia) {
         Barbearia barbearia = barbeariaRepository.findByNomeBarbearia(nomeBarbearia);
 
@@ -70,7 +70,7 @@ public class BarbeariaService {
     /**
      * Atualiza o nome comercial da barbearia cadastrada.
      */
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Barbearia alterarNomeBarbearia(String nomeBarbeariaAtual, String nomeBarbeariaNovo) {
         Barbearia barbeariaExistente = barbeariaRepository.findByNomeBarbearia(nomeBarbeariaAtual);
 
@@ -85,7 +85,7 @@ public class BarbeariaService {
     /**
      * Altera o intervalo de funcionamento (abertura e fechamento) do estabelecimento.
      */
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Barbearia alterarHorariosFun(LocalTime horarioAberturaAtual, LocalTime horarioAberturaNovo,
                                         LocalTime horarioFechamentoAtual, LocalTime horarioFechamentoNovo) {
         Barbearia barbeariaComHorario = barbeariaRepository.findByHorarioAberturaAndHorarioFechamento(
@@ -105,7 +105,7 @@ public class BarbeariaService {
     /**
      * Atualiza o telefone de contato oficial da barbearia.
      */
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Barbearia alterarTelefone(String telefoneAtual, String telefoneNovo) {
         Barbearia barbeariaComTelefone = barbeariaRepository.findByTelefoneBarbearia(telefoneAtual);
 
@@ -120,7 +120,7 @@ public class BarbeariaService {
     /**
      * Atualiza o endereço completo (rua e número) da unidade.
      */
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Barbearia alterarEndereco(String ruaAtual, String ruaNova, int numeroRuaAtual, String numeroRuaNova) {
         Barbearia barbeariaComEndereco = barbeariaRepository.findByRuaAndNumeroRua(ruaAtual, numeroRuaAtual);
 
@@ -136,7 +136,7 @@ public class BarbeariaService {
     /**
      * Transfere ou atualiza o proprietário vinculado à barbearia.
      */
-    @PreAuthorize("hasRole('Proprietario')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Barbearia alterarProprietario(Proprietario proprietarioAtual, Proprietario proprietarioNovo) {
         Barbearia barbeariaComProprietario = barbeariaRepository.findByProprietario(proprietarioAtual);
 
