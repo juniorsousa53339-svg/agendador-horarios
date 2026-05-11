@@ -43,8 +43,8 @@ public class ClienteController {
      */
     @GetMapping
     public ResponseEntity<List<Cliente>> buscarCliente(
-            @RequestParam UUID idCliente,
-            @RequestParam String nomeCliente) {
+            @RequestParam(required = false) UUID idCliente,
+            @RequestParam(required = false) String nomeCliente) {
 
         var lista = clienteService.buscarCliente(idCliente, nomeCliente);
         return ResponseEntity.ok().body(lista);

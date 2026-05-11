@@ -32,6 +32,7 @@ public interface ProprietarioRepository extends JpaRepository<Proprietario, UUID
      * Realiza uma consulta de alta precisão combinando ID, Nome e Email.
      * Geralmente utilizada em processos internos de segurança ou auditoria de conta.
      */
+
     List<Proprietario> findByIdProprietarioAndNomeAndEmail( UUID idProprietario, String nome, String email);
 
     /**

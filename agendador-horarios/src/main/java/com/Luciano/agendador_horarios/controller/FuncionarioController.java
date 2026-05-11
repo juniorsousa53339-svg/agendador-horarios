@@ -42,8 +42,8 @@ public class FuncionarioController {
      */
     @GetMapping
     public ResponseEntity<List<Funcionario>> buscarFuncionario(
-            @RequestParam long idFuncionario,
-            @RequestParam String nomeFuncionario) {
+            @RequestParam (required = false) long idFuncionario,
+            @RequestParam (required = false) String nomeFuncionario) {
 
         var lista = funcionarioService.buscarFuncionario(idFuncionario, nomeFuncionario);
         return ResponseEntity.ok().body(lista);

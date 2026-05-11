@@ -46,9 +46,9 @@ public class BarbeariaController {
      */
     @GetMapping
     public ResponseEntity<List<Barbearia>> buscarBarbearia(
-            @RequestParam String nomeBarbearia,
-            @RequestParam UUID idBarbearia,
-            @RequestParam String rua) {
+            @RequestParam (required = false) String nomeBarbearia,
+            @RequestParam (required = false) UUID idBarbearia,
+            @RequestParam (required = false) String rua) {
 
         var lista = barbeariaService.buscarBarbearia(idBarbearia, nomeBarbearia, rua);
         return ResponseEntity.ok().body(lista);

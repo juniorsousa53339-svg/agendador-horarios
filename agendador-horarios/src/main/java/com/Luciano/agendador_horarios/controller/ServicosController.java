@@ -44,9 +44,9 @@ public class ServicosController {
      */
     @GetMapping
     public ResponseEntity<List<Servicos>> buscarServico(
-            @RequestParam UUID idServico,
-            @RequestParam String nomeServico,
-            @RequestParam BigDecimal precoServico) {
+            @RequestParam(required = false)UUID idServico,
+            @RequestParam(required = false) String nomeServico,
+            @RequestParam(required = false) BigDecimal precoServico) {
 
         var lista = servicosService.buscarServico(idServico, nomeServico, precoServico);
         return ResponseEntity.ok().body(lista);
