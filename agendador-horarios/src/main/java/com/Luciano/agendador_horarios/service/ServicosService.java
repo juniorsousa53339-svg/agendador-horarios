@@ -130,4 +130,9 @@ public class ServicosService {
         servicoComDuracao.setDuracaoMinutos(duracaoNova);
         return servicosRepository.save(servicoComDuracao);
     }
+
+    public List<Servicos> listarTodos() {
+        return servicosRepository.findAll();
+    }
+
 }

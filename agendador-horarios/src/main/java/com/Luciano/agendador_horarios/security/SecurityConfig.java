@@ -33,15 +33,21 @@ public class SecurityConfig {
                 }))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(basic -> {})
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers("/auth/login").authenticated()
-                        .requestMatchers("/proprietarios/**", "/barbearias/**", "/servicos/**")
-                        .hasRole("PROPRIETARIO")
-                        .requestMatchers("/funcionarios/**").hasAnyRole("PROPRIETARIO", "FUNCIONARIO")
-                        .requestMatchers("/agendamentos/**", "/clientes/**").authenticated()
-                        .anyRequest().denyAll())
+                        .anyRequest().permitAll())
+
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+//                        .requestMatchers("/h2-console/**").permitAll()
+//                        .requestMatchers("/auth/login").authenticated()
+//                        .requestMatchers("/proprietarios/**", "/barbearias/**", "/servicos/**")
+//                        .hasRole("PROPRIETARIO")
+//                        .requestMatchers("/funcionarios/**").hasAnyRole("PROPRIETARIO", "FUNCIONARIO")
+//                        .requestMatchers("/agendamentos/**", "/clientes/**").authenticated()
+//                        .anyRequest().denyAll())
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()));
 
         return http.build();

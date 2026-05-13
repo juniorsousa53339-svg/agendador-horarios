@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Service responsável pela gestão do quadro de funcionários.
@@ -58,7 +59,7 @@ public class FuncionarioService {
      * O uso de 'ContainingIgnoreCase' permite flexibilidade na pesquisa.
      */
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
-    public List<Funcionario> buscarFuncionario(long idFuncionario, String nomeFuncionario) {
+    public List<Funcionario> buscarFuncionario(UUID idFuncionario, String nomeFuncionario) {
         List<Funcionario> funcionarios = funcionarioRepository
                 .findByNomeFuncionarioContainingIgnoreCase(nomeFuncionario);
 

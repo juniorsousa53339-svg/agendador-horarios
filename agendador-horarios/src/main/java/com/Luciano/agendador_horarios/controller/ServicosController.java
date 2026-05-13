@@ -44,12 +44,20 @@ public class ServicosController {
      */
     @GetMapping
     public ResponseEntity<List<Servicos>> buscarServico(
-            @RequestParam(required = false)UUID idServico,
-            @RequestParam(required = false) String nomeServico,
-            @RequestParam(required = false) BigDecimal precoServico) {
+            @RequestParam UUID idServico,
+            @RequestParam String nomeServico,
+            @RequestParam BigDecimal precoServico) {
 
         var lista = servicosService.buscarServico(idServico, nomeServico, precoServico);
         return ResponseEntity.ok().body(lista);
+    }
+
+    @GetMapping("/listar")
+    public ResponseEntity<List<Servicos>> listarServicos() {
+
+        var lista = servicosService.listarTodos();
+
+        return ResponseEntity.ok(lista);
     }
 
     /**

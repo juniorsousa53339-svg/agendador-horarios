@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Controller responsável pela gestão do quadro de funcionários.
@@ -42,7 +43,7 @@ public class FuncionarioController {
      */
     @GetMapping
     public ResponseEntity<List<Funcionario>> buscarFuncionario(
-            @RequestParam (required = false) long idFuncionario,
+            @RequestParam (required = false) UUID idFuncionario,
             @RequestParam (required = false) String nomeFuncionario) {
 
         var lista = funcionarioService.buscarFuncionario(idFuncionario, nomeFuncionario);
