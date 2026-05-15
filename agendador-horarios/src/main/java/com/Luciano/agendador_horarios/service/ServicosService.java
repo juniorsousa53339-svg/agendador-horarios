@@ -25,7 +25,7 @@ public class ServicosService {
      * Cadastra um novo serviço validando se todos os atributos principais já existem.
      * Evita duplicidade de itens idênticos no catálogo.
      */
-    @PreAuthorize("hasRole('PROPRIETARIO')")
+   // @PreAuthorize("hasRole('PROPRIETARIO')")
     public Servicos salvarServico(Servicos servicos) {
         Servicos servicoExistente = servicosRepository
                 .findByNomeServicoAndDescricaoServicoAndPrecoServicoAndDuracaoMinutos(
