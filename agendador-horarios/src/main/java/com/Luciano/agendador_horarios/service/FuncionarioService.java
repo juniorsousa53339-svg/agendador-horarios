@@ -24,7 +24,7 @@ public class FuncionarioService {
      * Cadastra um novo profissional no sistema.
      * Valida a existência prévia combinando nome, telefone e especialidade para evitar duplicidade.
      */
-    @PreAuthorize("hasRole('PROPRIETARIO')")
+//    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Funcionario salvarFuncionario(Funcionario funcionario) {
         Funcionario funcionarioExistente = funcionarioRepository
                 .findByNomeFuncionarioAndTelefoneFuncionarioAndEspecialidade(
@@ -99,4 +99,6 @@ public class FuncionarioService {
         funcionarioComTelefone.setTelefoneFuncionario(telefoneNovo);
         return funcionarioRepository.save(funcionarioComTelefone);
     }
+
+    public List<Funcionario> listarTodos() { return funcionarioRepository.findAll(); }
 }

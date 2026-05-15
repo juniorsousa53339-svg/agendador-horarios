@@ -34,7 +34,6 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, UUID> 
      * ignorando letras maiúsculas ou minúsculas. Ideal para campos de pesquisa (autocomplete).
      */
     List<Funcionario> findByNomeFuncionarioContainingIgnoreCase(String nome);
-    List<Funcionario> findByIdFuncionarioAndNomeFuncionarioContainingIgnoreCase(UUID idFuncionario, String nomeFuncionario);
 
     /**
      * Busca direta pelo nome completo do funcionário.

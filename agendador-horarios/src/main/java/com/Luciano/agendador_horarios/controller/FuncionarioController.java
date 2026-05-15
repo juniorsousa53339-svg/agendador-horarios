@@ -50,6 +50,15 @@ public class FuncionarioController {
         return ResponseEntity.ok().body(lista);
     }
 
+    @GetMapping("/listar")
+    public ResponseEntity<List<Funcionario>> listarFuncionario() {
+
+        var lista = funcionarioService.listarTodos();
+
+        return ResponseEntity.ok().body(lista);
+    }
+
+
     /**
      * Endpoint específico para atualização do nome de registro do profissional.
      */
