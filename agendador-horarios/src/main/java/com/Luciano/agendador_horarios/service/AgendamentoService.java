@@ -139,7 +139,7 @@ public class AgendamentoService {
     }
 
     /**
-     * Método auxiliar para converter a entidade em DTO de resposta.
+     * Método auxiliar para converter a entidade em DTO de respostaA.
      */
     private AgendamentoResponseDTO mapperParaResponse(Agendamento salvo) {
         return new AgendamentoResponseDTO(
