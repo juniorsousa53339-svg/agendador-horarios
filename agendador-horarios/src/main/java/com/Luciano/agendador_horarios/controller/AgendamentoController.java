@@ -68,4 +68,16 @@ public class AgendamentoController {
         var atualizado = agendamentoService.alterar(dataHoraAtual, idClienteAtual, dataHoraNova, idClienteNovo);
         return ResponseEntity.ok(atualizado);
     }
+
+    @GetMapping("/disponivel")
+    public ResponseEntity<Boolean> verificarDisponibilidade(
+            @RequestParam UUID idFuncionario,
+            @RequestParam LocalDateTime dataHora
+    ) {
+
+        boolean disponivel =
+                agendamentoService.verificarDisponibilidade(idFuncionario, dataHora);
+
+        return ResponseEntity.ok(disponivel);
+    }
 }

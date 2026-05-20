@@ -51,4 +51,6 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, UUID> 
      * @param cliente Cliente solicitante da remoção.
      */
     void deleteByDataHoraAgendamentoAndCliente(LocalDateTime dataHora, Cliente cliente);
+
+   boolean existsByFuncionario_IdFuncionarioAndDataHoraAgendamento(UUID idFuncionario, LocalDateTime dataHora);
 }

@@ -39,7 +39,7 @@ public class AgendamentoService {
     /**
      * Registra um novo agendamento após validar a existência das entidades e conflitos de horário.
      */
-    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
+    // @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     @Transactional
     public AgendamentoResponseDTO criar(AgendamentoRequestDTO dto) {
         // Validação de existência das entidades relacionadas
@@ -153,5 +153,21 @@ public class AgendamentoService {
                 salvo.getDataHoraAgendamento(),
                 "MARCADO"
         );
+    }
+
+    /**
+     * Método verifica se o funcionário está disponível
+     * para o agendamento solicitado pelo usuário.
+     */
+    public boolean verificarDisponibilidade(UUID idFuncionario,
+                                            LocalDateTime dataHora) {
+
+        boolean ocupado = agendamentoRepository
+                .existsByFuncionario_IdFuncionarioAndDataHoraAgendamento(
+                        idFuncionario,
+                        dataHora
+                );
+
+        return !ocupado;
     }
 }
