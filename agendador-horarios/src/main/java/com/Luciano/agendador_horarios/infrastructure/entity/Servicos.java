@@ -22,8 +22,8 @@ public class Servicos {
     private UUID idServico;
 
 
-    @NotBlank
-    @Size(min=2, max=100) // Determina um min e um max de caracter
+    @NotBlank(message = "Nome é obrigatório")
+    @Size(min=2, max=100, message = "Nome deve ter entre 3 e 100 caracteres") // Determina um min e um max de caracter
     private String nomeServico;
 
     @NotBlank

@@ -24,14 +24,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AgendamentoController {
 
-    private final AgendamentoService agendamentoService;
+    private final  @Valid AgendamentoService agendamentoService;
 
     /**
      * Endpoint para criar um novo agendamento.
      * Retorna 201 (Created) e os dados do agendamento confirmado.
      */
     @PostMapping
-    public ResponseEntity<AgendamentoResponseDTO> criar(@RequestBody @Valid AgendamentoRequestDTO dto) {
+    public ResponseEntity<AgendamentoResponseDTO> criar(@RequestBody AgendamentoRequestDTO dto) {
         var criado = agendamentoService.criar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(criado);
     }
@@ -52,7 +52,8 @@ public class AgendamentoController {
      */
     @GetMapping
     public ResponseEntity<List<Agendamento>> listarDoDia(@RequestParam LocalDate data,
-                                                         @RequestParam UUID idCliente) {
+                                                         @RequestParam UUID idCliente,
+                                                         @Valid AgendamentoRequestDTO dto) {
         var agendamentos = agendamentoService.buscarDoDia(data, idCliente);
         return ResponseEntity.ok(agendamentos);
     }

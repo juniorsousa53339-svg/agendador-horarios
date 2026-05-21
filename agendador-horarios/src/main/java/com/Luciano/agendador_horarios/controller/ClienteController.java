@@ -2,6 +2,7 @@ package com.Luciano.agendador_horarios.controller;
 
 import com.Luciano.agendador_horarios.infrastructure.entity.Cliente;
 import com.Luciano.agendador_horarios.service.ClienteService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class ClienteController {
      * Endpoint para realizar o cadastro inicial de um cliente.
      */
     @PostMapping
-    public ResponseEntity<Cliente> salvarCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> salvarCliente(@RequestBody @Valid Cliente cliente) {
         var salvo = clienteService.salvarCliente(cliente);
         return ResponseEntity.accepted().body(salvo);
     }

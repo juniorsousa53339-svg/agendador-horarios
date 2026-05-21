@@ -2,6 +2,7 @@ package com.Luciano.agendador_horarios.controller;
 
 import com.Luciano.agendador_horarios.infrastructure.entity.Proprietario;
 import com.Luciano.agendador_horarios.service.ProprietarioService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class ProprietarioController {
      * Endpoint para cadastrar um novo proprietário no sistema.
      */
     @PostMapping
-    public ResponseEntity<Proprietario> salvarProprietario(@RequestBody Proprietario proprietario) {
+    public ResponseEntity<Proprietario> salvarProprietario(@RequestBody  @Valid Proprietario proprietario) {
         var salvo = proprietarioService.salvarProprietario(proprietario);
         return ResponseEntity.accepted().body(salvo);
     }

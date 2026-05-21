@@ -29,8 +29,12 @@ public class Barbearia {
     private Proprietario proprietario;
 
 
-    @NotBlank
-    @Size(min=2, max=100) // Determina um min e um max de caracter
+    @NotBlank(message = "Nome é obrigatório")
+    @Size(
+            min = 3,
+            max = 100,
+            message = "Nome deve ter entre 3 e 100 caracteres"
+    )
     private String nomeBarbearia;
 
 
@@ -41,9 +45,11 @@ public class Barbearia {
     @Positive
     private int numeroRua;
 
-    @NotBlank
-   @Pattern(regexp = "\\\\(\\\\d{2}\\\\) \\\\d{5}-\\\\d{4}")
-    // Valida o formato do telefone no padrão (XX) XXXXX-XXXX
+    @NotBlank(message = "Telefone é obrigatório")
+    @Pattern(
+            regexp = "\\(\\d{2}\\) \\d{5}-\\d{4}",
+            message = "Telefone deve estar no formato (11) 99999-9999"
+    )
     private String telefoneBarbearia;
 
     @NotNull

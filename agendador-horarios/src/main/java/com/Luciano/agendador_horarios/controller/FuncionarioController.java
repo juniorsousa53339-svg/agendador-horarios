@@ -2,6 +2,7 @@ package com.Luciano.agendador_horarios.controller;
 
 import com.Luciano.agendador_horarios.infrastructure.entity.Funcionario;
 import com.Luciano.agendador_horarios.service.FuncionarioService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class FuncionarioController {
      * Endpoint para cadastrar um novo funcionário.
      */
     @PostMapping
-    public ResponseEntity<Funcionario> salvarFuncionario(@RequestBody Funcionario funcionario) {
+    public ResponseEntity<Funcionario> salvarFuncionario(@RequestBody @Valid Funcionario funcionario) {
         var salvo = funcionarioService.salvarFuncionario(funcionario);
         return ResponseEntity.accepted().body(salvo);
     }

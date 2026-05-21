@@ -23,15 +23,18 @@ public class Funcionario {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID idFuncionario;
 
-    @NotBlank
-    @Size(min=2, max=100) // Determina um min e um max de caracter
+    @NotBlank(message = "Nome é obrigatório")
+    @Size(min=2, max=100, message = "Nome deve ter entre 3 e 100 caracteres") // Determina um min e um max de caracter
     private String nomeFuncionario;
 
-    @Pattern(regexp = "\\\\(\\\\d{2}\\\\) \\\\d{5}-\\\\d{4}") // Valida o formato do telefone no padrão (XX) XXXXX-XXXX
-    @NotBlank
+    @NotBlank(message = "Telefone é obrigatório")
+    @Pattern(
+            regexp = "\\(\\d{2}\\) \\d{5}-\\d{4}",
+            message = "Telefone deve estar no formato (11) 99999-9999"
+    )
     private String telefoneFuncionario;
 
     @NotBlank
-    @Size(min=2, max=100) // Determina um min e um max de caracter
+    @Size(min=2, max=100, message = "Especialidade deve ter entre 3 e 100 caracteres") // Determina um min e um max de caracter
     private String especialidade;
 }
