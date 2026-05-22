@@ -52,5 +52,22 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, UUID> 
      */
     void deleteByDataHoraAgendamentoAndCliente(LocalDateTime dataHora, Cliente cliente);
 
+
+    /**
+     * Verifica se o funcionario tem vaga para o Cliente agendar
+     */
    boolean existsByFuncionario_IdFuncionarioAndDataHoraAgendamento(UUID idFuncionario, LocalDateTime dataHora);
+
+
+    /**
+     * Busca os agendamentos do Funcionario
+     */
+   List<Agendamento>  findByFuncionario_IdFuncionarioAndDataHoraAgendamentoBetween(
+
+           Funcionario funcionario,
+            LocalDateTime inicio,
+            LocalDateTime fim
+   );
+
+
 }

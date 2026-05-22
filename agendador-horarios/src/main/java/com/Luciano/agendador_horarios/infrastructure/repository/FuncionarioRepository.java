@@ -35,6 +35,7 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, UUID> 
      */
     List<Funcionario> findByNomeFuncionarioContainingIgnoreCase(String nome);
 
+
     /**
      * Busca direta pelo nome completo do funcionário.
      */
@@ -44,6 +45,8 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, UUID> 
      * Localiza o profissional através do seu número de contato.
      */
     Funcionario findByTelefoneFuncionario(String telefoneFuncionario);
+
+
 
     /**
      * Remove um funcionário do sistema baseando-se no nome.

@@ -70,6 +70,10 @@ public class AgendamentoController {
         return ResponseEntity.ok(atualizado);
     }
 
+
+    /**
+     * Endpoint para verificar se a agenda do Funcionario está disponivel.
+     */
     @GetMapping("/disponivel")
     public ResponseEntity<Boolean> verificarDisponibilidade(
             @RequestParam UUID idFuncionario,
@@ -80,5 +84,19 @@ public class AgendamentoController {
                 agendamentoService.verificarDisponibilidade(idFuncionario, dataHora);
 
         return ResponseEntity.ok(disponivel);
+    }
+
+    /**
+     * Endpoint para buscar os agendamentos do dia de um funcionario.
+     */
+    @GetMapping("/funcionarios/{id}/agendamentos")
+    public ResponseEntity<List<Agendamento>> buscarAgendaFuncionario(
+            @RequestParam UUID idFuncionario,
+            @RequestParam LocalDateTime dataHora
+    ) {
+        var agenda = agendamentoService
+                .buscarAgendaFuncionario(idFuncionario, dataHora);
+
+        return ResponseEntity.ok(agenda);
     }
 }

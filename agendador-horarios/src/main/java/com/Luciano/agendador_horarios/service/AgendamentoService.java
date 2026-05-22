@@ -170,4 +170,34 @@ public class AgendamentoService {
 
         return !ocupado;
     }
+
+    /**
+     * Método busca os agendamentos do funcionario de acordo com o dia
+     * Caso não encontrado o funcionario = NOT_FOUND
+     */
+    public List<Agendamento> buscarAgendaFuncionario(
+            UUID idFuncionario,
+            LocalDateTime dataHora
+    ) {
+
+        Funcionario funcionario = funcionarioRepository
+                .findById(idFuncionario)
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Funcionário não encontrado"
+                        ));
+
+        LocalDateTime inicio = dataHora.toLocalDate().atStartOfDay();
+
+        LocalDateTime fim = dataHora.toLocalDate().atTime(LocalTime.MAX);
+
+        return  agendamentoRepository
+                .findByFuncionario_IdFuncionarioAndDataHoraAgendamentoBetween(
+                        funcionario,
+                        inicio,
+                        fim
+                );
+
+    }
 }
