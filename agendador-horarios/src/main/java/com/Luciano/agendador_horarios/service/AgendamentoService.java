@@ -194,7 +194,7 @@ public class AgendamentoService {
 
         return  agendamentoRepository
                 .findByFuncionario_IdFuncionarioAndDataHoraAgendamentoBetween(
-                        funcionario,
+                        idFuncionario,
                         inicio,
                         fim
                 );

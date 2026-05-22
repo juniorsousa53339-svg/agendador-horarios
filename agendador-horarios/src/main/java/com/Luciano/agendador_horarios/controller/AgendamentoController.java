@@ -91,7 +91,8 @@ public class AgendamentoController {
      */
     @GetMapping("/funcionarios/{id}/agendamentos")
     public ResponseEntity<List<Agendamento>> buscarAgendaFuncionario(
-            @RequestParam UUID idFuncionario,
+
+            @PathVariable("id") UUID idFuncionario,
             @RequestParam LocalDateTime dataHora
     ) {
         var agenda = agendamentoService

@@ -64,7 +64,7 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, UUID> 
      */
    List<Agendamento>  findByFuncionario_IdFuncionarioAndDataHoraAgendamentoBetween(
 
-           Funcionario funcionario,
+          UUID idFuncionario,
             LocalDateTime inicio,
             LocalDateTime fim
    );
