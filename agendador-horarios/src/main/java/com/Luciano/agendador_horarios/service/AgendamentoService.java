@@ -23,10 +23,6 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Service responsável pela lógica de negócio dos agendamentos.
- * Gerencia validações de disponibilidade e permissões de acesso.
- */
 @Service
 @RequiredArgsConstructor
 public class AgendamentoService {
@@ -36,13 +32,11 @@ public class AgendamentoService {
     private final FuncionarioRepository funcionarioRepository;
     private final ServicosRepository servicosRepository;
 
-    /**
-     * Registra um novo agendamento após validar a existência das entidades e conflitos de horário.
-     */
     // @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     @Transactional
     public AgendamentoResponseDTO criar(AgendamentoRequestDTO dto) {
-        // Validação de existência das entidades relacionadas
+
+
         Cliente cliente = clienteRepository.findById(dto.idCliente())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
 
@@ -68,9 +62,6 @@ public class AgendamentoService {
         return mapperParaResponse(salvo);
     }
 
-    /**
-     * Remove um agendamento específico baseado no horário e identificador do cliente.
-     */
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     @Transactional
     public void deletar(LocalDateTime dataHoraAgendamento, UUID idCliente) {
@@ -84,9 +75,6 @@ public class AgendamentoService {
         agendamentoRepository.deleteByDataHoraAgendamentoAndCliente(dataHoraAgendamento, cliente);
     }
 
-    /**
-     * Consulta agendamentos de um cliente em uma data específica.
-     */
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     @Transactional(readOnly = true)
     public List<Agendamento> buscarDoDia(LocalDate data, UUID idCliente) {
@@ -106,9 +94,6 @@ public class AgendamentoService {
         return lista;
     }
 
-    /**
-     * Altera o horário ou o cliente de um agendamento existente, validando a nova disponibilidade.
-     */
     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     @Transactional
     public AgendamentoResponseDTO alterar(LocalDateTime dataHoraAtual, UUID idCliente,
@@ -138,9 +123,6 @@ public class AgendamentoService {
         return mapperParaResponse(salvo);
     }
 
-    /**
-     * Método auxiliar para converter a entidade em DTO de respostaA.
-     */
     private AgendamentoResponseDTO mapperParaResponse(Agendamento salvo) {
         return new AgendamentoResponseDTO(
                 salvo.getIdAgendamento(),
@@ -155,10 +137,6 @@ public class AgendamentoService {
         );
     }
 
-    /**
-     * Método verifica se o funcionário está disponível
-     * para o agendamento solicitado pelo usuário.
-     */
     public boolean verificarDisponibilidade(UUID idFuncionario,
                                             LocalDateTime dataHora) {
 
@@ -171,10 +149,6 @@ public class AgendamentoService {
         return !ocupado;
     }
 
-    /**
-     * Método busca os agendamentos do funcionario de acordo com o dia
-     * Caso não encontrado o funcionario = NOT_FOUND
-     */
     public List<Agendamento> buscarAgendaFuncionario(
             UUID idFuncionario,
             LocalDateTime dataHora

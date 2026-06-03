@@ -19,13 +19,6 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UsuarioRepository usuarioRepository;
-
-    /**
-     * Localiza o usuário no banco e converte para o formato que o Spring Security entende.
-     * * @param username O identificador (e-mail ou login) enviado pelo usuário.
-     * @return UserDetails Objeto contendo credenciais e permissões (Roles).
-     * @throws UsernameNotFoundException Caso o usuário não conste na base de dados.
-     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 

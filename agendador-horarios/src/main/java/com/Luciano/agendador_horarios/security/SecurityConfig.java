@@ -11,10 +11,6 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.List;
 
-/**
- * Configuração central de segurança do Spring Security.
- * Define permissões de rotas, políticas de CORS e proteção contra ataques comuns.
- */
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {

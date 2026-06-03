@@ -11,10 +11,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Controller responsável por gerenciar as operações do catálogo de serviços.
- * Oferece endpoints para manutenção de preços, durações e descrições das atividades.
- */
+
 @RestController
 @RequestMapping("/servicos")
 @RequiredArgsConstructor
@@ -22,27 +19,18 @@ public class ServicosController {
 
     private final ServicosService servicosService;
 
-    /**
-     * Endpoint para cadastrar um novo serviço no catálogo.
-     */
     @PostMapping
     public ResponseEntity<Servicos> salvarServico(@RequestBody @Valid Servicos servicos) {
         var salvo = servicosService.salvarServico(servicos);
         return ResponseEntity.accepted().body(salvo);
     }
 
-    /**
-     * Endpoint para remover um serviço do catálogo pelo nome comercial.
-     */
     @DeleteMapping
     public ResponseEntity<Void> deletarServico(@RequestParam String nomeServico) {
         servicosService.deletarServico(nomeServico);
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * Endpoint para busca de serviços utilizando filtros de ID, Nome e Preço.
-     */
     @GetMapping
     public ResponseEntity<List<Servicos>> buscarServico(
             @RequestParam UUID idServico,
@@ -61,9 +49,6 @@ public class ServicosController {
         return ResponseEntity.ok(lista);
     }
 
-    /**
-     * Endpoint específico para a atualização do nome do serviço.
-     */
     @PutMapping("/alterar-nome")
     public ResponseEntity<Servicos> alterarNomeServico(
             @RequestParam String nomeServicoAtual,
@@ -73,9 +58,6 @@ public class ServicosController {
         return ResponseEntity.accepted().body(atualizado);
     }
 
-    /**
-     * Endpoint específico para o reajuste de preço de um serviço.
-     */
     @PutMapping("/alterar-preco")
     public ResponseEntity<Servicos> alterarPrecoServico(
             @RequestParam BigDecimal precoServicoAtual,
@@ -85,9 +67,6 @@ public class ServicosController {
         return ResponseEntity.accepted().body(atualizado);
     }
 
-    /**
-     * Endpoint específico para atualização da descrição detalhada do serviço.
-     */
     @PutMapping("/alterar-descricao")
     public ResponseEntity<Servicos> alterarDescricaoServico(
             @RequestBody String descricaoAtual,
@@ -97,9 +76,6 @@ public class ServicosController {
         return ResponseEntity.accepted().body(atualizado);
     }
 
-    /**
-     * Endpoint específico para ajuste do tempo estimado de duração do serviço.
-     */
     @PutMapping("/alterar-duracao")
     public ResponseEntity<Servicos> alterarDuracaoServico(
             @RequestParam Integer duracaoAtual,

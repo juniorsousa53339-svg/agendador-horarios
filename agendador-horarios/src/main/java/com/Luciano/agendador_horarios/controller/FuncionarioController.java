@@ -10,10 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Controller responsável pela gestão do quadro de funcionários.
- * Fornece endpoints para cadastro, consulta e atualização de perfis profissionais.
- */
 @RestController
 @RequestMapping("/funcionarios")
 @RequiredArgsConstructor
@@ -21,27 +17,18 @@ public class FuncionarioController {
 
     private final FuncionarioService funcionarioService;
 
-    /**
-     * Endpoint para cadastrar um novo funcionário.
-     */
     @PostMapping
     public ResponseEntity<Funcionario> salvarFuncionario(@RequestBody @Valid Funcionario funcionario) {
         var salvo = funcionarioService.salvarFuncionario(funcionario);
         return ResponseEntity.accepted().body(salvo);
     }
 
-    /**
-     * Endpoint para remover o registro de um profissional pelo nome.
-     */
     @DeleteMapping
     public ResponseEntity<Void> deletarFuncionario(@RequestParam String nomeFuncionario) {
         funcionarioService.deletarFuncionario(nomeFuncionario);
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * Endpoint para buscar profissionais por identificador e nome.
-     */
     @GetMapping
     public ResponseEntity<List<Funcionario>> buscarFuncionario(
             @RequestParam (required = false) UUID idFuncionario,
@@ -59,10 +46,6 @@ public class FuncionarioController {
         return ResponseEntity.ok().body(lista);
     }
 
-
-    /**
-     * Endpoint específico para atualização do nome de registro do profissional.
-     */
     @PutMapping("/alterar-nome")
     public ResponseEntity<Funcionario> alterarNomeFuncionario(
             @RequestParam String nomeFuncionarioAtual,
@@ -72,9 +55,6 @@ public class FuncionarioController {
         return ResponseEntity.accepted().body(atualizado);
     }
 
-    /**
-     * Endpoint específico para atualização do telefone de contato do profissional.
-     */
     @PutMapping("/alterar-telefone")
     public ResponseEntity<Funcionario> alterarTelefoneFuncionario(
             @RequestParam String telefoneAtual,

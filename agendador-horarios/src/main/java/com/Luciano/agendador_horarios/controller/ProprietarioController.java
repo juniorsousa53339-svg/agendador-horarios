@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Controller responsável pela gestão dos perfis de proprietários.
- * Centraliza as operações de cadastro e atualização dos administradores do sistema.
- */
+
 @RestController
 @RequestMapping("/proprietarios")
 @RequiredArgsConstructor
@@ -21,27 +18,20 @@ public class ProprietarioController {
 
     private final ProprietarioService proprietarioService;
 
-    /**
-     * Endpoint para cadastrar um novo proprietário no sistema.
-     */
+
     @PostMapping
     public ResponseEntity<Proprietario> salvarProprietario(@RequestBody  @Valid Proprietario proprietario) {
         var salvo = proprietarioService.salvarProprietario(proprietario);
         return ResponseEntity.accepted().body(salvo);
     }
 
-    /**
-     * Endpoint para remover o registro de um proprietário pelo nome.
-     */
     @DeleteMapping
     public ResponseEntity<Void> deletarProprietario(@RequestParam String nome) {
         proprietarioService.deletarProprietario(nome);
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * Endpoint para busca de proprietários utilizando filtros de Nome, ID e Email.
-     */
+
     @GetMapping
     public ResponseEntity<List<Proprietario>> buscarProprietario(
             @RequestParam String nome,
@@ -52,9 +42,6 @@ public class ProprietarioController {
         return ResponseEntity.ok().body(lista);
     }
 
-    /**
-     * Endpoint específico para atualização do nome do proprietário.
-     */
     @PutMapping("/alterar-nome")
     public ResponseEntity<Proprietario> alterarNome(
             @RequestParam String nomeAtual,
@@ -64,9 +51,7 @@ public class ProprietarioController {
         return ResponseEntity.accepted().body(atualizado);
     }
 
-    /**
-     * Endpoint específico para atualização do telefone de contato.
-     */
+
     @PutMapping("/alterar-telefone")
     public ResponseEntity<Proprietario> alterarTelefone(
             @RequestParam String telefoneAtual,
@@ -76,9 +61,7 @@ public class ProprietarioController {
         return ResponseEntity.accepted().body(atualizado);
     }
 
-    /**
-     * Endpoint específico para atualização do e-mail de acesso/notificação.
-     */
+
     @PutMapping("/alterar-email")
     public ResponseEntity<Proprietario> alterarEmail(
             @RequestParam String emailAtual,
