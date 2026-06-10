@@ -29,4 +29,6 @@ public interface ServicosRepository extends JpaRepository<Servicos, UUID> {
 
     @Transactional
     void deleteByNomeServico(String nome);
+
+
 }

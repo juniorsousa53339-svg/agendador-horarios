@@ -1,7 +1,9 @@
 package com.Luciano.agendador_horarios.infrastructure.repository;
 
 import com.Luciano.agendador_horarios.infrastructure.entity.Funcionario;
+import com.Luciano.agendador_horarios.infrastructure.entity.Servicos;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +14,8 @@ import java.util.UUID;
 
 @Repository
 public interface FuncionarioRepository extends JpaRepository<Funcionario, UUID> {
+
+
 
 
     Funcionario findByNomeFuncionarioAndTelefoneFuncionarioAndEspecialidade(
@@ -28,4 +32,6 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, UUID> 
 
     @Transactional
     void deleteByNomeFuncionario(String nome);
+
+
 }
