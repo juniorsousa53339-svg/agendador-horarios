@@ -3,10 +3,12 @@ package com.Luciano.agendador_horarios.service;
 import com.Luciano.agendador_horarios.infrastructure.entity.Funcionario;
 import com.Luciano.agendador_horarios.infrastructure.repository.FuncionarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.naming.factory.SendMailFactory;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -54,24 +56,17 @@ public class FuncionarioService {
                         (nomeFuncionario);
     }
 
-    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
-    public List<Funcionario> buscarFuncionario(
-            UUID idFuncionario,
-            String nomeFuncionario) {
+   // @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
+    public Funcionario buscarFuncionario(UUID idFuncionario) {
 
-        List<Funcionario> funcionarios
-                = funcionarioRepository
-                .findByNomeFuncionarioContainingIgnoreCase
-                        (nomeFuncionario);
+        Funcionario funcionarioBuscado
+                =funcionarioRepository
+                .findById(idFuncionario)
+                .orElseThrow(() -> new RuntimeException
+                ("Funcionario não encontrado"));
 
-        if (Objects.isNull(funcionarios) || funcionarios.isEmpty()) {
-            throw new RuntimeException("Funcionário não encontrado.");
-        }
-
-        return funcionarios;
+        return funcionarioBuscado;
     }
-
-
 
     //@PreAuthorize("hasRole('PROPRIETARIO')")
     public Funcionario alterarDados(

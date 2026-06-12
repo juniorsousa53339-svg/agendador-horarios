@@ -29,6 +29,8 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, UUID> 
 
     Optional<Funcionario> findById(UUID idFuncionario);
 
+
+
     List<Funcionario> findByNomeFuncionarioContainingIgnoreCase(String nome);
 
 
@@ -36,6 +38,5 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, UUID> 
 
     @Transactional
     void deleteByNomeFuncionario(String nome);
-
 
 }

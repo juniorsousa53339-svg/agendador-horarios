@@ -1,6 +1,7 @@
 package com.Luciano.agendador_horarios.controller;
 
 import com.Luciano.agendador_horarios.DTO.AlterarFuncionarioRequest;
+import com.Luciano.agendador_horarios.DTO.BuscarFuncionarioResponse;
 import com.Luciano.agendador_horarios.infrastructure.entity.Funcionario;
 import com.Luciano.agendador_horarios.service.FuncionarioService;
 import jakarta.validation.Valid;
@@ -30,13 +31,13 @@ public class FuncionarioController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    public ResponseEntity<List<Funcionario>> buscarFuncionario(
-            @RequestParam (required = false) UUID idFuncionario,
-            @RequestParam (required = false) String nomeFuncionario) {
+    @GetMapping("/{idFuncionario}")
+    public ResponseEntity<Funcionario>buscarFuncionario(@PathVariable UUID idFuncionario) {
 
-        var lista = funcionarioService.buscarFuncionario(idFuncionario, nomeFuncionario);
-        return ResponseEntity.ok().body(lista);
+        Funcionario funcionario =
+                funcionarioService.buscarFuncionario(idFuncionario);
+
+        return  ResponseEntity.ok().body(funcionario);
     }
 
     @GetMapping("/listar")
