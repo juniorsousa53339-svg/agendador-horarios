@@ -18,8 +18,14 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, UUID> 
 
 
 
-    Funcionario findByNomeFuncionarioAndTelefoneFuncionarioAndEspecialidade(
-            String nomeFuncionario, String telefoneFuncionario, String especialidade);
+    Funcionario findByNomeFuncionarioAndTelefoneFuncionarioAndEspecialidadeAndEmailAndSenha
+            (
+            String nomeFuncionario,
+            String telefoneFuncionario,
+            String especialidade ,
+            String email,
+            String senha
+            );
 
     Optional<Funcionario> findById(UUID id);
 

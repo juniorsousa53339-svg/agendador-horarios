@@ -24,7 +24,7 @@ public class Funcionario {
     private UUID idFuncionario;
 
     @NotBlank(message = "Nome é obrigatório")
-    @Size(min=2, max=100, message = "Nome deve ter entre 3 e 100 caracteres") // Determina um min e um max de caracter
+    @Size(min=2, max=100, message = "Nome deve ter entre 3 e 100 caracteres")
     private String nomeFuncionario;
 
     @NotBlank(message = "Telefone é obrigatório")
@@ -35,6 +35,12 @@ public class Funcionario {
     private String telefoneFuncionario;
 
     @NotBlank
-    @Size(min=2, max=100, message = "Especialidade deve ter entre 3 e 100 caracteres") // Determina um min e um max de caracter
+    @Size(min=2, max=100, message = "Especialidade deve ter entre 3 e 100 caracteres")
     private String especialidade;
+
+    @Email
+    private String email;
+
+    @NotNull
+    private String senha;
 }

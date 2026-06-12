@@ -20,10 +20,13 @@ public class FuncionarioService {
     public Funcionario salvarFuncionario(Funcionario funcionario) {
 
         Funcionario funcionarioExistente = funcionarioRepository
-                .findByNomeFuncionarioAndTelefoneFuncionarioAndEspecialidade(
+                .findByNomeFuncionarioAndTelefoneFuncionarioAndEspecialidadeAndEmailAndSenha(
+
                         funcionario.getNomeFuncionario(),
                         funcionario.getTelefoneFuncionario(),
-                        funcionario.getEspecialidade()
+                        funcionario.getEspecialidade(),
+                        funcionario.getEmail(),
+                        funcionario.getSenha()
                 );
 
         if (Objects.nonNull(funcionarioExistente)) {
