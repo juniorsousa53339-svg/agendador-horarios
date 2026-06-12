@@ -3,6 +3,7 @@ package com.Luciano.agendador_horarios.service;
 import com.Luciano.agendador_horarios.infrastructure.entity.Funcionario;
 import com.Luciano.agendador_horarios.infrastructure.repository.FuncionarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -70,49 +71,37 @@ public class FuncionarioService {
         return funcionarios;
     }
 
-    @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Funcionario alterarNomeFuncionario(
-            String nomeFuncionarioAtual,
-            String nomeFuncionarioNovo
-    ) {
 
-        Funcionario funcionarioExistente =
+
+    //@PreAuthorize("hasRole('PROPRIETARIO')")
+    public Funcionario alterarDados(
+
+            UUID idFuncionario,
+            String nomeFuncionario,
+            String telefoneFuncionario,
+            String especialidade,
+            String email
+
+    ){
+        Funcionario funcionarioComDados =
                 funcionarioRepository.
-                        findByNomeFuncionario
-                                (nomeFuncionarioAtual);
+                        findById(idFuncionario)
+                          .orElseThrow(()
+                                  -> new RuntimeException
+                                 ("Funcionario não encontrado")
+                        );
 
-        if (Objects.isNull(funcionarioExistente)) {
-            throw new RuntimeException("Funcionário não encontrado.");
-        }
-
-        funcionarioExistente.
-                setNomeFuncionario
-                        (nomeFuncionarioNovo);
-        return funcionarioRepository.
-                save(funcionarioExistente);
-    }
-
-    @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Funcionario alterarTelefoneFuncionario(
-            String telefoneAtual,
-            String telefoneNovo
-    ) {
-        Funcionario funcionarioComTelefone
-                = funcionarioRepository.
-                findByTelefoneFuncionario
-                        (telefoneAtual);
-
-        if (Objects.isNull(funcionarioComTelefone)) {
-            throw new RuntimeException("Telefone não encontrado.");
-        }
-
-        funcionarioComTelefone.
-                setTelefoneFuncionario
-                        (telefoneNovo);
+        funcionarioComDados.alterarDados(
+                nomeFuncionario,
+                telefoneFuncionario,
+                especialidade,
+                email
+        );
 
         return funcionarioRepository.
-                save(funcionarioComTelefone);
+                save(funcionarioComDados);
     }
 
-    public List<Funcionario> listarTodos() { return funcionarioRepository.findAll(); }
+    //@PreAuthorize("hasRole('PROPRIETARIO')")
+    public List<Funcionario> listarTodos() {return funcionarioRepository.findAll();}
 }

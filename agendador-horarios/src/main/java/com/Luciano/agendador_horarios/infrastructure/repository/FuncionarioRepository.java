@@ -27,14 +27,12 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, UUID> 
             String senha
             );
 
-    Optional<Funcionario> findById(UUID id);
+    Optional<Funcionario> findById(UUID idFuncionario);
 
     List<Funcionario> findByNomeFuncionarioContainingIgnoreCase(String nome);
 
 
     Funcionario findByNomeFuncionario(String nome);
-
-    Funcionario findByTelefoneFuncionario(String telefoneFuncionario);
 
     @Transactional
     void deleteByNomeFuncionario(String nome);

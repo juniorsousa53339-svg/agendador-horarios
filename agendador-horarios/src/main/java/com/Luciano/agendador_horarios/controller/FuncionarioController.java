@@ -1,5 +1,6 @@
 package com.Luciano.agendador_horarios.controller;
 
+import com.Luciano.agendador_horarios.DTO.AlterarFuncionarioRequest;
 import com.Luciano.agendador_horarios.infrastructure.entity.Funcionario;
 import com.Luciano.agendador_horarios.service.FuncionarioService;
 import jakarta.validation.Valid;
@@ -46,21 +47,22 @@ public class FuncionarioController {
         return ResponseEntity.ok().body(lista);
     }
 
-    @PutMapping("/alterar-nome")
-    public ResponseEntity<Funcionario> alterarNomeFuncionario(
-            @RequestParam String nomeFuncionarioAtual,
-            @RequestParam String nomeFuncionarioNovo) {
 
-        var atualizado = funcionarioService.alterarNomeFuncionario(nomeFuncionarioAtual, nomeFuncionarioNovo);
-        return ResponseEntity.accepted().body(atualizado);
-    }
+    @PutMapping("/{idFuncionario}")
+    public ResponseEntity<Void> alterarDadosFuncionario(
 
-    @PutMapping("/alterar-telefone")
-    public ResponseEntity<Funcionario> alterarTelefoneFuncionario(
-            @RequestParam String telefoneAtual,
-            @RequestParam String telefoneNovo) {
+            @PathVariable  UUID idFuncionario,
+            @RequestBody @Valid AlterarFuncionarioRequest req
+    ){
 
-        var atualizado = funcionarioService.alterarTelefoneFuncionario(telefoneAtual, telefoneNovo);
-        return ResponseEntity.accepted().body(atualizado);
+        funcionarioService.alterarDados(
+                idFuncionario,
+                req.getNomeFuncionario(),
+                req.getTelefoneFuncionario(),
+                req.getEspecialidade(),
+                req.getEmail()
+        );
+
+        return ResponseEntity.ok().build();
     }
 }

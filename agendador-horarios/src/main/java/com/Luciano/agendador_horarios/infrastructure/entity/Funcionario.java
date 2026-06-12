@@ -43,4 +43,18 @@ public class Funcionario {
 
     @NotNull
     private String senha;
+
+
+    public void  alterarDados(
+
+            String nomeFuncionario,
+            String telefoneFuncionario,
+            String especialidade,
+            String email) {
+
+        this.nomeFuncionario = nomeFuncionario;
+        this.telefoneFuncionario = telefoneFuncionario;
+        this.especialidade = especialidade;
+        this.email = email;
+    }
 }
