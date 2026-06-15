@@ -21,12 +21,6 @@ public interface ServicosRepository extends JpaRepository<Servicos, UUID> {
 
     Servicos findByNomeServico(String nome);
 
-    Servicos findByPrecoServico(BigDecimal preco);
-
-    Servicos findByDescricaoServico(String desc);
-
-    Servicos findByDuracaoMinutos(Integer duracaoMinutos);
-
     @Transactional
     void deleteByNomeServico(String nome);
 

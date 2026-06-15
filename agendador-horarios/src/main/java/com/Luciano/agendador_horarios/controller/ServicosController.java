@@ -1,5 +1,6 @@
 package com.Luciano.agendador_horarios.controller;
 
+import com.Luciano.agendador_horarios.DTO.AlterarServicosResponse;
 import com.Luciano.agendador_horarios.infrastructure.entity.Servicos;
 import com.Luciano.agendador_horarios.service.ServicosService;
 import jakarta.validation.Valid;
@@ -49,39 +50,24 @@ public class ServicosController {
         return ResponseEntity.ok(lista);
     }
 
-    @PutMapping("/alterar-nome")
-    public ResponseEntity<Servicos> alterarNomeServico(
-            @RequestParam String nomeServicoAtual,
-            @RequestParam String nomeServicoNovo) {
 
-        var atualizado = servicosService.alterarNomeServico(nomeServicoAtual, nomeServicoNovo);
-        return ResponseEntity.accepted().body(atualizado);
-    }
 
-    @PutMapping("/alterar-preco")
-    public ResponseEntity<Servicos> alterarPrecoServico(
-            @RequestParam BigDecimal precoServicoAtual,
-            @RequestParam BigDecimal precoServicoNovo) {
+    @PutMapping("/{idServico}")
+    public ResponseEntity<Void> atualizarServico(
 
-        var atualizado = servicosService.alterarPrecoServico(precoServicoAtual, precoServicoNovo);
-        return ResponseEntity.accepted().body(atualizado);
-    }
+            @PathVariable UUID idServico,
+            @RequestBody @Valid AlterarServicosResponse r
+    ) {
 
-    @PutMapping("/alterar-descricao")
-    public ResponseEntity<Servicos> alterarDescricaoServico(
-            @RequestBody String descricaoAtual,
-            @RequestParam String descricaoNova) {
+        servicosService.alterarDados(
 
-        var atualizado = servicosService.alterarDescricaoServico(descricaoAtual, descricaoNova);
-        return ResponseEntity.accepted().body(atualizado);
-    }
+                idServico,
+                r.getNomeServico(),
+                r.getDescricaoServico(),
+                r.getPrecoServico(),
+                r.getDuracaoMinutos()
+        );
 
-    @PutMapping("/alterar-duracao")
-    public ResponseEntity<Servicos> alterarDuracaoServico(
-            @RequestParam Integer duracaoAtual,
-            @RequestParam Integer duracaoNova) {
-
-        var atualizado = servicosService.alterarDuracaoServico(duracaoAtual, duracaoNova);
-        return ResponseEntity.accepted().body(atualizado);
+        return ResponseEntity.accepted().build();
     }
 }

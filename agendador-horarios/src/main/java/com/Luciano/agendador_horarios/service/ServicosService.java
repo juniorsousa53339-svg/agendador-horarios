@@ -75,94 +75,31 @@ public class ServicosService {
         return servicos;
     }
 
-    @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Servicos alterarNomeServico
-            (
-            String nomeServicoAtual,
-            String nomeServicoNovo
-    ) {
-        Servicos servicoExistente =
-                servicosRepository.
-                        findByNomeServico
-                                (nomeServicoAtual);
+    public Servicos alterarDados(
 
-        if (Objects.isNull(servicoExistente)) {
-            throw new RuntimeException("Serviço não encontrado.");
-        }
+            UUID idServico,
+            String nomeServico,
+            String descricaoServico,
+            BigDecimal precoServico,
+            Integer duracaoMinutos
+    ){
 
-        servicoExistente.
-                setNomeServico
-                        (nomeServicoNovo);
+        Servicos serviceComDados =
+                servicosRepository.findById(idServico)
+                        .orElseThrow(()
+                                -> new RuntimeException("Serviço não encontrado.")
+                        );
 
-        return servicosRepository.
-                save(servicoExistente);
-    }
+        serviceComDados.alterarDados(
 
-    @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Servicos alterarPrecoServico
-            (
-
-            BigDecimal precoServicoAtual,
-            BigDecimal precoServicoNovo
-    ) {
-        Servicos servicoComPreco =
-                servicosRepository.
-                        findByPrecoServico
-                                (precoServicoAtual);
-
-        if (Objects.isNull(servicoComPreco)) {
-            throw new RuntimeException("Preço não encontrado.");
-        }
-
-        servicoComPreco.setPrecoServico(precoServicoNovo);
-        return servicosRepository.save(servicoComPreco);
-    }
-
-    @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Servicos alterarDescricaoServico
-
-            (
-                    String descricaoAtual,String descricaoNova
-            ) {
-        Servicos servicoExistente =
-                servicosRepository.
-                        findByDescricaoServico
-                                (descricaoAtual);
-
-        if (Objects.isNull(servicoExistente)) {
-            throw new RuntimeException("Descrição não encontrada.");
-        }
-
-        servicoExistente.
-                setDescricaoServico
-                        (descricaoNova);
+                nomeServico,
+                descricaoServico,
+                precoServico,
+                duracaoMinutos
+        );
 
         return servicosRepository.
-                save(servicoExistente);
-    }
-
-    @PreAuthorize("hasRole('PROPRIETARIO')")
-    public Servicos alterarDuracaoServico
-            (
-            Integer duracaoAtual,
-            Integer duracaoNova
-            ) {
-
-        Servicos servicoComDuracao =
-                servicosRepository.
-                        findByDuracaoMinutos
-                                (duracaoAtual);
-
-        if (Objects.isNull(servicoComDuracao)) {
-            throw new RuntimeException("Duração não encontrada.");
-        }
-
-        servicoComDuracao.
-                setDuracaoMinutos
-                        (duracaoNova);
-
-        return servicosRepository.
-                save(servicoComDuracao);
+                save(serviceComDados);
     }
 
     public List<Servicos> listarTodos() {

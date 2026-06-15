@@ -37,4 +37,20 @@ public class Servicos {
     @NotNull
     @Min(5) // duração mín é de 5 minutos
     private Integer duracaoMinutos;
+
+
+    public void alterarDados(
+
+        String nomeServico,
+        String descricaoServico,
+        BigDecimal precoServico,
+        Integer duracaoMinutos
+
+    ){
+
+        this.nomeServico = nomeServico;
+        this.descricaoServico = descricaoServico;
+        this.precoServico = precoServico;
+        this.duracaoMinutos = duracaoMinutos;
+    }
 }

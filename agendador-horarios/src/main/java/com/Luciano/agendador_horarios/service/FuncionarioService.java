@@ -59,8 +59,8 @@ public class FuncionarioService {
    // @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public Funcionario buscarFuncionario(UUID idFuncionario) {
 
-        Funcionario funcionarioBuscado
-                =funcionarioRepository
+        Funcionario funcionarioBuscado =
+                funcionarioRepository
                 .findById(idFuncionario)
                 .orElseThrow(() -> new RuntimeException
                 ("Funcionario não encontrado"));
