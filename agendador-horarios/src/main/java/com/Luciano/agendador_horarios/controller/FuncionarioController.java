@@ -25,8 +25,8 @@ public class FuncionarioController {
         return ResponseEntity.accepted().body(salvo);
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deletarFuncionario(@RequestParam String nomeFuncionario) {
+    @DeleteMapping("/{nomeFuncionario}")
+    public ResponseEntity<Void> deletarFuncionario(@PathVariable String nomeFuncionario) {
         funcionarioService.deletarFuncionario(nomeFuncionario);
         return ResponseEntity.noContent().build();
     }
@@ -61,7 +61,8 @@ public class FuncionarioController {
                 req.getNomeFuncionario(),
                 req.getTelefoneFuncionario(),
                 req.getEspecialidade(),
-                req.getEmail()
+                req.getEmail(),
+                req.getSenha()
         );
 
         return ResponseEntity.ok().build();

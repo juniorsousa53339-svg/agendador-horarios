@@ -50,11 +50,14 @@ public class Funcionario {
             String nomeFuncionario,
             String telefoneFuncionario,
             String especialidade,
-            String email) {
+            String email,
+            String senha
+    ) {
 
         this.nomeFuncionario = nomeFuncionario;
         this.telefoneFuncionario = telefoneFuncionario;
         this.especialidade = especialidade;
         this.email = email;
+        this.senha = senha;
     }
 }

@@ -39,7 +39,7 @@ public class FuncionarioService {
                 save(funcionario);
     }
 
-    @PreAuthorize("hasRole('PROPRIETARIO')")
+    //@PreAuthorize("hasRole('PROPRIETARIO')")
     public void deletarFuncionario(String nomeFuncionario) {
 
         Funcionario funcionario =
@@ -75,7 +75,8 @@ public class FuncionarioService {
             String nomeFuncionario,
             String telefoneFuncionario,
             String especialidade,
-            String email
+            String email,
+            String senha
 
     ){
         Funcionario funcionarioComDados =
@@ -90,7 +91,8 @@ public class FuncionarioService {
                 nomeFuncionario,
                 telefoneFuncionario,
                 especialidade,
-                email
+                email,
+                senha
         );
 
         return funcionarioRepository.

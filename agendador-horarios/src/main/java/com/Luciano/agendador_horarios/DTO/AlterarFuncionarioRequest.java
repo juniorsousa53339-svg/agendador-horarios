@@ -20,4 +20,7 @@ public class AlterarFuncionarioRequest {
 
     @NotNull
     String email;
+
+    @NotNull
+    String senha;
 }
