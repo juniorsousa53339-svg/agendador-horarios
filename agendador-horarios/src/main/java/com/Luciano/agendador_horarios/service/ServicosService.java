@@ -36,7 +36,7 @@ public class ServicosService {
                 save(servicos);
     }
 
-    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
+    // @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public void deletarServico(String nomeServico) {
         Servicos servico =
                 servicosRepository.
@@ -51,28 +51,18 @@ public class ServicosService {
                 deleteByNomeServico(nomeServico);
     }
 
-    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
-    public List<Servicos> buscarServico
-            (
-                    UUID idServico,
-                    String nomeServico,
-                    BigDecimal precoServico
-            ) {
+   // @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
+    public Servicos buscarServico(UUID idServico) {
 
-        List<Servicos> servicos = servicosRepository
-                .findByIdServicoAndNomeServicoAndPrecoServico
+        Servicos servicosBuscados =
+                servicosRepository
+                        .findById(idServico)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Servico não encontrado."
+                                ));
 
-                        (
-                                idServico,
-                                nomeServico,
-                                precoServico
-                        ) ;
-
-        if (Objects.isNull(servicos) || servicos.isEmpty()) {
-            throw new RuntimeException("Serviço não encontrado.");
-        }
-
-        return servicos;
+        return servicosBuscados;
     }
 
     public Servicos alterarDados(

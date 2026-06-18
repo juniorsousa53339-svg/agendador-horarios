@@ -26,20 +26,20 @@ public class ServicosController {
         return ResponseEntity.accepted().body(salvo);
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deletarServico(@RequestParam String nomeServico) {
+    @DeleteMapping("/{nomeServico}")
+    public ResponseEntity<Void> deletarServico(@PathVariable String nomeServico) {
         servicosService.deletarServico(nomeServico);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    public ResponseEntity<List<Servicos>> buscarServico(
-            @RequestParam UUID idServico,
-            @RequestParam String nomeServico,
-            @RequestParam BigDecimal precoServico) {
+    @GetMapping("/{idServico}")
+    public ResponseEntity<Servicos> buscarServico(
+            @PathVariable UUID idServico) {
 
-        var lista = servicosService.buscarServico(idServico, nomeServico, precoServico);
-        return ResponseEntity.ok().body(lista);
+        Servicos servicos =
+                servicosService.buscarServico(idServico);
+
+        return ResponseEntity.ok().body(servicos);
     }
 
     @GetMapping("/listar")
@@ -49,8 +49,6 @@ public class ServicosController {
 
         return ResponseEntity.ok(lista);
     }
-
-
 
     @PutMapping("/{idServico}")
     public ResponseEntity<Void> atualizarServico(
