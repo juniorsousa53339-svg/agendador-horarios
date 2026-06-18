@@ -17,7 +17,7 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        HttpSecurity httpSecurity = http
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(request -> {
                     var config = new CorsConfiguration();
@@ -28,23 +28,28 @@ public class SecurityConfig {
                     return config;
                 }))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .httpBasic(basic -> {})
+                .httpBasic(basic -> {
+                })
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
-                        .anyRequest().permitAll())
 
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-//                        .requestMatchers("/h2-console/**").permitAll()
-//                        .requestMatchers("/auth/login").authenticated()
-//                        .requestMatchers("/proprietarios/**", "/barbearias/**", "/servicos/**")
-//                        .hasRole("PROPRIETARIO")
-//                        .requestMatchers("/funcionarios/**").hasAnyRole("PROPRIETARIO", "FUNCIONARIO")
-//                        .requestMatchers("/agendamentos/**", "/clientes/**").authenticated()
-//                        .anyRequest().denyAll())
-                .headers(headers -> headers.frameOptions(frame -> frame.disable()));
+                        .requestMatchers("/proprietarios/**",
+                                "/barbearias/**",
+                                "/servicos/**")
+                        .hasRole("PROPRIETARIO")
+
+                        .requestMatchers("/funcionarios/**")
+                        .hasAnyRole("PROPRIETARIO", "FUNCIONARIO")
+
+                        .requestMatchers("/agendamentos/**",
+                                "/clientes/**")
+                        .authenticated()
+
+                        .anyRequest().denyAll()
+                )
+                        .headers(headers -> headers.frameOptions(frame -> frame.disable()));
 
         return http.build();
     }
