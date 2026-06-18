@@ -8,19 +8,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    @GetMapping("/login")
-    public ResponseEntity<LoginResponse> login(Authentication authentication) {
-        List<String> roles = authentication.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
+    @GetMapping("/auth/me")
+    public Map<String, Object> me(Authentication auth) {
+        return Map.of("username", auth.getName(),
+                "roles",auth.getAuthorities().stream()
 
-        return ResponseEntity.ok(new LoginResponse(authentication.getName(), roles));
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList())
+        );
     }
 
     public record LoginResponse(String username, List<String> roles) {

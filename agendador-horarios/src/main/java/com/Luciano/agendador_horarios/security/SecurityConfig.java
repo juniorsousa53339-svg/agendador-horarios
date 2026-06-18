@@ -3,10 +3,7 @@ package com.Luciano.agendador_horarios.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +14,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
@@ -25,7 +22,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableMethodSecurity
-@EnableWebSecurity
+
 public class SecurityConfig {
 
     @Bean
@@ -41,7 +38,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/h2-console/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/login").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/auth").authenticated()
 
                         .requestMatchers(
                                 "/proprietarios/**",
@@ -78,13 +75,13 @@ public class SecurityConfig {
     @Bean
     UserDetailsService userDetailsServices(PasswordEncoder encoder) {
         UserDetails admin = User.withUsername("proprietarioSistema@")
-                .password(encoder.encode("26"))
-                .roles("ROLE_PROPRIETARIO")
+                .password(encoder.encode("26121"))
+                .roles("PROPRIETARIO")
                 .build();
 
         UserDetails solicitante = User.withUsername("funcionarioluc")
                 .password(encoder.encode("2026"))
-                .roles("ROLE_FUNCIONARIO")
+                .roles("FUNCIONARIO")
                 .build();
 
         return new InMemoryUserDetailsManager(admin, solicitante);
@@ -105,7 +102,7 @@ public class SecurityConfig {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        return (CorsConfigurationSource) source;
+        return source;
     }
 }
 

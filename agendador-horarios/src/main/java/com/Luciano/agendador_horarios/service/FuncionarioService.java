@@ -19,7 +19,7 @@ public class FuncionarioService {
 
     private final FuncionarioRepository funcionarioRepository;
 
-//    @PreAuthorize("hasRole('PROPRIETARIO')")
+   @PreAuthorize("hasRole('PROPRIETARIO')")
     public Funcionario salvarFuncionario(Funcionario funcionario) {
 
         Funcionario funcionarioExistente = funcionarioRepository
@@ -39,7 +39,7 @@ public class FuncionarioService {
                 save(funcionario);
     }
 
-    //@PreAuthorize("hasRole('PROPRIETARIO')")
+   @PreAuthorize("hasRole('PROPRIETARIO')")
     public void deletarFuncionario(String nomeFuncionario) {
 
         Funcionario funcionario =
@@ -56,7 +56,7 @@ public class FuncionarioService {
                         (nomeFuncionario);
     }
 
-   // @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
+   @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public Funcionario buscarFuncionario(UUID idFuncionario) {
 
         Funcionario funcionarioBuscado =

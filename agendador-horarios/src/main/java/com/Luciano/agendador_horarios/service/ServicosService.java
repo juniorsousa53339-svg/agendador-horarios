@@ -17,7 +17,7 @@ public class ServicosService {
 
     private final ServicosRepository servicosRepository;
 
-   // @PreAuthorize("hasRole('PROPRIETARIO')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Servicos salvarServico(Servicos servicos) {
 
         Servicos servicoExistente = servicosRepository
@@ -36,7 +36,7 @@ public class ServicosService {
                 save(servicos);
     }
 
-    // @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
+     @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public void deletarServico(String nomeServico) {
         Servicos servico =
                 servicosRepository.
@@ -51,7 +51,7 @@ public class ServicosService {
                 deleteByNomeServico(nomeServico);
     }
 
-   // @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
+    @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
     public Servicos buscarServico(UUID idServico) {
 
         Servicos servicosBuscados =
