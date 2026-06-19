@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * Implementa 'UserDetailsService' para permitir que o Spring consulte as credenciais
  * durante o processo de autenticação (Login).
  */
-@Service
+
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 

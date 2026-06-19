@@ -38,6 +38,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/h2-console/**").permitAll()
 
+
                         .requestMatchers(HttpMethod.GET, "/auth").authenticated()
 
                         .requestMatchers(
