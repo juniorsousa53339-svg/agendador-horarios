@@ -42,6 +42,15 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/auth").authenticated()
 
                         .requestMatchers(
+                                HttpMethod.GET,
+                                "/servicos/listar"
+                        ).permitAll()
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/funcionarios/listar"
+                        ).permitAll()
+                        .requestMatchers(
                                 "/proprietarios/**",
                                 "/barbearias/**",
                                 "/servicos/**"

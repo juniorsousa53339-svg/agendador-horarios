@@ -68,7 +68,7 @@ public class FuncionarioService {
         return funcionarioBuscado;
     }
 
-    //@PreAuthorize("hasRole('PROPRIETARIO')")
+    @PreAuthorize("hasRole('PROPRIETARIO')")
     public Funcionario alterarDados(
 
             UUID idFuncionario,
@@ -99,6 +99,6 @@ public class FuncionarioService {
                 save(funcionarioComDados);
     }
 
-    @PreAuthorize("hasRole('PROPRIETARIO')")
+    //@PreAuthorize("hasRole('PROPRIETARIO')")
     public List<Funcionario> listarTodos() {return funcionarioRepository.findAll();}
 }

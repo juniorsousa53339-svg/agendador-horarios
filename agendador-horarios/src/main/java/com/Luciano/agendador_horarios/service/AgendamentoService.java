@@ -32,7 +32,7 @@ public class AgendamentoService {
     private final FuncionarioRepository funcionarioRepository;
     private final ServicosRepository servicosRepository;
 
-    // @PreAuthorize("hasAnyRole('PROPRIETARIO','FUNCIONARIO')")
+
     @Transactional
     public AgendamentoResponseDTO criar(AgendamentoRequestDTO dto) {
 
