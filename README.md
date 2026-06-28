@@ -1,50 +1,69 @@
-<div align="center">
+# 🚀 Sistema de Agendamento LucDev Barber
 
-   <img width="733" height="397" alt="Gemini_Generated_Image_bv78sxbv78sxbv78" src="https://github.com/user-attachments/assets/8a3d950c-c677-43fd-b535-3796ef5c2120" />
+<p align="center">
+  <img width="733" height="397" src="https://github.com/user-attachments/assets/8a3d950c-c677-43fd-b535-3796ef5c2120" />
+</p>
 
+Aplicação **Full Stack** desenvolvida para gerenciamento inteligente de horários, voltada para empresas e profissionais autônomos.
 
-  <br><br>
+O sistema integra um back-end robusto em **Java + Spring Boot** e um front-end moderno em **Angular**, utilizando arquitetura baseada em APIs REST, autenticação com Spring Security e interface responsiva.
 
-  <img src="https://skillicons.dev/icons?i=java,spring,maven,hibernate,mysql,postman,git,github,idea,docker" />
+O projeto foi finalizado e evoluído para **ambiente de produção**, com foco em performance, segurança e escalabilidade.
 
-  <br><br>
+---
 
-  <table width="100%">
-    <tr>
-      <td bgcolor="#161b22" align="left" style="padding: 30px; border-radius: 15px; border: 1px solid #30363d;">
-        <h2 style="color: #58a6ff; margin-top: 0; font-family: sans-serif;">📅 Barber Pro System</h2>
-        <p style="color: #c9d1d9; font-size: 16px; line-height: 1.6; font-family: sans-serif;">
-          Sistema <b>Enterprise</b> de agendamento desenvolvido com <b>Java 17</b> e <b>Spring Boot 3</b>. 
-          Foco em alta disponibilidade e regras de negócio blindadas por testes unitários.
-        </p>
-      </td>
-    </tr>
-  </table>
+## ⚙️ Tecnologias utilizadas
 
-  <br>
+### Backend
+- Java 17 + Spring Boot 3
+- Spring Security (autenticação e autorização)
+- Spring Data JPA + Hibernate
+- APIs REST
+- Maven
 
-  <table width="100%">
-    <tr>
-      <td width="50%" bgcolor="#161b22" style="padding: 20px; border-radius: 15px; border: 1px solid #30363d; vertical-align: top;">
-        <h4 style="color: #3fb950; font-family: sans-serif;">🛡️ Engineering</h4>
-        <ul style="color: #8b949e; text-align: left; font-size: 14px;">
-          <li>JUnit 5 & Mockito</li>
-          <li>Clean Architecture</li>
-          <li>Fail-Fast Validations</li>
-        </ul>
-      </td>
-      <td width="50%" bgcolor="#161b22" style="padding: 20px; border-radius: 15px; border: 1px solid #30363d; vertical-align: top;">
-        <h4 style="color: #d29922; font-family: sans-serif;">⚙️ Business</h4>
-        <ul style="color: #8b949e; text-align: left; font-size: 14px;">
-          <li>Gestão de Vagas</li>
-          <li>Multi-tenant</li>
-          <li>Filtros Avançados</li>
-        </ul>
-      </td>
-    </tr>
-  </table>
+### Frontend
+- Angular
+- Interface responsiva e dinâmica
+- Consumo de APIs REST
 
-</div>
+### Banco de dados
+- PostgreSQL (produção)
+- Supabase (hospedagem do banco)
 
+### DevOps / Infraestrutura
+- Docker Engine (isolamento e segurança do banco)
+- Deploy em nuvem (Vercel + GitHub Pages)
+- Separação entre frontend e backend
 
+---
 
+## 🔒 Evolução do projeto
+
+- Migração de banco de dados **H2 (memória)** para **PostgreSQL em produção**
+- Deploy completo da aplicação em ambiente cloud
+- Uso de Docker Engine para segurança e organização do banco de dados
+- Separação total entre front-end e back-end em deploy independente
+- Arquitetura preparada para escalabilidade
+
+---
+
+## 🔗 Repositórios
+
+- Backend: https://github.com/juniorsousa53339-svg/agendador-horarios.git  
+- Frontend: https://github.com/juniorsousa53339-svg/agendador-horarios-front.git  
+
+---
+
+## 🌐 Acesso ao sistema
+
+- 📅 Agendamento (clientes):  
+https://juniorsousa53339-svg.github.io/agendador-horarios-front/
+
+- 🔐 Login do sistema:  
+https://juniorsousa53339-svg.github.io/agendador-horarios-front/#/login
+
+---
+
+## 📌 Observação
+
+Projeto finalizado e em ambiente de produção, demonstrando integração completa entre frontend e backend, autenticação segura, persistência em banco relacional e deploy em cloud.
